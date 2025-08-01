@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useMenu } from "@/modules/layout/providers/LayoutClientWrapper";
+import {Cctv, BadgeInfo, History, Badge} from "lucide-react";
 
 export default function SideMenu() {
     // consuming state values form context provider
@@ -18,7 +19,7 @@ export default function SideMenu() {
                     <div className="space-y-3">
                         <label className="text-sm font-medium text-gray-700">Crime Type</label>
                         <select name="" id="" className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300
-                        focus-outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md border">
+                        focus-outline-none focus:ring-[#1E4B26] focus:border-[#1E4B26] sm:text-sm rounded-md border">
                             <option value="all">All Types</option>
                             <option value="theft">Theft</option>
                             <option value="assault">Assault</option>
@@ -32,7 +33,7 @@ export default function SideMenu() {
                     <div>
                         <label className="text-sm font-medium text-gray-700">Time Range</label>
                         <select name="" id="" className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300
-                        focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md border">
+                        focus:outline-none focus:ring-[#1E4B26] focus:border-[#1E4B26] sm:text-sm rounded-md border">
                             <option value="24h">Last 24 Hours</option>
                             <option value="7d">Last 7 Days</option>
                             <option value="30d">Last 30 Days</option>
@@ -73,16 +74,12 @@ export default function SideMenu() {
                 <div className="space-y-3">
                     <div className="bg-white border border-gray-200 rounded-lg p-3 shadow-sm">
                         <div className="flex items-start">
-                            <div className="w-[12px] h-[12px] rounded-[50%] bg-red-500 mt-1 mr-2"></div>
+                            <Badge size={16} className="rounded-[50%] text-red-500 mt-1 mr-2"/>
                             <div>
                                 <h3 className="font-medium">Theft</h3>
                                 <p className="text-sm text-gray-600">Phone snatched near Main St & 5th Ave</p>
                                 <div className="flex items-center mt-1 text-xs text-gray-500">
-                                    <Image
-                                        src="/schedule_24dp.svg"
-                                        alt="Filter menu"
-                                        width={10}
-                                        height={10}/>
+                                    <History size={16} className="mr-2" />
                                     <span>2 hours ago</span>
                                 </div>
                             </div>
@@ -97,12 +94,7 @@ export default function SideMenu() {
                 <div className="bg-blue-50 border-blue-200 rounded-lg p-4">
                     <ul className="space-y-2 text-sm">
                         <li className="flex items-start">
-                            <Image
-                                src="/info_24dp.svg"
-                                className="h-5 w-5 text-blue-600 mr-2 flex-shrink-0"
-                                alt="Filter menu"
-                                width={15}
-                                height={15}/>
+                            <BadgeInfo size={36} className="mr-4"/>
                             <span>Avoid walking alone at night on Pine Street between 10th and 12th Avenue.</span>
                         </li>
                     </ul>
@@ -110,13 +102,9 @@ export default function SideMenu() {
             </div>
 
             {/*Report Button*/}
-            <button className="w-full bg-[#B05216] hover:bg-blue-700 text-white font-medium py-2 px-4
-            rounded-lg flex items-center mb-6 justify-center">
-                <Image
-                    src="/emergency_home_24dp.svg"
-                    alt="Alert incident"
-                    width={30}
-                    height={30}/>
+            <button className="w-full bg-[#B05216] hover:bg-[#4F2915] text-white font-medium py-2 px-4
+            rounded-lg flex items-center mb-24 justify-center">
+                <Cctv className="mr-4"/>
                 Report Incident
             </button>
         </div>
