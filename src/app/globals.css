@@ -1,5 +1,18 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Rubik Dirt';
+  src: url('/fonts/Rubik_Dirt/RubikDirt-Regular.ttf');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+
+}
+
+#brand-name {
+  font-family:"Rubik Dirt";
+}
+
 :root {
   --color-primary: #8F9C68;
   --background: #ffffff;
@@ -41,4 +54,24 @@ body {
 
 .drawer.collapsed {
   transform: translateX(100%);
+}
+
+.bottom-nav-item.active::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #3b82f6;
+}
+
+.area-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.area-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }

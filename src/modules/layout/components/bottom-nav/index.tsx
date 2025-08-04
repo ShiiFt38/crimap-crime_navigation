@@ -19,6 +19,6 @@ export default function BottomNav(){
                     isActive={src == `${e.page}`}
                     iconStyle={`w-4 h-4 flex-shrink-0 ${src == e.page ? "text-[#8F9C68]" : "text-white"}`}/>
             ))}
-        <FilterButton style={"absolute justify-items-center bottom-25 right-5 p-2 bg-[#1E4B26] rounded-full "} label={false}/>
+        <FilterButton style={"absolute justify-items-center bottom-25 right-5 p-2 bg-[#1E4B26] rounded-full "}/>
         </nav>)
 }
