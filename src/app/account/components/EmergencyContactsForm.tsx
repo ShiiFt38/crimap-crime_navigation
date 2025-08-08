@@ -22,12 +22,15 @@ export default function EmergencyContactsForm() {
                     className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-gray-50 rounded-lg border">
                     <div className="flex-1 mb-3 sm:mb-0">
                         <div className="flex flex-col sm:flex-row sm:space-x-4">
-                            <input type="text" placeholder="Contact Name" value="Sarah Johnson"
-                                   className="mb-2 sm:mb-0 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
-                            <input type="tel" placeholder="Phone Number" value="+1 (555) 987-6543"
-                                   className="mb-2 sm:mb-0 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
+                            <input type="text" placeholder="Contact Name" defaultValue="Sarah Johnson"
+                                   className="mb-2 sm:mb-0 px-3 py-2 border border-gray-300 rounded-md focus:ring-2
+                                   focus:ring-blue-500 focus:border-transparent"/>
+                            <input type="tel" placeholder="Phone Number" defaultValue="+1 (555) 987-6543"
+                                   className="mb-2 sm:mb-0 px-3 py-2 border border-gray-300 rounded-md focus:ring-2
+                                   focus:ring-blue-500 focus:border-transparent"/>
                             <select
-                                className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2
+                                focus:ring-blue-500 focus:border-transparent">
                                 <option value="family">Family</option>
                                 <option value="friend">Friend</option>
                                 <option value="colleague">Colleague</option>
@@ -46,13 +49,16 @@ export default function EmergencyContactsForm() {
                     className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-gray-50 rounded-lg border">
                     <div className="flex-1 mb-3 sm:mb-0">
                         <div className="flex flex-col sm:flex-row sm:space-x-4">
-                            <input type="text" placeholder="Contact Name" value="Mike Davis"
-                                   className="mb-2 sm:mb-0 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
-                            <input type="tel" placeholder="Phone Number" value="+1 (555) 456-7890"
-                                   className="mb-2 sm:mb-0 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
+                            <input type="text" placeholder="Contact Name" defaultValue="Mike Davis"
+                                   className="mb-2 sm:mb-0 px-3 py-2 border border-gray-300 rounded-md focus:ring-2
+                                   focus:ring-blue-500 focus:border-transparent"/>
+                            <input type="tel" placeholder="Phone Number" defaultValue="+1 (555) 456-7890"
+                                   className="mb-2 sm:mb-0 px-3 py-2 border border-gray-300 rounded-md focus:ring-2
+                                   focus:ring-blue-500 focus:border-transparent"/>
                             <select
-                                className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                <option value="family" selected>Family</option>
+                                className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2
+                                focus:ring-blue-500 focus:border-transparent">
+                                <option value="family">Family</option>
                                 <option value="friend">Friend</option>
                                 <option value="colleague">Colleague</option>
                                 <option value="other">Other</option>

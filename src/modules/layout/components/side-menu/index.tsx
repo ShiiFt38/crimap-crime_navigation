@@ -9,7 +9,8 @@ export default function SideMenu() {
     const { isFilterOpen } = useMenu();
 
     return (
-        <div className={`sidebar ${isFilterOpen ? null : "collapsed" } fixed top-16 left-0 bottom-0 w-4/5 md:w-80 bg-white shadow-lg overflow-y-auto z-10`}>
+        <div className={`sidebar ${isFilterOpen ? null : "collapsed" } fixed top-16 left-0 bottom-0 w-4/5 md:w-80 
+        bg-white shadow-lg overflow-y-auto z-10`}>
 
             {/*Quick filters*/}
             <div className="p-4">
@@ -55,8 +56,13 @@ export default function SideMenu() {
                            <span>High</span>
                        </div>
                        <div className="relative">
-                           <div className="h-[8px] rounded-[4px] bg-gradient-to-r from-[#4ade80] to-[#f87171]"></div>
-                           <div id="crime-index-indicator" className="absolute top-[4px] w-[16px] h-[16px] rounded-[50%] bg-white border-[2px] border-solid border-[#1e40af] translate-x-[50%]"></div>
+                           <input
+                               type="range"
+                               min="0"
+                               max="12"
+                               className="w-full h-[8px] rounded-[4px] bg-gradient-to-r from-[#4ade80] to-[#f87171]"></input>
+                           {/*<div id="crime-index-indicator" className="absolute top-[4px] w-[16px] h-[16px] rounded-[50%]*/}
+                           {/* bg-white border-[2px] border-solid border-[#1e40af] translate-x-[50%]"></div>*/}
                        </div>
                        <div className="mt-2 text-center">
                            <span className="text-sm font-medium">Current Area: </span>

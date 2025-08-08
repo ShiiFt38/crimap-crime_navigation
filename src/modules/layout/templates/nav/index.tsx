@@ -32,8 +32,3 @@ export default function Nav() {
     )
 }
 
-// Possible brand names:
-// SecureJourney
-// WatchfulWay
-// SafEasy
-// USafety

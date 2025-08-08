@@ -1,6 +1,28 @@
+'use client'
+
 import { User } from "lucide-react"
+import { useState } from "react"
 
 export default function UserSettingsForm() {
+    const [userData, setUserData] = useState({
+        fullName: "",
+        email: "",
+        phoneNumber: "",
+    })
+
+    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+    }
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setUserData(prevFormData => ({
+            ...prevFormData,
+            [name]:value
+        }))
+        console.log(userData)
+    }
+
     return (
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
             <div className="flex justify-between items-center mb-6">
@@ -10,27 +32,35 @@ export default function UserSettingsForm() {
                 </div>
             </div>
 
-            <div className="space-y-4">
+            <form className="space-y-4" onSubmit={onSubmit}>
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-                    <input type="text" value="John Doe"
-                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"/>
+                    <input type="text" name="fullName" placeholder="Full Name"
+                           autoComplete="off" onChange={handleChange} value={userData.fullName}
+                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2
+                           focus:ring-blue-500 focus:border-transparent transition-all"/>
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-                    <input type="email" value="john.doe@email.com"
-                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"/>
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                    <input id="email" type="email" name="email" placeholder="Email Address"
+                           autoComplete="off" onChange={handleChange} value={userData.email}
+                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2
+                           focus:ring-blue-500 focus:border-transparent transition-all"/>
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
-                    <input type="tel" value="+1 (555) 123-4567"
-                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"/>
+                    <input type="tel" name="phoneNumber" placeholder="Phone Number" autoComplete="off"
+                           onChange={handleChange} value={userData.phoneNumber}
+                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2
+                           focus:ring-blue-500 focus:border-transparent transition-all"/>
                 </div>
-                <button
-                    className="w-full bg-[#B05216] hover:bg-[#4F2915] text-white font-medium py-3 px-4 rounded-lg transition-colors">
-                    Update Profile
-                </button>
-            </div>
+                <input
+                    type="submit"
+                    value="Update Profile"
+                    className="w-full bg-[#B05216] hover:bg-[#4F2915] text-white font-medium py-3 px-4 rounded-lg
+                     transition-colors"
+                />
+            </form>
         </div>
     )
 }

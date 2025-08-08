@@ -1,6 +1,28 @@
+'use client'
+
 import { Lock } from "lucide-react"
+import { useState } from "react";
 
 export default function PasswordForm() {
+    const [ passwordData, setPasswordData ] = useState({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+    })
+
+    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+    }
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target
+        setPasswordData((prevState) => ({
+            ...prevState,
+            [name]: value }))
+
+        console.log(passwordData)
+    }
+
     return (
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-6">
@@ -10,27 +32,27 @@ export default function PasswordForm() {
                 </div>
             </div>
 
-            <div className="space-y-4">
+            <form className="space-y-4" onSubmit={onSubmit}>
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
-                    <input type="password"
+                    <input type="password" name="currentPassword" onChange={handleChange} value={passwordData.currentPassword}
                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"/>
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">New Password</label>
-                    <input type="password"
+                    <input type="password" name="newPassword" onChange={handleChange} value={passwordData.newPassword}
                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"/>
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
-                    <input type="password"
+                    <input type="password" name="confirmPassword" onChange={handleChange} value={passwordData.confirmPassword}
                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"/>
                 </div>
                 <button
                     className="w-full bg-[#B05216] hover:bg-[#4F2915] text-white font-medium py-3 px-4 rounded-lg transition-colors">
                     Update Password
                 </button>
-            </div>
+            </form>
         </div>
     )
 }

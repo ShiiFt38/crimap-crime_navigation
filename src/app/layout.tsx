@@ -6,6 +6,7 @@ import Nav from "@/modules/layout/templates/nav";
 import SideMenu from "@/modules/layout/components/side-menu";
 import DrawerNav from "@/modules/layout/components/drawer-nav";
 import BottomNav from "@/modules/layout/components/bottom-nav";
+import React from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

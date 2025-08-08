@@ -1,6 +1,30 @@
+'use client'
+
 import { Bell } from "lucide-react";
+import { useState } from "react";
 
 export default function AlertsForm() {
+    const [ alertsData, setAlertsData ] = useState({
+        smsAlerts: false,
+        emailAlerts: false,
+        pushNotifications: false,
+        alertRadius: "",
+    })
+
+    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+    }
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value, type, checked } = e.target;
+        setAlertsData((prevState) => ({
+            ...prevState,
+            [name]: type === "checkbox" ? checked : value,
+        }))
+
+        console.log(alertsData)
+    }
+
     return (
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
             <div className="flex justify-between items-center mb-6">
@@ -10,16 +34,21 @@ export default function AlertsForm() {
                 </div>
             </div>
 
-            <div className="space-y-6">
+            <form onSubmit={onSubmit} className="space-y-6">
                 <div className="flex items-center justify-between">
                     <div>
                         <h4 className="font-medium text-gray-900">SMS Alerts</h4>
                         <p className="text-sm text-gray-600">Receive crime alerts via text message</p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" className="sr-only peer"/>
+                        <input type="checkbox" name="smsAlerts" className="sr-only peer" onChange={handleChange}
+                            checked={alertsData.smsAlerts}/>
                         <div
-                            className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                            className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4
+                            peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full
+                            peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px]
+                            after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full
+                            after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                     </label>
                 </div>
 
@@ -29,9 +58,14 @@ export default function AlertsForm() {
                         <p className="text-sm text-gray-600">Receive detailed crime reports via email</p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" checked className="sr-only peer"/>
+                        <input type="checkbox" name="emailAlerts" checked={alertsData.emailAlerts} className="sr-only peer"
+                            onChange={handleChange}/>
                         <div
-                            className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                            className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4
+                            peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full
+                            peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px]
+                            after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full
+                            after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                     </label>
                 </div>
 
@@ -41,28 +75,32 @@ export default function AlertsForm() {
                         <p className="text-sm text-gray-600">Instant alerts on your device</p>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" className="sr-only peer"/>
+                        <input type="checkbox" name="pushNotifications" className="sr-only peer" onChange={handleChange}
+                        checked={alertsData.pushNotifications}/>
                         <div
-                            className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                            className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4
+                            peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full
+                            peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px]
+                            after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full
+                            after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                     </label>
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Alert Radius (miles)</label>
-                    <input type="range" min="1" max="10" value="3"
-                           className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"/>
                     <div className="flex justify-between text-xs text-gray-500 mt-1">
                         <span>1 mile</span>
-                        <span id="radiusValue">3 miles</span>
+                        <span>{alertsData.alertRadius || "1"} miles</span>
                         <span>10 miles</span>
                     </div>
+                    <input type="range" name="alertRadius" min="1" max="10" value={alertsData.alertRadius} onChange={handleChange}
+                           className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"/>
                 </div>
 
                 <button
                     className="w-full bg-[#B05216] hover:bg-[#4F2915] text-white font-medium py-3 px-4 rounded-lg transition-colors">
                     Save Alert Preferences
                 </button>
-            </div>
+            </form>
         </div>
     )
 }
