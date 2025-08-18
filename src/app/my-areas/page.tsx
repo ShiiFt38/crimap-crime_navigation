@@ -1,3 +1,5 @@
+//TODO: Add a placeholder container for when there is no saved areas
+
 import {Plus} from "lucide-react";
 import AreaCard from "@/app/my-areas/components/AreaCard"
 

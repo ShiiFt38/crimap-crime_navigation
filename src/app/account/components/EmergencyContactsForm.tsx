@@ -11,7 +11,7 @@ export default function EmergencyContactsForm() {
                     <h3 className="text-lg font-semibold text-gray-900">Emergency Contacts</h3>
                 </div>
                 <button id="addContactBtn"
-                        className="flex flex-row bg-[#B05216] hover:bg-[#4F2915] text-white font-medium py-2 px-4 rounded-lg transition-colors">
+                        className="flex flex-row bg-[#B05216] hover:bg-[#4F2915] border-b-2 border-[#4F2915] text-white font-medium py-2 px-4 rounded-lg transition-colors">
                     <Plus className="mr-2" />Add Contact
                 </button>
             </div>
@@ -73,7 +73,7 @@ export default function EmergencyContactsForm() {
             </div>
 
             <button
-                className="w-full mt-4 bg-[#B05216] hover:bg-[#4F2915] text-white font-medium py-3 px-4 rounded-lg transition-colors">
+                className="w-full mt-4 bg-[#B05216] hover:bg-[#4F2915] border-b-2 border-[#4F2915] text-white font-medium py-3 px-4 rounded-lg transition-colors">
                 Save Emergency Contacts
             </button>
         </div>

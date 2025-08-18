@@ -49,7 +49,7 @@ export default function PasswordForm() {
                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"/>
                 </div>
                 <button
-                    className="w-full bg-[#B05216] hover:bg-[#4F2915] text-white font-medium py-3 px-4 rounded-lg transition-colors">
+                    className="w-full bg-[#B05216] hover:bg-[#4F2915] border-b-2 border-[#4F2915] text-white font-medium py-3 px-4 rounded-lg transition-colors">
                     Update Password
                 </button>
             </form>

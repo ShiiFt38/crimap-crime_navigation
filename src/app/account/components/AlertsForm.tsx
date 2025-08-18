@@ -97,7 +97,7 @@ export default function AlertsForm() {
                 </div>
 
                 <button
-                    className="w-full bg-[#B05216] hover:bg-[#4F2915] text-white font-medium py-3 px-4 rounded-lg transition-colors">
+                    className="w-full bg-[#B05216] hover:bg-[#4F2915] border-b-2 border-[#4F2915] text-white font-medium py-3 px-4 rounded-lg transition-colors">
                     Save Alert Preferences
                 </button>
             </form>
