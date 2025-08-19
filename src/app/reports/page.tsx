@@ -1,133 +1,63 @@
-// TODO: Change crime indicators to match styling in My areas page
-// TODO: Create components for submitted chats
+//TODO: Fix chat responiveness
 
-import { MapPin, EllipsisVertical } from "lucide-react";
+import CrimeReportCard from "@/app/reports/components/CrimeReportCard";
 
 export default function Reports(){
     return (
         <div id="reportsContent" className="max-w-md mx-auto px-4 py-4 space-y-4 md:max-w-4xl">
+            <CrimeReportCard
+                offence="Illegal possession of firearms and ammunition"
+                time="1 day ago"
+                description="Graffiti on bus stop shelter. Appears to be gang-related tags. City has been notified for cleanup."
+                location="Oak Street Bus Stop"
+                author="@concerned_citizen"
+                likes={15}
 
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-                <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center space-x-2">
-                        <span
-                            className="bg-safety-red text-white text-xs font-medium px-2 py-1 rounded-full">Theft</span>
-                        <span className="text-gray-500 text-xs">2 hours ago</span>
-                    </div>
-                    <button className="text-gray-400 hover:text-gray-600">
-                        <EllipsisVertical />
-                    </button>
-                </div>
+            />
+            <CrimeReportCard
+                offence="Robbery with aggravating circumstances"
+                time="3 hours ago"
+                description="Armed robbery at a convenience store reported at 7:30 AM today. Suspect fled on foot."
+                location="Main Street Market"
+                author="@citywatcher"
+                likes={22}
+            />
 
-                <p className="text-gray-800 text-sm mb-3">Bike stolen from outside Central Station. Black mountain bike,
-                    locked with chain lock that was cut.</p>
+            <CrimeReportCard
+                offence="Assault with the intent to inflict grievous bodily harm"
+                time="12 hours ago"
+                description="Incident reported at 10:30 PM last night involving a fight outside a bar. Victim hospitalized."
+                location="Downtown Pub, 3rd Avenue"
+                author="@nightpatrol"
+                likes={9}
+            />
 
-                <div className="bg-gray-100 rounded-lg p-3 mb-3">
-                    <div className="flex items-center text-gray-600 text-xs">
-                        <MapPin />
-                        Central Station, Main St
-                    </div>
-                </div>
+            <CrimeReportCard
+                offence="Burglary at residential premises"
+                time="2 days ago"
+                description="Break-in reported on Sunday, August 17. Jewelry and electronics stolen."
+                location="12 Elm Street"
+                author="@neighborhoodalert"
+                likes={7}
+            />
 
-                <div className="flex items-center justify-between">
-                    <span className="text-gray-500 text-xs">by @anonymous</span>
-                    <div className="flex items-center space-x-4">
-                        <button className="flex items-center space-x-1 text-gray-500 hover:text-safety-blue">
-                            <span>👍</span>
-                            <span className="text-xs">12</span>
-                        </button>
-                        <button className="text-gray-500 hover:text-safety-blue">
-                            <span>📌</span>
-                        </button>
-                        <button className="text-gray-500 hover:text-safety-blue">
-                            <span>🔗</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
+            <CrimeReportCard
+                offence="Drug-related crime"
+                time="30 minutes ago"
+                description="Suspicious activity near the park at 10:00 AM today. Possible drug deal observed."
+                location="Central Park East"
+                author="@safetyscanner"
+                likes={4}
+            />
 
-
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-                <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center space-x-2">
-                        <span
-                            className="bg-safety-orange text-white text-xs font-medium px-2 py-1 rounded-full">Assault</span>
-                        <span className="text-gray-500 text-xs">5 hours ago</span>
-                    </div>
-                    <button className="text-gray-400 hover:text-gray-600">
-                        <EllipsisVertical />
-                    </button>
-                </div>
-
-                <p className="text-gray-800 text-sm mb-3">Witnessed verbal altercation that escalated to pushing. Police
-                    were called and arrived quickly.</p>
-
-                <div className="bg-gray-100 rounded-lg p-3 mb-3">
-                    <div className="flex items-center text-gray-600 text-xs">
-                        <MapPin /> Park Avenue & 5th Street
-                    </div>
-                </div>
-
-                <div className="flex items-center justify-between">
-                    <span className="text-gray-500 text-xs">by @safetywatch</span>
-                    <div className="flex items-center space-x-4">
-                        <button className="flex items-center space-x-1 text-gray-500 hover:text-safety-blue">
-                            <span>👍</span>
-                            <span className="text-xs">8</span>
-                        </button>
-                        <button className="text-gray-500 hover:text-safety-blue">
-                            <span>📌</span>
-                        </button>
-                        <button className="text-gray-500 hover:text-safety-blue">
-                            <span>🔗</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-                <div className="flex items-start justify-between mb-3">
-                    <div className="flex items-center space-x-2">
-                        <span
-                            className="bg-yellow-500 text-white text-xs font-medium px-2 py-1 rounded-full">Vandalism</span>
-                        <span className="text-gray-500 text-xs">1 day ago</span>
-                    </div>
-                    <button className="text-gray-400 hover:text-gray-600">
-                        <EllipsisVertical />
-                    </button>
-                </div>
-
-                <p className="text-gray-800 text-sm mb-3">Graffiti on bus stop shelter. Appears to be gang-related tags.
-                    City has been notified for cleanup.</p>
-
-                {/*media thumbnail*/}
-                <div className="bg-gray-200 rounded-lg h-32 mb-3 flex items-center justify-center">
-                    <span className="w-8 h-8 text-gray-400"></span>
-                </div>
-
-                <div className="bg-gray-100 rounded-lg p-3 mb-3">
-                    <div className="flex items-center text-gray-600 text-xs">
-                        <MapPin /> Oak Street Bus Stop
-                    </div>
-                </div>
-
-                <div className="flex items-center justify-between">
-                    <span className="text-gray-500 text-xs">by @concerned_citizen</span>
-                    <div className="flex items-center space-x-4">
-                        <button className="flex items-center space-x-1 text-gray-500 hover:text-safety-blue">
-                            <span>👍</span>
-                            <span className="text-xs">15</span>
-                        </button>
-                        <button className="text-gray-500 hover:text-safety-blue">
-                            <span>📌</span>
-                        </button>
-                        <button className="text-gray-500 hover:text-safety-blue">
-                            <span>🔗</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
+            <CrimeReportCard
+                offence="Theft of motor vehicle"
+                time="6 hours ago"
+                description="Car stolen from parking lot at 4:30 AM. Black sedan, license plate reported."
+                location="City Hall Parking"
+                author="@trafficwatch"
+                likes={13}
+            />
         </div>
     )
 }

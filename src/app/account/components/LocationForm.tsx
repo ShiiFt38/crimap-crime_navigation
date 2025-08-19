@@ -1,3 +1,5 @@
+//TODO: Add the logic for the "Add contact" button, create a form for adding a contact
+
 'use client'
 
 import { House } from "lucide-react"

@@ -1,3 +1,5 @@
+//TODO: Turn the elements into controlled components
+
 import { Phone, Plus, Trash } from "lucide-react"
 
 export default function EmergencyContactsForm() {

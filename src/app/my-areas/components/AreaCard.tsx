@@ -1,3 +1,5 @@
+//TODO: Add color bottom border under buttons
+
 import RiskBadge from "@/app/my-areas/components/RiskBadge";
 import CrimeItem from "@/app/my-areas/components/CrimeItem";
 
@@ -27,11 +29,13 @@ export default function AreaCard({area, distance, crimeIndex}: AreaCardProps) {
                         <CrimeItem crime="Public Disturbance" timestamp="1 days ago, 11:15 PM" />
                     </div>
 
-                    <div className="flex space-x-2">
-                        <button className="flex-1 bg-[#B05216] hover:bg-[#4F2915] text-white py-2 px-3 rounded-lg text-sm font-medium">
+                    <div className="flex space-x-2 mt-4">
+                        <button className="flex-1 bg-[#B05216] hover:bg-[#4F2915] border-b-2 border-[#4F2915]
+                        text-white py-2 px-3 rounded-lg text-sm font-medium">
                             Get Updates
                         </button>
-                        <button className="flex-1 bg-gray-100 hover:bg-[#4F2915] hover:text-white text-gray-700 py-2 px-3 rounded-lg text-sm font-medium">
+                        <button className="flex-1 bg-gray-100 hover:bg-[#4F2915] border-b-2 border-[#4F2915]
+                        hover:text-white text-gray-700 py-2 px-3 rounded-lg text-sm font-medium">
                             Remove
                         </button>
                     </div>

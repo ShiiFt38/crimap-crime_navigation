@@ -1,3 +1,5 @@
+//TODO: Add a pointer cursor on the open and close button
+
 'use client'
 
 import Link from "next/link";
