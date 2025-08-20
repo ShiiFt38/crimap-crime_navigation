@@ -16,7 +16,7 @@ export default function CrimeInformationSection({offence, severity, onChange,}: 
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 space-y-4 space-x-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 space-y-4 ">
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Type of Crime *</label>
                     <select
@@ -42,7 +42,7 @@ export default function CrimeInformationSection({offence, severity, onChange,}: 
                         name="severity"
                         value={severity}
                         onChange={onChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-l"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                     >
                         <option value="">Select severity...</option>
                         <option value="Low - Minor incident">Low - Minor incident</option>

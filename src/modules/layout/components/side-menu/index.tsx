@@ -1,8 +1,8 @@
 'use client'
 
-import Image from "next/image";
 import { useMenu } from "@/modules/layout/providers/LayoutClientWrapper";
-import {Cctv, BadgeInfo, History, Badge} from "lucide-react";
+import { BadgeInfo, History, Badge} from "lucide-react";
+import Link from "next/link";
 
 export default function SideMenu() {
     // consuming state values form context provider
@@ -75,7 +75,7 @@ export default function SideMenu() {
             <div className="mb-6">
                 <div className="flex justify-between items-center mb-3">
                     <h2 className="text-lg font-semibold">Latest Reports</h2>
-                    <button className="text-sm text-blue-600 hover:text-blue-800">View All</button>
+                    <Link href="/reports" className="text-sm text-[#B05216] hover:text-[#4F2915] cursor-pointer">View All</Link>
                 </div>
                 <div className="space-y-3">
                     <div className="bg-white border border-gray-200 rounded-lg p-3 shadow-sm">
@@ -108,11 +108,10 @@ export default function SideMenu() {
             </div>
 
             {/*Report Button*/}
-            <button className="w-full bg-[#B05216] hover:bg-[#4F2915] border-b-2 border-[#4F2915]
-            text-white font-medium py-2 px-4 rounded-lg flex items-center mb-24 justify-center">
-                <Cctv className="mr-4"/>
+            <Link href="/reports/report-form" className="px-10 mx-auto bg-[#B05216] active:bg-[#4F2915] border-b-2 border-[#4F2915]
+            text-white font-medium py-2 rounded-lg flex items-center mb-24 justify-center text-sm cursor-pointer">
                 Report Incident
-            </button>
+            </Link>
         </div>
         </div>
     )

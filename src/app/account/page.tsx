@@ -1,3 +1,5 @@
+//TODO: Add focus rings on form inputs for real time form verification
+
 import UserSettingsForm from "@/app/account/components/UserSettingsForm";
 import PasswordForm from "@/app/account/components/PasswordForm";
 import EmergencyContactsForm from "@/app/account/components/EmergencyContactsForm";

@@ -3,6 +3,7 @@
 
 import { Phone, CirclePlus, Trash } from "lucide-react"
 import { useState } from "react";
+import SubmitBtn from "@/app/account/components/SubmitBtn";
 
 export default function EmergencyContactsForm() {
     const [emergencyData, setEmergencyData] = useState({
@@ -66,16 +67,11 @@ export default function EmergencyContactsForm() {
                         </div>
                     </div>
                     <button
-                        className="p-2 rounded-full transition-colors">
+                        className="p-2 rounded-full cursor-pointer active:text-[#4F2915]">
                         <CirclePlus size={16} />
                     </button>
                 </div>
-                <input
-                    type="submit"
-                    value="Save Emergency Contacts"
-                    className="w-full bg-[#B05216] hover:bg-[#4F2915] border-b-2 border-[#4F2915] text-white
-                font-medium py-3 px-4 rounded-lg"
-                />
+                <SubmitBtn name={"Save Emergency Contacts"}/>
             </form>
         </div>
     )

@@ -2,6 +2,7 @@
 
 import { Bell } from "lucide-react";
 import { useState } from "react";
+import SubmitBtn from "@/app/account/components/SubmitBtn";
 
 export default function AlertsForm() {
     const [ alertsData, setAlertsData ] = useState({
@@ -95,10 +96,7 @@ export default function AlertsForm() {
                            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"/>
                 </div>
 
-                <button
-                    className="w-full bg-[#B05216] hover:bg-[#4F2915] border-b-2 border-[#4F2915] text-white font-medium py-3 px-4 rounded-lg transition-colors">
-                    Save Alert Preferences
-                </button>
+                <SubmitBtn name={"Save Alert Preferences"}/>
             </form>
         </div>
     )

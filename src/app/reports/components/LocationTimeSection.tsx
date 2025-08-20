@@ -64,8 +64,7 @@ export default function LocationTimeSection({ useCurrentLocation, location, date
                         name="date"
                         onChange={onChange}
                         value={date}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2
-                                focus:ring-safety-blue focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                     />
                 </div>
 
@@ -76,8 +75,7 @@ export default function LocationTimeSection({ useCurrentLocation, location, date
                         name="time"
                         onChange={onChange}
                         value={time}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2
-                                focus:ring-safety-blue focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                     />
                 </div>
             </div>

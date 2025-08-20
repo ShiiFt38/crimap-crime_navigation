@@ -2,6 +2,7 @@
 
 import { Lock } from "lucide-react"
 import { useState } from "react";
+import SubmitBtn from "@/app/account/components/SubmitBtn";
 
 export default function PasswordForm() {
     const [ passwordData, setPasswordData ] = useState({
@@ -12,6 +13,7 @@ export default function PasswordForm() {
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
+        console.log(passwordData)
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -19,8 +21,6 @@ export default function PasswordForm() {
         setPasswordData((prevState) => ({
             ...prevState,
             [name]: value }))
-
-        console.log(passwordData)
     }
 
     return (
@@ -48,10 +48,7 @@ export default function PasswordForm() {
                     <input type="password" name="confirmPassword" onChange={handleChange} value={passwordData.confirmPassword}
                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"/>
                 </div>
-                <button
-                    className="w-full bg-[#B05216] hover:bg-[#4F2915] border-b-2 border-[#4F2915] text-white font-medium py-3 px-4 rounded-lg transition-colors">
-                    Update Password
-                </button>
+                <SubmitBtn name={"Update Password"}/>
             </form>
         </div>
     )

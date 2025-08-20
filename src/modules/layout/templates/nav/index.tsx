@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { usePathname } from "next/navigation";
 import { navLinks } from "@/lib/nav-links";
 import FilterButton from "@/modules/layout/components/filter-button";
@@ -17,13 +18,15 @@ export default function Nav() {
                     <FilterButton style="hidden md:flex flex-1 basis-0 h-full "/>
 
                     {/*logo*/}
+                    <Link href="/" className="flex flex-row">
                         <div className="flex items-center h-full gap-x-2 uppercase">
                             <h1 className="md:hidden flex text-xl font-bold text-white">{
                                 navLinks.map(e => src == e.page ? `${e.name}` : null)
                             }</h1>
                             <h1 id="brand-name" className="hidden md:flex text-2xl font-bold text-gray-100">CRIMAP</h1>
                         </div>
-                    <Fingerprint id="brand-logo" className="flex ml-4 text-[#B05216]"/>
+                        <Fingerprint id="brand-logo" className="flex ml-4 my-auto text-[#B05216]"/>
+                    </Link>
 
                     <NavButton style="gap-x-6 h-full flex-1 basis-0" toggle={false}/>
                 </nav>

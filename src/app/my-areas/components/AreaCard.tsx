@@ -30,12 +30,12 @@ export default function AreaCard({area, distance, crimeIndex}: AreaCardProps) {
                     </div>
 
                     <div className="flex space-x-2 mt-4">
-                        <button className="flex-1 bg-[#B05216] hover:bg-[#4F2915] border-b-2 border-[#4F2915]
-                        text-white py-2 px-3 rounded-lg text-sm font-medium">
+                        <button className="flex-1 bg-[#B05216] active:bg-[#4F2915] cursor-pointer border-b-2
+                        border-[#4F2915] text-white py-2 px-3 rounded-lg text-sm font-medium">
                             Get Updates
                         </button>
-                        <button className="flex-1 bg-gray-100 hover:bg-[#4F2915] border-b-2 border-[#4F2915]
-                        hover:text-white text-gray-700 py-2 px-3 rounded-lg text-sm font-medium">
+                        <button className="flex-1 bg-gray-100 active:bg-[#4F2915] cursor-pointer border-b-2
+                        border-[#4F2915] active:text-white text-gray-700 py-2 px-3 rounded-lg text-sm font-medium">
                             Remove
                         </button>
                     </div>

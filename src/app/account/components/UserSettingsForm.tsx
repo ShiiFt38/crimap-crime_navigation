@@ -2,6 +2,7 @@
 
 import { User } from "lucide-react"
 import { useState } from "react"
+import SubmitBtn from "@/app/account/components/SubmitBtn";
 
 export default function UserSettingsForm() {
     const [userData, setUserData] = useState({
@@ -11,7 +12,8 @@ export default function UserSettingsForm() {
     })
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
+        e.preventDefault();
+        console.log(userData)
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,7 +22,6 @@ export default function UserSettingsForm() {
             ...prevFormData,
             [name]:value
         }))
-        console.log(userData)
     }
 
     return (
@@ -37,29 +38,21 @@ export default function UserSettingsForm() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
                     <input type="text" name="fullName" placeholder="Full Name"
                            autoComplete="off" onChange={handleChange} value={userData.fullName}
-                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2
-                           focus:ring-blue-500 focus:border-transparent transition-all"/>
+                           className="w-full px-4 py-3 border border-gray-300 rounded-lg"/>
                 </div>
                 <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
                     <input id="email" type="email" name="email" placeholder="Email Address"
                            autoComplete="off" onChange={handleChange} value={userData.email}
-                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2
-                           focus:ring-blue-500 focus:border-transparent transition-all"/>
+                           className="w-full px-4 py-3 border border-gray-300 rounded-lg"/>
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
                     <input type="tel" name="phoneNumber" placeholder="Phone Number" autoComplete="off"
                            onChange={handleChange} value={userData.phoneNumber}
-                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2
-                           focus:ring-blue-500 focus:border-transparent transition-all"/>
+                           className="w-full px-4 py-3 border border-gray-300 rounded-lg"/>
                 </div>
-                <input
-                    type="submit"
-                    value="Update Profile"
-                    className="w-full bg-[#B05216] hover:bg-[#4F2915] border-b-2 border-[#4F2915] text-white font-medium py-3 px-4 rounded-lg
-                     transition-colors"
-                />
+                <SubmitBtn name={"Update Profile"}/>
             </form>
         </div>
     )

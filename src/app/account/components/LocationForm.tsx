@@ -4,6 +4,7 @@
 
 import { House } from "lucide-react"
 import { useState } from "react";
+import SubmitBtn from "@/app/account/components/SubmitBtn";
 
 export default function LocationForm(){
     const [locationData, setlocationData] = useState({
@@ -12,7 +13,8 @@ export default function LocationForm(){
     })
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
+        e.preventDefault();
+        console.log(locationData);
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,8 +23,6 @@ export default function LocationForm(){
             ...prevState,
             [name]: type === "checkbox" ? checked : value,
         }))
-        
-        console.log(locationData)
     }
 
     return (
@@ -39,7 +39,7 @@ export default function LocationForm(){
                     <label className="block text-sm font-medium text-gray-700 mb-2">Home Address</label>
                     <input type="text" name="address" placeholder="123 Main Street, New York, NY 10001"
                            onChange={handleChange} value={locationData.address}
-                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"/>
+                           className="w-full px-4 py-3 border border-gray-300 rounded-lg"/>
                 </div>
                 <div className="flex items-center space-x-3">
                     <input type="checkbox" name="currentLocation" id="useCurrentLocation" onChange={handleChange}
@@ -48,10 +48,7 @@ export default function LocationForm(){
                     <label htmlFor="useCurrentLocation" className="text-sm text-gray-700">Use current location
                         as default</label>
                 </div>
-                <button
-                    className="w-full bg-[#B05216] hover:bg-[#4F2915] border-b-2 border-[#4F2915] text-white font-medium py-3 px-4 rounded-lg transition-colors">
-                    <i className="fas fa-crosshairs mr-2"></i>Update Location
-                </button>
+                <SubmitBtn name={"Update Location"}/>
             </form>
         </div>
     )

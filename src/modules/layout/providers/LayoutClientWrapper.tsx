@@ -19,7 +19,7 @@ export const useMenu = () => {
 }
 
 export function MenuProvider({ children }: { children: ReactNode }) {
-    const [isFilterOpen, setIsFilterOpen] = useState(true)
+    const [isFilterOpen, setIsFilterOpen] = useState(false)
     const [isDrawerOpen, setDrawerOpen] = useState(false)
 
     const toggleFilter = () => setIsFilterOpen(prev => !prev)
