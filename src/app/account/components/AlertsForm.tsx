@@ -13,6 +13,7 @@ export default function AlertsForm() {
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        console.log(alertsData)
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -21,8 +22,6 @@ export default function AlertsForm() {
             ...prevState,
             [name]: type === "checkbox" ? checked : value,
         }))
-
-        console.log(alertsData)
     }
 
     return (

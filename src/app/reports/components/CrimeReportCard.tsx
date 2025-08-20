@@ -1,3 +1,5 @@
+//TODO: Add a full details list that is accessible by the menu-list button
+
 import { MapPin, EllipsisVertical, ThumbsUp, Pin } from "lucide-react";
 import OffenceBadge from "@/app/reports/components/OffenceBadge";
 import Image from "next/link";
@@ -13,7 +15,8 @@ interface ReportCardProps {
 }
 
 export default function CrimeReportCard({offence, time, description, location, author, likes, image,
-                                        } :ReportCardProps) {
+                                        } :ReportCardProps)
+{
     return (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
             <div className="flex items-start justify-between mb-3">
@@ -21,7 +24,7 @@ export default function CrimeReportCard({offence, time, description, location, a
                     <OffenceBadge offence={offence} />
                     <span className="text-gray-500 text-xs">{time}</span>
                 </div>
-                <button className="text-gray-400 hover:text-gray-600">
+                <button className="menu-list text-gray-400 hover:text-gray-600">
                     <EllipsisVertical />
                 </button>
             </div>
@@ -50,11 +53,11 @@ export default function CrimeReportCard({offence, time, description, location, a
                 <span className="text-gray-500 text-xs">by {author}</span>
                 <div className="flex items-center space-x-4">
                     <button className="flex items-center space-x-1 text-gray-500 hover:text-safety-blue">
-                        <ThumbsUp size={12}/>
+                        <ThumbsUp size={14}/>
                         <span className="text-xs">{likes}</span>
                     </button>
                     <button className="text-gray-500 hover:text-safety-blue">
-                        <Pin />
+                        <Pin size={14} />
                     </button>
                     <button className="text-gray-500 hover:text-safety-blue">
                         <span>🔗</span>

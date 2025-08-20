@@ -1,10 +1,10 @@
-//TODO: Fix chat responiveness
+//TODO: Fix chat responsiveness
 
 import CrimeReportCard from "@/app/reports/components/CrimeReportCard";
 
 export default function Reports(){
     return (
-        <div id="reportsContent" className="max-w-md mx-auto px-4 py-4 space-y-4 md:max-w-4xl">
+        <div id="reportsContent" className="max-w-md mx-auto px-4 py-10 space-y-4 md:max-w-4xl">
             <CrimeReportCard
                 offence="Illegal possession of firearms and ammunition"
                 time="1 day ago"

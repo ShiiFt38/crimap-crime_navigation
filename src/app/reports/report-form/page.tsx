@@ -31,15 +31,15 @@ export default function ReportForm(){
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement
         | HTMLTextAreaElement>) => {
+
         const { name, value, type, checked } = e.target;
         setFormData((prevFormData) => ({
             ...prevFormData,
             [name]: type === "checkbox" ? checked : value,
-            useCurrentLocation: !prevFormData.useCurrentLocation,
         }))
     }
     return (
-        <div id="submitContent" className="max-w-4xl mx-auto px-4 py-6">
+        <div id="submitContent" className="max-w-4xl mx-auto px-4 py-10">
             <form className="space-y-8" onSubmit={onSubmit}>
                 {/*Crime Information Section*/}
                 <CrimeInformationSection
@@ -56,11 +56,22 @@ export default function ReportForm(){
                     onChange={handleChange}/>
 
                 {/*Details & Evidence Section*/}
-                <DetailsEvidenceSection />
+                <DetailsEvidenceSection
+                    description={formData.description}
+                    witnesses={formData.witnesses}
+                    policeContacted={formData.policeContacted}
+                    image={formData.image}
+                    onChange={handleChange}/>
 
                 {/*Privacy & Submission Section*/}
-                <PrivacySubmissionSection />
-                <div className="mt-8 flex flex-col sm:flex-row gap-4">
+                <PrivacySubmissionSection
+                    anonymous={formData.anonymous}
+                    termsConfirmation={formData.termsConfirmation}
+                    contactEmail={formData.contactEmail}
+                    contactPhone={formData.contactPhone}
+                    onChange={handleChange}/>
+
+                <div className="mt-8 pb-12 flex flex-col sm:flex-row gap-4">
                     <input
                         type="submit"
                         value="Submit Crime Report"

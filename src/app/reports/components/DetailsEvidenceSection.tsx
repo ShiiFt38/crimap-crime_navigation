@@ -32,20 +32,17 @@ export default function DetailsEvidenceSection({ description, witnesses, policeC
                         onChange={onChange}
                         value={description}
                         placeholder="Describe what happened in detail. Include any relevant information about suspects, vehicles, or other important details..."
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-safety-blue focus:border-transparent resize-none"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                     ></textarea>
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2"
-                    >Witnesses Present</label
-                    >
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Witnesses Present</label>
                     <select
                         name="witnesses"
                         onChange={onChange}
                         value={witnesses}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2
-                        focus:ring-safety-blue focus:border-transparent"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                     >
                         <option>Select...</option>
                         <option>Yes - Multiple witnesses</option>

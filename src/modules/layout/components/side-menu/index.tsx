@@ -108,8 +108,8 @@ export default function SideMenu() {
             </div>
 
             {/*Report Button*/}
-            <button className="w-full bg-[#B05216] hover:bg-[#4F2915] text-white font-medium py-2 px-4
-            rounded-lg flex items-center mb-24 justify-center">
+            <button className="w-full bg-[#B05216] hover:bg-[#4F2915] border-b-2 border-[#4F2915]
+            text-white font-medium py-2 px-4 rounded-lg flex items-center mb-24 justify-center">
                 <Cctv className="mr-4"/>
                 Report Incident
             </button>
