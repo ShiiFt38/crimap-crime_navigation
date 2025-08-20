@@ -1,4 +1,4 @@
-import {BookText, ImageUp} from "lucide-react";
+import {BookText, ImageUp, Lock} from "lucide-react";
 
 interface DetailsEvidenceProps {
     description: string;
@@ -11,17 +11,14 @@ interface DetailsEvidenceProps {
 export default function DetailsEvidenceSection({ description, witnesses, policeContacted, image, onChange }: DetailsEvidenceProps) {
     return (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <div className="flex justify-between items-center">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                    Details & Evidence
-                </h2>
-                <div className="py-[0.25rem] px-[0.75rem] bg-emerald-200 rounded-lg flex items-center
-                           justify-center mr-4">
-                    <BookText size={16} className="text-emerald-600"/>
+            <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-semibold text-gray-900">Details & Evidence</h3>
+                <div className="py-[0.25rem] px-[0.75rem] bg-emerald-100 rounded-lg flex items-center justify-center mr-4">
+                    <BookText size={16} className="text-emerald-600 text-xl" />
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 space-y-6">
                 <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-2"
                     >Description</label
@@ -53,9 +50,7 @@ export default function DetailsEvidenceSection({ description, witnesses, policeC
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2"
-                    >Police Contacted</label
-                    >
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Police Contacted</label>
                     <select
                         name="policeContacted"
                         onChange={onChange}

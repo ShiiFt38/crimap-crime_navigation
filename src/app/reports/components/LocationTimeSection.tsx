@@ -1,4 +1,4 @@
-import {Check, MapPin, Ban } from "lucide-react";
+import {Check, MapPin, Ban, Lock} from "lucide-react";
 
 interface LocationTimeSectionProps {
     useCurrentLocation: boolean;
@@ -11,13 +11,10 @@ interface LocationTimeSectionProps {
 export default function LocationTimeSection({ useCurrentLocation, location, date, time, onChange }: LocationTimeSectionProps){
     return(
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-            <div className="flex justify-between items-center">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                    Location & Time
-                </h2>
-                <div className="py-[0.25rem] px-[0.75rem] bg-gray-200 rounded-lg flex items-center
-                           justify-center mr-4">
-                    <MapPin size={16} className="text-gray-600"/>
+            <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-semibold text-gray-900">Location & Time</h3>
+                <div className="py-[0.25rem] px-[0.75rem] bg-gray-200 rounded-lg flex items-center justify-center mr-4">
+                    <MapPin size={16} className="text-gray-600 text-xl" />
                 </div>
             </div>
 
