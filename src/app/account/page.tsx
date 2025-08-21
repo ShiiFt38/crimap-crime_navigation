@@ -9,7 +9,7 @@ import {TriangleAlert, Phone, Share2} from "lucide-react"
 
 export default function Settings() {
     return (
-        <main className="flex-grow bg-gray-100">
+        <main className="flex-grow bg-gray-100 min-h-[100vh] pb-14">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">Account Settings</h2>
                 <p className="text-gray-600">Manage your personal safety preferences and account details</p>
@@ -45,7 +45,7 @@ export default function Settings() {
                         className="flex flex-row justify-center bg-red-400 bg-opacity-20 hover:bg-opacity-30
                         backdrop-blur-sm border border-white border-opacity-30
                         text-white font-medium py-3 px-4 rounded-lg transition-all">
-                        <Phone className="mr-2"/>Call 911
+                        <Phone className="mr-2"/>Call 10111
                     </button>
                     <button
                         className="flex flex-row justify-center bg-red-400 bg-opacity-20 hover:bg-opacity-30

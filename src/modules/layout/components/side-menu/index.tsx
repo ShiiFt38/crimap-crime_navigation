@@ -1,3 +1,5 @@
+//TODO: Implement swipe to close feature
+
 'use client'
 
 import { useMenu } from "@/modules/layout/providers/LayoutClientWrapper";

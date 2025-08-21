@@ -21,6 +21,7 @@ export default function Reports(){
                 location="Main Street Market"
                 author="@citywatcher"
                 likes={22}
+                image="https://placehold.co/600x400"
             />
 
             <CrimeReportCard
@@ -30,6 +31,7 @@ export default function Reports(){
                 location="Downtown Pub, 3rd Avenue"
                 author="@nightpatrol"
                 likes={9}
+                image="https://placehold.co/600x400"
             />
 
             <CrimeReportCard

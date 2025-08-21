@@ -7,7 +7,7 @@ export default function ReportsLayout({children}: {children: React.ReactNode}) {
     const src = usePathname();
 
     return (
-        <main className="flex-grow bg-gray-100">
+        <main className="flex-grow bg-gray-100 min-h-[100vh]">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                 <div className="fixed bg-white rounded-lg shadow-sm mb-6 ">
                     <div className="flex overflow-x-auto scrollbar-hide">

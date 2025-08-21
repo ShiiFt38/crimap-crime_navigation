@@ -1,6 +1,6 @@
 export default function Emergency() {
     return (
-        <main className="flex-grow bg-gray-100">
+        <main className="flex-grow bg-gray-100 min-h-[100vh]">
         </main>
     )
 }

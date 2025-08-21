@@ -5,7 +5,7 @@ import AreaCard from "@/app/my-areas/components/AreaCard"
 
 export default function MyAreas() {
     return (
-        <main className="flex-grow bg-gray-100">
+        <main className="flex-grow min-h-[100vh] bg-gray-100">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
                 <div className="flex items-center justify-between mb-6">
                     <h1 className="text-2xl font-bold text-gray-900">My Areas</h1>
@@ -17,14 +17,13 @@ export default function MyAreas() {
                 </div>
 
                 {/*Area cards*/}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-14">
 
-                    <AreaCard area="Downtown" distance={1.2} crimeIndex={3}/>
-                    <AreaCard area="Riverside Park" distance={2.6} crimeIndex={6}/>
-                    <AreaCard area="Central Station" distance={3.2} crimeIndex={2}/>
-                    <AreaCard area="Shopping Mall" distance={4.3} crimeIndex={10}/>
+                    <AreaCard area="Ekhuruleni District" distance={1.2} crimeIndex={3}/>
+                    <AreaCard area="Westrand District" distance={2.6} crimeIndex={6}/>
+                    <AreaCard area="Uthukela District" distance={3.2} crimeIndex={2}/>
+                    <AreaCard area="Nkangala District" distance={4.3} crimeIndex={10}/>
                 </div>
-
             </div>
         </main>
     )

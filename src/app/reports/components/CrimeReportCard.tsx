@@ -34,10 +34,7 @@ export default function CrimeReportCard({offence, time, description, location, a
             {image && (
                 <div className="image bg-gray-200 rounded-lg h-32 mb-3 flex items-center justify-center">
                     <Image
-                        src={image}
-                        alt="Crime report media"
-                        width={300}
-                        height={128}
+                        href={image}
                         className="object-cover w-full h-32"
                     />
                 </div>

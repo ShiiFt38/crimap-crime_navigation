@@ -12,7 +12,8 @@ interface DrawerLinkProps {
 export default function DrawerLink({ page,icon: Icon, iconName, isActive, iconStyle }: DrawerLinkProps) {
 
     return (
-        <Link href={page} className={`hidden md:flex p-3 rounded-lg hover:bg-[#8F9C68] ${isActive && "bg-[#8F9C68]"}`}>
+        <Link href={page} className={`hidden md:flex group text-sm p-3 rounded-lg duration-500 
+        hover:bg-[#8F9C68] ${isActive && "bg-[#8F9C68]"}`}>
             <Icon className={iconStyle}/>{iconName}
         </Link>
     )

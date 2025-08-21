@@ -30,10 +30,11 @@ export default function DrawerNav(){
                             iconName={e.name}
                             page={e.page}
                             isActive={src == e.page}
-                            iconStyle={`mr-2 w-4 h-4 flex-shrink-0 ${src == e.page ? "text-[#1E4B26]" : "text-white"}`}/>
+                            iconStyle={`mr-2 w-4 h-4 flex-shrink-0 group-active:text-[#1E4B26] duration-300 
+                                ${src == e.page ? "text-[#1E4B26]" : "text-white"}`}/>
                     ))}
                     <Link href="/settings" className={`flex p-3 rounded-lg align-middle hover:bg-[#8F9C68] 
-                        ${src == "/settings" ? "bg-[#8F9C68]" : null}`}>
+                        ${src == "/settings" && "bg-[#8F9C68]"}`}>
                         <Bolt className={`mr-2 w-4 h-4 flex-shrink-0 ${src == "/settings" ? "text-[#1E4B26]" : 
                             "text-white"}`}/>Settings
                     </Link>
