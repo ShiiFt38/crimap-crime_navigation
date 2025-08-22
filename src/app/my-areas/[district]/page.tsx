@@ -87,14 +87,6 @@ export default function DistrictPage() {
         router.push("/my-areas");
     }
 
-    const zoomIn = () => {
-        alert('Zooming in on map...');
-    };
-
-    const zoomOut = () => {
-        alert('Zooming out on map...');
-    };
-
     return (
         <div className="bg-gray-100 min-h-screen pb-14 font-inter">
             <style jsx global>{`
@@ -125,12 +117,12 @@ export default function DistrictPage() {
 
                 {/* Map Controls */}
                 <div className="absolute top-4 right-4 flex flex-col space-y-2">
-                    <button onClick={zoomIn} className="bg-white p-2 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                    <button className="bg-white p-2 rounded-lg shadow-md hover:shadow-lg transition-shadow">
                         <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                         </svg>
                     </button>
-                    <button onClick={zoomOut} className="bg-white p-2 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+                    <button className="bg-white p-2 rounded-lg shadow-md hover:shadow-lg transition-shadow">
                         <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M18 12H6" />
                         </svg>
