@@ -20,11 +20,11 @@ export default function CrimeReportCard({offence, time, description, location, a
     return (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
             <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 w-7/8">
                     <OffenceBadge offence={offence} />
                     <span className="text-gray-500 text-xs">{time}</span>
                 </div>
-                <button className="menu-list text-gray-400 hover:text-gray-600">
+                <button className="flex justify-end menu-list text-gray-400 w-1/8 hover:text-gray-600">
                     <EllipsisVertical />
                 </button>
             </div>
@@ -55,9 +55,6 @@ export default function CrimeReportCard({offence, time, description, location, a
                     </button>
                     <button className="text-gray-500 hover:text-safety-blue">
                         <Pin size={14} />
-                    </button>
-                    <button className="text-gray-500 hover:text-safety-blue">
-                        <span>🔗</span>
                     </button>
                 </div>
             </div>

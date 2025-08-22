@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname } from "next/navigation";
 import { navLinks } from "@/lib/nav-links";
 import FilterButton from "@/modules/layout/components/filter-button";
-import {EllipsisVertical, Fingerprint, Menu, X} from "lucide-react"
+import {EllipsisVertical, Fingerprint, Menu} from "lucide-react"
 import { useMenu } from "@/modules/layout/providers/LayoutClientWrapper";
 
 export default function Nav() {
@@ -15,8 +15,7 @@ export default function Nav() {
         <div className="sticky top-0 z-20">
             <header className="relative h-16 mx-auto duration-200 bg-[#1E4B26] shadow-md">
                 <nav className="content-container flex items-center justify-between w-full h-full text-small-regular px-4">
-
-                    <FilterButton style="hidden md:flex h-full "/>
+                    <FilterButton style="hidden md:flex"/>
 
                     {/*logo*/}
                     <Link href="/" className="flex flex-row justify-self-center">

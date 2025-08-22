@@ -3,12 +3,13 @@ import { useMenu } from "@/modules/layout/providers/LayoutClientWrapper"
 
 export default function FilterButton({style}: { style?: string}) {
     const { isFilterOpen, toggleFilter } = useMenu();
-    const iconStyle = "cursor-pointer rounded-full m-auto md:m-2 flex-shrink-0 text-white hover:text-[#8F9C68]"
+    const iconStyle = "rounded-full m-auto md:m-2 flex-shrink-0 text-white group-active:text-[#1E4B26]"
 
     return (
-        <div className={`flex items-center ${style}`} onClick={toggleFilter}>
+        <div className={`flex group rounded-full cursor-pointer hover:bg-[#8F9C68] items-center ${style}`}
+             onClick={toggleFilter}>
             <button className="focus:outline-none rounded-full ">
-                {isFilterOpen ? <FunnelX className={iconStyle}/> : <Funnel className={iconStyle}/>}
+                {isFilterOpen ? <FunnelX size={20} className={iconStyle}/> : <Funnel size={20} className={iconStyle}/>}
             </button>
         </div>
     )

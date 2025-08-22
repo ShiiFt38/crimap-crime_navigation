@@ -11,14 +11,12 @@ export default function Settings() {
     return (
         <main className="flex-grow bg-gray-100 min-h-[100vh] pb-14">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">Account Settings</h2>
+                <h1 className="text-2xl font-bold text-gray-900">Account Settings</h1>
                 <p className="text-gray-600">Manage your personal safety preferences and account details</p>
             </div>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 ">
-            {/*Page Title*/}
-
+            {/*max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6*/}
             {/*Settings Grid*/}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/*User Settings Card*/}
                 <UserSettingsForm />
 
@@ -32,30 +30,29 @@ export default function Settings() {
                 <LocationForm />
 
                 <AlertsForm />
-            </div>
 
-            {/*Emergency Action*/}
-            <div className="mt-8 bg-gradient-to-r from-red-500 to-red-600 rounded-xl shadow-lg p-6 text-white">
-                <div className="flex items-center mb-4">
-                    <TriangleAlert className="text-2xl mr-3" />
-                    <h3 className="text-lg font-semibold">Emergency Actions</h3>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <button
-                        className="flex flex-row justify-center bg-red-400 bg-opacity-20 hover:bg-opacity-30
+                {/*Emergency Action*/}
+                <div className="col-span-2 mt-8 bg-gradient-to-r from-red-500 to-red-600 rounded-xl shadow-lg p-6 text-white">
+                    <div className="flex items-center mb-4">
+                        <TriangleAlert className="text-2xl mr-3" />
+                        <h3 className="text-lg font-semibold">Emergency Actions</h3>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <button
+                            className="flex flex-row justify-center bg-red-400 bg-opacity-20 hover:bg-opacity-30
                         backdrop-blur-sm border border-white border-opacity-30
                         text-white font-medium py-3 px-4 rounded-lg transition-all">
-                        <Phone className="mr-2"/>Call 10111
-                    </button>
-                    <button
-                        className="flex flex-row justify-center bg-red-400 bg-opacity-20 hover:bg-opacity-30
+                            <Phone className="mr-2"/>Call 10111
+                        </button>
+                        <button
+                            className="flex flex-row justify-center bg-red-400 bg-opacity-20 hover:bg-opacity-30
                         backdrop-blur-sm border border-white border-opacity-30
                         text-white font-medium py-3 px-4 rounded-lg transition-all">
-                        <Share2 className="mr-2"/>Share Location
-                    </button>
-                </div>
+                            <Share2 className="mr-2"/>Share Location
+                        </button>
+                    </div>
             </div>
-        </div>
+            </div>
         </main>
     )
 }

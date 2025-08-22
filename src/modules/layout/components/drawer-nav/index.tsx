@@ -14,7 +14,7 @@ export default function DrawerNav(){
 
     return (
         <>
-            <div className={`${!isDrawerOpen && "translate-x-full"} fixed top-0 right-0 h-full w-3/4 max-w-xs 
+            <div className={`${!isDrawerOpen && "translate-x-full"} duration-300 transition ease-in-out fixed top-0 right-0 h-full w-3/4 max-w-xs 
             bg-[#1E4B26] text-white shadow-lg z-30 p-6`}>
                 <button className="flex group items-center justify-self-end" onClick={toggleDrawer}>
                     <div className="focus:outline-none p-2 rounded-full active:bg-[#8F9C68]
