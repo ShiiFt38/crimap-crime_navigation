@@ -20,7 +20,7 @@ export default function CrimeReportCard({offence, time, description, location, a
     return (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
             <div className="flex items-start justify-between mb-3">
-                <div className="flex items-center space-x-2 w-7/8">
+                <div className="flex items-center space-x-2 w-fit">
                     <OffenceBadge offence={offence} />
                     <span className="text-gray-500 text-xs">{time}</span>
                 </div>
@@ -40,7 +40,7 @@ export default function CrimeReportCard({offence, time, description, location, a
                 </div>
             )}
 
-            <div className="bg-gray-100 rounded-lg p-3 mb-3">
+            <div className="bg-gray-100 rounded-lg p-3 mb-3 w-1/2">
                 <div className="flex items-center text-gray-600 text-xs">
                     <MapPin size={14} className="mr-4"/> {location}
                 </div>
@@ -48,12 +48,12 @@ export default function CrimeReportCard({offence, time, description, location, a
 
             <div className="flex items-center justify-between">
                 <span className="text-gray-500 text-xs">by {author}</span>
-                <div className="flex items-center space-x-4">
-                    <button className="flex items-center space-x-1 text-gray-500 hover:text-safety-blue">
+                <div className="flex items-center space-x-4 bg-[#B05216] rounded-full px-4 py-2">
+                    <button className="cursor-pointer flex items-center space-x-1 text-white hover:text-safety-blue">
                         <ThumbsUp size={14}/>
                         <span className="text-xs">{likes}</span>
                     </button>
-                    <button className="text-gray-500 hover:text-safety-blue">
+                    <button className="cursor-pointer text-white hover:text-safety-blue">
                         <Pin size={14} />
                     </button>
                 </div>

@@ -16,7 +16,7 @@ export default function Settings() {
             </div>
             {/*max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6*/}
             {/*Settings Grid*/}
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 grid md:grid-cols-1 lg:grid-cols-2 gap-6">
                 {/*User Settings Card*/}
                 <UserSettingsForm />
 
@@ -32,7 +32,7 @@ export default function Settings() {
                 <AlertsForm />
 
                 {/*Emergency Action*/}
-                <div className="col-span-2 mt-8 bg-gradient-to-r from-red-500 to-red-600 rounded-xl shadow-lg p-6 text-white">
+                <div className="lg:col-span-2 mt-8 bg-gradient-to-r from-red-500 to-red-600 rounded-xl shadow-lg p-6 text-white">
                     <div className="flex items-center mb-4">
                         <TriangleAlert className="text-2xl mr-3" />
                         <h3 className="text-lg font-semibold">Emergency Actions</h3>

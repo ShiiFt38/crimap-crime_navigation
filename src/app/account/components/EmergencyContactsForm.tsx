@@ -39,11 +39,11 @@ export default function EmergencyContactsForm() {
 
                 {/*Add emergency contact*/}
                 <div
-                    className="flex flex-col sm:flex-row sm:items-center justify-between p-4
+                    className="flex flex-col md:flex-row sm:items-center justify-between p-4
                     bg-gray-50 rounded-lg border">
 
-                    <div className="flex-1 mb-3 sm:mb-0">
-                        <div className="flex flex-col sm:flex-row sm:space-x-4">
+
+                        <div className="flex flex-col md:flex-row sm:space-x-4">
                             <input type="text" placeholder="Contact Name"
                                    name="contactName"
                                    onChange={handleChange}
@@ -58,14 +58,13 @@ export default function EmergencyContactsForm() {
                                 onChange={handleChange}
                                 name="dependent"
                                 value={emergencyData.dependent}
-                                className="px-3 py-2 border border-gray-300 rounded-md">
+                                className="px-3 py-2 border border-gray-300 mx-4 rounded-md">
                                 <option value="family">Family</option>
                                 <option value="friend">Friend</option>
                                 <option value="colleague">Colleague</option>
                                 <option value="other">Other</option>
                             </select>
                         </div>
-                    </div>
                     <button
                         className="p-2 rounded-full cursor-pointer active:text-[#4F2915]">
                         <CirclePlus size={16} />

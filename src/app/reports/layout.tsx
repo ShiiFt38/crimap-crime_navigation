@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {Plus} from "lucide-react";
 
 export default function ReportsLayout({children}: {children: React.ReactNode}) {
     const src = usePathname();

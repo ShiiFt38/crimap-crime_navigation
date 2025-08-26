@@ -1,5 +1,3 @@
-//TODO: Fix chat responsiveness
-
 import CrimeReportCard from "@/app/reports/components/CrimeReportCard";
 
 export default function Reports(){
