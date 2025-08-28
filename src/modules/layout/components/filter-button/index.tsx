@@ -6,7 +6,7 @@ export default function FilterButton({style}: { style?: string}) {
     const iconStyle = "rounded-full m-auto md:m-2 flex-shrink-0 text-white group-active:text-[#1E4B26]"
 
     return (
-        <div className={`flex group rounded-full cursor-pointer hover:bg-[#8F9C68] items-center ${style}`}
+        <div className={`group rounded-full cursor-pointer hover:bg-[#8F9C68] items-center flex space-around ${style}`}
              onClick={toggleFilter}>
             <button className="focus:outline-none rounded-full ">
                 {isFilterOpen ? <FunnelX size={20} className={iconStyle}/> : <Funnel size={20} className={iconStyle}/>}

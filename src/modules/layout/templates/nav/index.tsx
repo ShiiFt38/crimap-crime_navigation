@@ -18,7 +18,7 @@ export default function Nav() {
                     <FilterButton style="hidden md:flex"/>
 
                     {/*logo*/}
-                    <Link href="/" className="flex flex-row justify-self-center">
+                    <Link href="/" className="flex flex-row justify-self-center focus:border-none">
                         <div className="flex items-center h-full gap-x-2 uppercase">
                             <h1 className="md:hidden flex text-xl font-bold text-white">{
                                 navLinks.map(e => src == e.page ? `${e.name}` : null)

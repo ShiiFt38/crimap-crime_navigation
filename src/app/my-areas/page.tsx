@@ -1,9 +1,21 @@
 //TODO: Add a placeholder container for when there is no saved areas
+'use client'
 
+import { useState, useEffect } from 'react'
 import {Plus} from "lucide-react";
 import AreaCard from "@/app/my-areas/components/AreaCard"
 
 export default function MyAreas() {
+    const [districts, setDistricts] = useState([]);
+
+    useEffect(() => {
+        fetch("/api/districts")
+            .then(res => res.json())
+            .then(data => setDistricts(data));
+        console.log(districts);
+    }, []);
+
+
     return (
         <main className="flex-grow min-h-[100vh] bg-gray-100">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -18,11 +30,9 @@ export default function MyAreas() {
 
                 {/*Area cards*/}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-14">
-
-                    <AreaCard area="Ekhuruleni District" distance={1.2} crimeIndex={3}/>
-                    <AreaCard area="Westrand District" distance={2.6} crimeIndex={6}/>
-                    <AreaCard area="Uthukela District" distance={3.2} crimeIndex={2}/>
-                    <AreaCard area="Nkangala District" distance={4.3} crimeIndex={10}/>
+                    {districts.map((district) => (
+                        <AreaCard key={district.id} area={district.district_name} distance={1.2} crimeIndex={3}/>
+                    ))}
                 </div>
             </div>
         </main>
