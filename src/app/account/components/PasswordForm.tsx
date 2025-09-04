@@ -32,7 +32,7 @@ export default function PasswordForm() {
                 </div>
             </div>
 
-            <form className="space-y-4" onSubmit={onSubmit}>
+            <form className="flex flex-col space-y-4 md:px-16" onSubmit={onSubmit}>
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
                     <input type="password" name="currentPassword" onChange={handleChange} value={passwordData.currentPassword}

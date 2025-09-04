@@ -35,7 +35,7 @@ export default function EmergencyContactsForm() {
                     </div>
                 </div>
 
-            <form id="contactsList" className="space-y-4" onSubmit={handleSubmit}>
+            <form id="contactsList" className="space-y-4 md:px-16" onSubmit={handleSubmit}>
 
                 {/*Add emergency contact*/}
                 <div

@@ -34,7 +34,7 @@ export default function LocationForm(){
                 </div>
             </div>
 
-            <form onSubmit={onSubmit} className="space-y-4">
+            <form onSubmit={onSubmit} className="flex flex-col space-y-4 md:px-16">
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Home Address</label>
                     <input type="text" name="address" placeholder="123 Main Street, New York, NY 10001"

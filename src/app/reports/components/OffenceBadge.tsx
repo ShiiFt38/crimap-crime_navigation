@@ -1,7 +1,7 @@
 export default function OffenceBadge({offence} : {offence?: string}){
     return (
         <span
-            className={`rounded-full text-[0.75rem] py-[0.25rem] px-[0.75rem] text-center truncate w-2/4 font-bold 
+            className={`rounded-full text-[0.75rem] py-[0.25rem] px-[0.75rem] text-center truncate font-bold 
                 ${offence === 'Theft' || offence === 'Shoplifting' || offence === 'Theft of motor vehicle and motorcycle' 
                 || offence === 'Theft out of or from motor vehicle' || offence === 'All theft not mentioned elsewhere' 
                 || offence === 'Stock-theft' ? 'bg-[#d1fae5] text-[#065f46]' 
