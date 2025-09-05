@@ -10,7 +10,7 @@ interface DetailsEvidenceProps {
 
 export default function DetailsEvidenceSection({ description, witnesses, policeContacted, image, onChange }: DetailsEvidenceProps) {
     return (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 ">
             <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-gray-900">Details & Evidence</h3>
                 <div className="py-[0.25rem] px-[0.75rem] bg-emerald-100 rounded-lg flex items-center justify-center mr-4">
@@ -18,7 +18,7 @@ export default function DetailsEvidenceSection({ description, witnesses, policeC
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 space-y-6 md:px-20">
                 <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-2"
                     >Description</label

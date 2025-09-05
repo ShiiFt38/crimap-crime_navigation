@@ -2,7 +2,7 @@ import CrimeReportCard from "@/app/reports/components/CrimeReportCard";
 
 export default function Reports(){
     return (
-        <div id="reportsContent" className="max-w-7xl mx-auto px-4 py-10 space-y-4 md:max-w-4xl">
+        <div id="reportsContent" className="max-w-7xl mx-auto py-10 space-y-6">
             <CrimeReportCard
                 offence="Illegal possession of firearms and ammunition"
                 time="1 day ago"

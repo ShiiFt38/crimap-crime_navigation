@@ -41,7 +41,7 @@ export default function ReportForm(){
         }))
     }
     return (
-        <div id="submitContent" className="max-w-4xl mx-auto px-4 py-10">
+        <div id="submitContent" className="max-w-7xl mx-auto py-10">
             <form className="space-y-8" onSubmit={onSubmit}>
                 {/*Crime Information Section*/}
                 <CrimeInformationSection

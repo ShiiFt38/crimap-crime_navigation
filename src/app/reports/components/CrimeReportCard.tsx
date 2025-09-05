@@ -1,7 +1,6 @@
 'use client'
 
 import { MapPin, EllipsisVertical, ThumbsUp, Pin } from "lucide-react";
-import Image from "next/image"; // Correct import for Next.js Image
 import OffenceBadge from "@/app/reports/components/OffenceBadge";
 import { useState } from "react";
 
@@ -27,7 +26,7 @@ export default function CrimeReportCard({
     const [isDetailsOpen, setIsDetailsOpen] = useState(false); // State for toggling details
 
     return (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 w-full">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 md:px-20 w-full">
             {/* Post details and menu button */}
             <div className="flex flex-row items-start justify-between mb-3">
                 <div className="flex flex-row items-center space-x-2 w-3/4">

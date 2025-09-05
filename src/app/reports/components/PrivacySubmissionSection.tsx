@@ -13,7 +13,7 @@ interface PrivacySubmissionProps {
 export default function PrivacySubmissionSection({ anonymous, termsConfirmation, contactEmail, contactPhone, onChange }
                                                  : PrivacySubmissionProps) {
     return (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 ">
             <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-gray-900">Privacy & Submission</h3>
                 <div className="py-[0.25rem] px-[0.75rem] bg-yellow-100 rounded-lg flex items-center justify-center mr-4">
@@ -21,7 +21,7 @@ export default function PrivacySubmissionSection({ anonymous, termsConfirmation,
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 space-x-4 ">
+            <div className="grid grid-cols-1 md:grid-cols-2 space-x-4 md:px-20">
                 <div className="space-y-4">
                     <div
                         className="flex items-center justify-between p-4 bg-gray-100 rounded-lg">
