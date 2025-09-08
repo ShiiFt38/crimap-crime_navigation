@@ -23,7 +23,7 @@ This helps users quickly see the latest crime trends for the district using proc
 */}
 
 type StatsSummaryProps = {
-    rows: { count: number; district_name?: string; station_name?: string; date: string }[];
+    rows: { count: number; district_name?: string; station_name?: string; date: string; population: number | null }[];
 };
 
 export default function StatsSummary({ rows }: StatsSummaryProps) {
@@ -49,8 +49,18 @@ export default function StatsSummary({ rows }: StatsSummaryProps) {
 
     const stations = new Set(rows.map((row) => row.station_name)).size; // Unique stations
 
-    // Calculate crime index (simplified: total latest crimes scaled to 0-10 range)
-    const crimeIndex = (latestTotalCrimes / 10).toFixed(1);
+    // Calculate average population for fallback (exclude nulls)
+    const validPopulations = rows.map(row => row.population).filter(p => p !== null) as number[];
+    const avgPopulation = validPopulations.length > 0 ? validPopulations.reduce((a, b) => a + b) / validPopulations.length : 10000;
+    const population = rows[0]?.population ?? avgPopulation; // Use district population or average
+
+    // Calculate crime index (crimes per 100,000, scaled to 1-12 based on max expected 1200/100k annually)
+    const crimeRatePer100k = (latestTotalCrimes / population) * 100000;
+    const maxExpectedRate = 1200; // Assume 1200 crimes/100k annually (100/100k quarterly as max)
+    const crimeIndex = Math.max(1, Math.min(12, (crimeRatePer100k / (maxExpectedRate / 12)) + 1)).toFixed(1);
+
+    // Calculate safety score (inversely related, 0-100%)
+    const safetyScore = Math.max(0, Math.min(100, 100 - ((parseFloat(crimeIndex) - 1) * 100 / 11))).toFixed(0);
 
     let level = 'Moderate';
     let color = 'orange-500';
@@ -58,7 +68,7 @@ export default function StatsSummary({ rows }: StatsSummaryProps) {
     if (indexValue < 4) {
         level = 'Low';
         color = 'green-500';
-    } else if (indexValue > 7) {
+    } else if (indexValue > 8) {
         level = 'High';
         color = 'red-500';
     }
@@ -77,15 +87,25 @@ export default function StatsSummary({ rows }: StatsSummaryProps) {
                 <div className="text-sm text-gray-500">Police Stations</div>
                 <div className="text-xs text-green-500 mt-1">Well covered</div>
             </div>
-            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                <div className={`text-2xl font-bold text-${color}`}>{crimeIndex}</div>
+            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 relative group">
+                <div className="text-2xl font-bold text-{color}">{crimeIndex}</div>
                 <div className="text-sm text-gray-500">Crime Index</div>
                 <div className={`text-xs text-${color} mt-1`}>{level}</div>
+                <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block
+                bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap z-9">
+                    Crimes per 100,000 population, scaled to 1-12 based on a max of 1200/100k annually. Uses average population if null.
+                </span>
             </div>
-            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                <div className="text-2xl font-bold text-green-600">89%</div>
+            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 relative group">
+                <div className="text-2xl font-bold text-green-600">{safetyScore}%</div>
                 <div className="text-sm text-gray-500">Safety Score</div>
-                <div className="text-xs text-green-500 mt-1">Above average</div>
+                <div className={`text-xs ${parseInt(safetyScore) > 70 ? 'text-green-500' : parseInt(safetyScore) < 40 ? 'text-red-500' : 'text-orange-500'} mt-1`}>
+                    {parseInt(safetyScore) > 70 ? 'Above average' : parseInt(safetyScore) < 40 ? 'Below average' : 'Moderate'}
+                </div>
+                <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block
+                bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap z-9">
+                    Calculated as 100 - ((Crime Index - 1) * 100 / 11), reflecting safety based on crime rate.
+                </span>
             </div>
         </div>
     );

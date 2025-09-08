@@ -78,8 +78,7 @@ export default function ReportForm(){
                         type="submit"
                         value="Submit Crime Report"
                         className="px-10 mx-auto bg-[#B05216] hover:bg-[#4F2915] border-b-2 border-[#4F2915]
-                        text-white text-sm py-2 rounded-lg
-                     transition-colors"
+                        text-white text-sm py-2 rounded-lg cursor-pointer transition-colors"
                     />
                 </div>
             </form>

@@ -2,8 +2,10 @@ import { openDB } from "@lib/db";
 
 export async function GET(request, { params }) {
     try {
+
         const db = await openDB();
-        const district = params.district; // Access district from URL params
+        const district = await params.district; // Access district from URL params
+        console.log("Incoming district: ", district);
 
         const rows = await db.all(
             `SELECT 

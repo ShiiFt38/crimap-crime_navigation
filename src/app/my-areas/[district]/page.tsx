@@ -20,7 +20,6 @@ Here's how it works:
 This page runs on the server, so it prepares everything (including the typed data) before sending it to the browser.
 */}
 
-
 import { openDb } from "@/lib/db";
 import Map from "./components/Map";
 import StatsSummary from "./components/StatsSummary";
@@ -41,19 +40,43 @@ export default async function DistrictPage({ params }: DistrictPageProps) {
     const { district } = resolvedParams;
 
     const rows = await db.all(
-        `SELECT 
-      d.district_name,
-      s.station_name,
-      o.offence_name,
-      cr.date,
-      cr.count
-    FROM crime_record cr
-    JOIN station s ON cr.station_id = s.station_id
-    JOIN district d ON s.district_id = d.district_id
-    JOIN offence o ON cr.offence_id = o.offence_id
-    WHERE lower(replace(d.district_name, ' ', '-')) = ?`,
+        `SELECT
+             d.district_name,
+             d.population,
+             s.station_name,
+             o.offence_name,
+             cr.date,
+             cr.count
+         FROM crime_record cr
+                  JOIN station s ON cr.station_id = s.station_id
+                  JOIN district d ON s.district_id = d.district_id
+                  JOIN offence o ON cr.offence_id = o.offence_id
+         WHERE lower(replace(d.district_name, ' ', '-')) = ?`,
         [district]
     );
+
+    // Log the fetched data to the server console for debugging
+    // console.log("Fetched rows for district", district, ":", rows);
+
+    // Check if data is empty or all counts are 0
+    const hasData = rows.length > 0 && rows.some(row => row.count > 0);
+
+    if (!hasData) {
+        return (
+            <div className="bg-gray-100 min-h-screen pb-14 font-inter flex items-center justify-center">
+                <div className="text-center">
+                    <h1 className="text-2xl font-semibold text-gray-900 mb-4">No Crime Data Found</h1>
+                    <p className="text-gray-500 mb-6">It seems there is no crime data available for {district
+                        .replace("-", " ").split(" ")
+                        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                        .join(" ")}.</p>
+                    <Link href="/my-areas" className="inline-flex items-center px-4 py-2 bg-[#B05216] text-white rounded-lg hover:bg-[#4F2915]">
+                        <ArrowLeft className="mr-2" /> Back to All Areas
+                    </Link>
+                </div>
+            </div>
+        );
+    }
 
     // Aggregate crime counts by offence for the chart
     const crimeData = rows.reduce((acc, row) => {
@@ -78,7 +101,7 @@ export default async function DistrictPage({ params }: DistrictPageProps) {
     return (
         <div className="bg-gray-100 min-h-screen pb-14 font-inter">
             <Map />
-            <header className="bg-white shadow-sm border-b border-gray-200 sticky top-14 z-9">
+            <header className="bg-white shadow-sm border-b border-gray-200 sticky top-14 z-8">
                 <div className="px-4 py-3">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
@@ -86,7 +109,7 @@ export default async function DistrictPage({ params }: DistrictPageProps) {
                                 <ArrowLeft className="group-active:text-[#4F2915]" />
                             </Link>
                             <div>
-                                <h1 className="text-lg font-semibold text-gray-900">{rows[0]?.district_name || district}</h1>
+                                <h1 className="text-lg font-semibold text-gray-900">{rows[0]?.district_name.replace("District", "")}</h1>
                                 <p className="text-sm text-gray-500">Crime & Safety Overview</p>
                             </div>
                         </div>

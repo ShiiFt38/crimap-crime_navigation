@@ -28,11 +28,10 @@ export default function Nav() {
                         <Fingerprint id="brand-logo" className="flex ml-4 my-auto text-[#B05216]"/>
                     </Link>
 
-                    <button className={`flex items-center justify-self-end gap-x-6 h-full`} onClick={toggleDrawer}>
+                    <button className={`flex items-center justify-self-end gap-x-6 h-full hidden md:flex`} onClick={toggleDrawer}>
                         <div id="menuBtn" className="focus:outline-none group p-2 rounded-full active:bg-[#8F9C68]
                             hover:bg-[#8F9C68] cursor-pointer duration-300">
-                            <Menu className="hidden md:flex text-white group-active:text-[#1E4B26]"/>
-                            <EllipsisVertical className="flex md:hidden text-white group-active:text-[#1E4B26]" />
+                            <Menu className=" text-white group-active:text-[#1E4B26]"/>
                         </div>
                     </button>
                 </nav>

@@ -1,4 +1,5 @@
-//TODO: Add a placeholder container for when there is no saved areas
+//TODO: Calculate the crime index to display on the area card badges
+//TODO: Add a loading effect
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -12,7 +13,6 @@ export default function MyAreas() {
         fetch("/api/districts")
             .then(res => res.json())
             .then(data => setDistricts(data));
-        console.log(districts);
     }, []);
 
 

@@ -1,23 +1,14 @@
 "use client";
-{/*
-This component shows a static map section for the district's crime overview.
-It runs in the browser (client-side) and works like this:
-
-1. When the component loads, print a message to check if it’s working (placeholder for future map setup).
-2. Create a colored background with a grid pattern using SVG lines to look like a map base.
-3. Add control buttons on the top right (zoom in and out) that change appearance when hovered over.
-4. Place a safety level indicator on the bottom left showing "Moderate Risk" with a colored dot.
-5. The map is static for now, but it’s ready to add real map features (like Leaflet) later.
-This component doesn’t need data from the database; it just displays a visual placeholder using basic HTML and CSS.
-*/}
 
 import { useEffect } from "react";
 
 export default function Map() {
-    useEffect(() => {
-        // Placeholder for map initialization (e.g., Leaflet or Google Maps)
-        console.log("Map component mounted");
-    }, []);
+    {/*
+        useEffect(() => {
+            // Placeholder for map initialization (e.g., Leaflet or Google Maps)
+            console.log("Map component mounted");
+        }, []);
+    */}
 
     return (
         <div className="h-64 md:h-80 relative bg-gradient-to-br from-[#667eea] to-[#764ba2] overflow-hidden">
@@ -47,11 +38,15 @@ export default function Map() {
                     </svg>
                 </button>
             </div>
-            <div className="absolute bottom-4 left-4 rounded-lg p-3 shadow-lg backdrop-blur-lg">
+            <div className="absolute bottom-4 left-4 rounded-lg p-3 shadow-lg backdrop-blur-lg group">
                 <div className="flex items-center space-x-2">
                     <div className="w-3 h-3 bg-gradient-to-br from-[#f59e0b] to-[#fbbf24] rounded-full" />
-                    <span className="text-sm font-medium text-gray-700">Moderate Risk</span>
+                    <span className="text-sm font-medium text-gray-700 duration-300">Moderate Risk</span>
                 </div>
+                <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 hidden group-hover:block
+                bg-gray-800 text-white text-xs rounded py-1 px-2 whitespace-nowrap z-9">
+          Based on crime index (0-10 scale), where Moderate is 4-7. Reflects total crimes in the latest quarter.
+        </span>
             </div>
         </div>
     );

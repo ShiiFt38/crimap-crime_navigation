@@ -13,10 +13,12 @@ export default function Emergency() {
     }, []);
 
     return (
-        <ul>
-            {records.map((rec, idx) => (
-                <li key={idx}>{JSON.stringify(rec)}</li>
-            ))}
-        </ul>
+        <main className="flex-grow bg-gray-100 h-100vh">
+            <ul>
+                {records.map((rec, idx) => (
+                    <li key={idx}>{JSON.stringify(rec)}</li>
+                ))}
+            </ul>
+        </main>
     );
 }

@@ -16,7 +16,7 @@ export default function AreaCard({area, distance, crimeIndex}: AreaCardProps) {
             <div className="p-5">
                 <div className="flex justify-between items-start mb-3">
                     <div>
-                        <h2 className="text-lg font-semibold text-gray-900">{area}</h2>
+                        <h2 className="text-lg font-semibold text-gray-900">{area.replace("District", "")}</h2>
                         <p className="text-sm text-gray-500">{distance} kilometres away</p>
                     </div>
                     <RiskBadge crimeIndex={crimeIndex}/>
