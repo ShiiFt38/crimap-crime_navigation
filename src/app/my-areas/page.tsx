@@ -15,7 +15,6 @@ export default function MyAreas() {
             .then(data => setDistricts(data));
     }, []);
 
-
     return (
         <main className="flex-grow min-h-[100vh] bg-gray-100">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -31,7 +30,12 @@ export default function MyAreas() {
                 {/*Area cards*/}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-14">
                     {districts.map((district) => (
-                        <AreaCard key={district.id} area={district.district_name} distance={1.2} crimeIndex={3}/>
+                        <AreaCard
+                            key={district.id}
+                            area={district.district_name}
+                            distance={1.2}
+                            crimeIndex={district.crimeIndex}
+                        />
                     ))}
                 </div>
             </div>

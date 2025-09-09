@@ -1,3 +1,4 @@
+// TODO: Improve performance speed, implement caching, pagination, partial loading and querying
 {/*
 This is the main page for a specific district's crime and safety overview.
 It fetches data from the database for a single district based on the URL parameter.

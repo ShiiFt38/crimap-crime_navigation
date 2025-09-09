@@ -1,26 +1,5 @@
+// app/my-areas/[district]/components/CrimeBreakdown.tsx
 "use client";
-{/*
-This component shows a chart breaking down crimes by type for a selected time period.
-It runs in the browser (client-side) and works with crime data. Here's how it works:
-
-1. Take the list of crime records (rows) as input, an array of objects like:
-   - { offence_name: string, count: number, date: string }[].
-2. Find all unique quarter dates (string[]) from the data and sort them from newest to oldest.
-3. Pick the newest quarter as the default, but let the user change it with a dropdown menu.
-4. For the selected quarter:
-   - Filter the data to only include records from that quarter, resulting in a subset array.
-   - Use a reduce function to add up the counts for each offence type, creating a Record<string, number>
-     - (e.g., { "Theft": 35, "Assault": 20 }).
-   - Sort the offence counts (array of [string, number] pairs) descending.
-   - Take the top 9 offences and group the rest into an "Other" category, producing new arrays for labels and data.
-5. Prepare the chart data:
-   - Use offence names (string[]) as labels.
-   - Use the counts (number[]) as data values.
-6. Create a dropdown menu with quarter options (e.g., "April to June 2019") that updates the chart when changed.
-7. Show the chart inside a styled box with a title "Crime Breakdown by Type".
-This lets users see which crimes are most common in a specific quarter easily using filtered and aggregated data.
-*/}
-
 
 import { useState } from "react";
 import CrimeChart from "./CrimeChart";
@@ -30,15 +9,28 @@ interface CrimeBreakdownProps {
 }
 
 export default function CrimeBreakdown({ rows }: CrimeBreakdownProps) {
-    // Extract unique quarters sorted descending
-    const quarters = Array.from(new Set(rows.map((row) => row.date))).sort(
-        (a, b) => new Date(b).getTime() - new Date(a).getTime()
-    );
+    // Extract unique months and map to quarters
+    const quarters = Array.from(new Set(rows.map((row) => row.date)))
+        .map(date => {
+            const year = date.slice(0, 4);
+            const month = parseInt(date.slice(5, 7));
+            const quarterStart = `${year}-${Math.floor((month - 1) / 3) * 3 + 1}-01`; // e.g., 10 -> '2024-10-01'
+            return quarterStart;
+        })
+        .filter((date, index, self) => self.indexOf(date) === index) // Unique quarters
+        .sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
 
     const [selectedQuarter, setSelectedQuarter] = useState(quarters[0] || "");
 
-    // Filter rows for selected quarter and aggregate by offence
-    const filteredRows = rows.filter((row) => row.date === selectedQuarter);
+    // Filter rows for selected quarter (all months in that quarter)
+    const filteredRows = rows.filter((row) => {
+        const year = row.date.slice(0, 4);
+        const month = parseInt(row.date.slice(5, 7));
+        const quarterStart = `${year}-${Math.floor((month - 1) / 3) * 3 + 1}-01`;
+        return quarterStart === selectedQuarter;
+    });
+
+    // Aggregate by offence for the selected quarter
     const crimeData = filteredRows.reduce((acc, row) => {
         acc[row.offence_name] = (acc[row.offence_name] || 0) + row.count;
         return acc;
@@ -51,7 +43,7 @@ export default function CrimeBreakdown({ rows }: CrimeBreakdownProps) {
     const finalLabels = [...top9.map(([k]) => k), ...(otherSum > 0 ? ['Other'] : [])];
     const finalData = [...top9.map(([_, v]) => v), ...(otherSum > 0 ? [otherSum] : [])];
 
-    // Format date to descriptive quarter label (e.g., "April to June 2019")
+    // Format date to descriptive quarter label (e.g., "October to December 2024")
     const formatQuarter = (dateStr: string) => {
         const date = new Date(dateStr);
         const year = date.getFullYear();
