@@ -1,4 +1,7 @@
 // app/[district]/StatsSummary.tsx
+"use client"
+
+import {useMemo} from "react";
 
 type StatsSummaryProps = {
     rows: { count: number; district_name?: string; station_name?: string; date: string; population: number | null }[];
@@ -6,17 +9,20 @@ type StatsSummaryProps = {
 
 export default function StatsSummary({ rows }: StatsSummaryProps) {
     // Group total crimes by quarter
-    const quarters = rows.reduce((acc, row) => {
-        const year = row.date.slice(0, 4);
-        const month = parseInt(row.date.slice(5, 7));
-        const quarterStart = `${year}-${Math.floor((month - 1) / 3) * 3 + 1}-01`; // e.g., 10, 11, 12 -> '2024-10-01'
-        if (!acc[quarterStart]) acc[quarterStart] = 0;
-        acc[quarterStart] += row.count;
-        return acc;
-    }, {} as Record<string, number>);
+    const quarters = useMemo(() => {
+        return rows.reduce((acc, row) => {
+            const year = row.date.slice(0, 4);
+            const month = parseInt(row.date.slice(5, 7));
+            const quarterStart = `${year}-${Math.floor((month - 1) / 3) * 3 + 1}-01`; // e.g., 10, 11, 12 -> '2024-10-01'
+
+            if (!acc[quarterStart]) acc[quarterStart] = 0;
+            acc[quarterStart] += row.count;
+            return acc;
+        }, {} as Record<string, number>);
+    }, [rows]);
 
     // Sort dates descending and use the latest
-    const sortedDates = Object.keys(quarters).sort((a, b) => new Date(b).getTime() - new Date(a).getTime());
+    const sortedDates = useMemo(() => Object.keys(quarters).sort((a, b) => new Date(b).getTime() - new Date(a).getTime()), [quarters]);
     const latestQuarter = sortedDates[0] || '';
     const previousQuarter = sortedDates[1] || '';
 

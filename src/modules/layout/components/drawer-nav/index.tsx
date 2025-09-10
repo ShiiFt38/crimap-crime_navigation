@@ -1,11 +1,10 @@
 'use client'
 
-import Link from "next/link";
 import { navLinks } from "@/lib/nav-links"
 import { useMenu } from "@/modules/layout/providers/LayoutClientWrapper";
 import DrawerLink from "@/modules/layout/components/drawer-nav/components/DrawerLink"
 import { usePathname } from "next/navigation";
-import { Bolt, X } from "lucide-react";
+import { X } from "lucide-react";
 
 export default function DrawerNav(){
     // consuming state values form context provider
