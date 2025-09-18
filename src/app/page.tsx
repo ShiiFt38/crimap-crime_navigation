@@ -1,3 +1,5 @@
+// TODO: Improve the district popup
+
 "use client";
 
 import { Map, AttributionControl } from "react-map-gl/maplibre";
@@ -32,6 +34,7 @@ export default function Home() {
                 );
                 const data = await response.json();
                 setSuggestions(data);
+                console.log(suggestions)
             } catch (error) {
                 console.error("Error fetching suggestions:", error);
                 setSuggestions([]);
@@ -74,7 +77,7 @@ export default function Home() {
         if (mapRef.current) {
             mapRef.current.flyTo({
                 center: [parseFloat(suggestion.lon), parseFloat(suggestion.lat)],
-                zoom: 10,
+                zoom: 15,
             });
         }
     };
@@ -88,7 +91,7 @@ export default function Home() {
                     latitude: -30,
                     zoom: 5,
                 }}
-                style={{ width: "100vw", height: "100vh" }}
+                style={{ width: "100vw", height: "95vh" }}
                 mapStyle="https://demotiles.maplibre.org/style.json"
                 onLoad={() => {
                     const map = mapRef.current.getMap();
@@ -169,7 +172,7 @@ export default function Home() {
                                 .setLngLat(e.lngLat)
                                 .setHTML(
                                     `<strong>District:</strong> ${
-                                        feature.properties?.DISTRICT || "Unknown"
+                                        feature.properties?.DISTRICT_N || "Unknown"
                                     }`
                                 )
                                 .addTo(map);
@@ -192,24 +195,27 @@ export default function Home() {
 
             <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10 max-w-md w-full px-4">
                 <form onSubmit={handleSearch} className="flex flex-row justify-center px-2">
-                    <div className="flex flex-row space-around">
+                    <div className="flex flex-row space-x-2">
                         <input
                             type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             onFocus={() => setIsFocused(true)}
                             onBlur={() => setTimeout(() => setIsFocused(false), 200)}
-                            className="flex-1 sm:w-xs md:w-xl px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 bg-white"
+                            className="flex-1 sm:w-xs md:w-xl px-4 py-2 rounded-full border border-gray-300
+                            focus:outline-none focus:ring-2 bg-white"
                             placeholder="Search locations in South Africa..."
                         />
-                        <div className="flex justify-items-center w-fit h-fit text-white rounded-full cursor-pointer bg-[#1E4B26]">
+                        <div className="flex justify-items-center w-fit h-fit text-white rounded-full cursor-pointer
+                        bg-[#1E4B26]">
                             <button className="cursor-pointer p-2" onClick={() => {setSearchQuery("")}}>
-                                <X size={20} className=""/>
+                                <X size={20} />
                             </button>
                         </div>
-                        <div className="flex justify-items-center w-fit h-fit text-white rounded-full cursor-pointer bg-[#1E4B26]">
+                        <div className="flex justify-items-center w-fit h-fit text-white rounded-full cursor-pointer
+                        bg-[#1E4B26]">
                             <button className="cursor-pointer p-2" type="submit">
-                                <Search size={20} className=""/>
+                                <Search size={20} />
                             </button>
                         </div>
                     </div>

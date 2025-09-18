@@ -1,13 +1,47 @@
 //TODO: Add focus rings on form inputs for real time form verification
+"use client"
 
+
+import { useSession, signIn, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import UserSettingsForm from "@/app/account/components/UserSettingsForm";
 import PasswordForm from "@/app/account/components/PasswordForm";
 import EmergencyContactsForm from "@/app/account/components/EmergencyContactsForm";
 import LocationForm from "@/app/account/components/LocationForm";
 import AlertsForm from "@/app/account/components/AlertsForm";
-import {TriangleAlert, Phone, Share2} from "lucide-react"
+import {TriangleAlert, Phone, Share2, LogOut} from "lucide-react"
 
 export default function Settings() {
+    const { data: session, status } = useSession();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (status === "unauthenticated") {
+            router.push("/auth/signin");  // Redirect to sign-in
+        }
+    }, [status, router]);
+
+    const handleLogout = async () => {
+        await signOut({ callbackUrl: "/auth/signin" }); // Redirect to sign-in after logout
+    };
+
+    if (status === "loading") {
+        return <div className="flex justify-center items-center h-64">
+            <p className="text-lg text-gray-600">Loading...</p>
+        </div>;
+    }
+
+    if (!session) {
+        return (
+            <div className="flex min-h-screen items-center justify-center">
+                <button onClick={() => signIn()} className="bg-blue-500 text-white p-4 rounded">
+                    Sign In to Access Settings
+                </button>
+            </div>
+        );
+    }
+
     return (
         <main className="flex-grow bg-gray-100 min-h-[100vh] pb-14">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -52,6 +86,16 @@ export default function Settings() {
                         </button>
                     </div>
             </div>
+                {/* New Logout Button */}
+                <div className="lg:col-span-2 mt-4 flex justify-center">
+                    <button
+                        onClick={handleLogout}
+                        className="flex items-center bg-gray-500 hover:bg-gray-600 text-white font-medium py-3 px-6 rounded-lg transition-all"
+                    >
+                        <LogOut className="mr-2" />
+                        Log Out
+                    </button>
+                </div>
             </div>
         </main>
     )

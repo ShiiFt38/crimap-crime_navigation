@@ -1,6 +1,7 @@
-'use client'
+"use client"
 // Provides access to state variables and setter functions through a shared context environment
 import { createContext, useState, useContext, ReactNode } from 'react'
+import { SessionProvider } from "next-auth/react"
 
 type MenuContextType = {
     isFilterOpen: boolean
@@ -32,7 +33,9 @@ export function MenuProvider({ children }: { children: ReactNode }) {
             isDrawerOpen: isDrawerOpen,
             toggleDrawer
         }}>
+            <SessionProvider>
             {children}
+            </SessionProvider>
         </MenuContext.Provider>
     )
 }
