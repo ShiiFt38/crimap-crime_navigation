@@ -6,6 +6,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { User } from "lucide-react";
 
 export default function SignUp() {
     const [username, setUsername] = useState("");
@@ -42,8 +43,13 @@ export default function SignUp() {
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-gray-100">
-            <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md w-96">
-                <h2 className="text-2xl font-bold mb-6">Sign Up</h2>
+            <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md w-full max-w-md mx-4 sm:mx-6">
+                <div className="flex justify-between items-center mb-6">
+                    <h3 className="text-lg font-semibold text-gray-900">Sign Up</h3>
+                    <div className="py-[0.25rem] px-[0.75rem] bg-blue-100 rounded-lg flex items-center justify-center mr-4">
+                        <User size={16} className="text-blue-600" />
+                    </div>
+                </div>
                 {error && <p className="text-red-500 mb-4">{error}</p>}
                 <input
                     type="text"
@@ -83,12 +89,13 @@ export default function SignUp() {
                     onChange={(e) => setPhone(e.target.value)}
                     className="w-full p-2 mb-4 border rounded"
                 />
-                <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
+                <button type="submit" className="bg-[#B05216] active:bg-[#4F2915] text-white px-10 py-2 rounded-lg
+                    flex cursor-pointer border-b-2 border-[#4F2915] items-center shadow-md text-sm">
                     Sign Up
                 </button>
                 <p className="mt-4 text-center">
                     Already have an account?{" "}
-                    <Link href="/auth/signin" className="text-blue-500">
+                    <Link href="/auth/signin" className="text-[#B05216]">
                         Sign In
                     </Link>
                 </p>

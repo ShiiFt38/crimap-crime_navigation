@@ -6,7 +6,7 @@ export async function POST(req: Request) {
     const { username, email, password, full_name, phone } = await req.json();
 
     if (!email || !password || !username) {
-        return NextResponse.json({ error: "Email, username, and password are required" }, { status: 400 });
+        return NextResponse.json({ error: "MISSING_FIELDS" }, { status: 400 });
     }
 
     const db = await openDb(); // Use the centralized DB connection
@@ -15,7 +15,7 @@ export async function POST(req: Request) {
         // Debug: Check if table exists
         const tables = await db.all("SELECT name FROM sqlite_master WHERE type='table' AND name='user'");
         if (tables.length === 0) {
-            throw new Error("User table does not exist in the database");
+            throw new Error("DATABASE_ERROR: User table does not exist in the database");
         }
 
         // Check for existing user
@@ -24,7 +24,7 @@ export async function POST(req: Request) {
             [email, username]
         );
         if (existingUser) {
-            return NextResponse.json({ error: "Email or username already taken" }, { status: 400 });
+            return NextResponse.json({ error: "USER_EXISTS" }, { status: 400 });
         }
 
         // Hash the password
@@ -41,7 +41,7 @@ export async function POST(req: Request) {
     } catch (error) {
         console.error("Signup error:", error); // Log full error
         return NextResponse.json({
-            error: "Failed to create user",
+            error: "SERVER_ERROR",
             details: error.message || "Unknown error"
         }, { status: 500 });
     } finally {

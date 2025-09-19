@@ -1,4 +1,5 @@
 //TODO: Add focus rings on form inputs for real time form verification
+//TODO: Add a confirmation popup for form submissions
 "use client"
 
 
@@ -35,7 +36,9 @@ export default function Settings() {
     if (!session) {
         return (
             <div className="flex min-h-screen items-center justify-center">
-                <button onClick={() => signIn()} className="bg-blue-500 text-white p-4 rounded">
+                <button onClick={() => signIn()} className="bg-[#B05216] active:bg-[#4F2915]
+                text-white px-10 py-2 rounded-lg flex cursor-pointer border-b-2 border-[#4F2915] items-center
+                shadow-md text-sm">
                     Sign In to Access Settings
                 </button>
             </div>
@@ -90,7 +93,8 @@ export default function Settings() {
                 <div className="lg:col-span-2 mt-4 flex justify-center">
                     <button
                         onClick={handleLogout}
-                        className="flex items-center bg-gray-500 hover:bg-gray-600 text-white font-medium py-3 px-6 rounded-lg transition-all"
+                        className="bg-[#B05216] active:bg-[#4F2915] text-white px-10 py-2 rounded-lg flex
+                            cursor-pointer border-b-2 border-[#4F2915] items-center shadow-md text-sm"
                     >
                         <LogOut className="mr-2" />
                         Log Out

@@ -1,15 +1,29 @@
+//TODO: implement the update button functionality
+
 'use client'
 
 import { User } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import SubmitBtn from "@/app/account/components/SubmitBtn";
+import {useSession} from "next-auth/react";
 
 export default function UserSettingsForm() {
+    const { data: session, status} = useSession()
     const [userData, setUserData] = useState({
         fullName: "",
         email: "",
         phoneNumber: "",
     })
+
+    useEffect(() => {
+        if(status == "authenticated" && session?.user) {
+            setUserData(prevUserData => ({
+                ...prevUserData,
+                fullName: session.user.fullName || "",
+                email: session.user.email,
+            }))
+        }
+    }, [session, status]);
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();

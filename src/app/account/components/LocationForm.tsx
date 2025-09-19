@@ -1,4 +1,5 @@
 //TODO: Add the logic for the "Add contact" button, create a form for adding a contact
+//TODO: implement the update button functionality
 
 'use client'
 

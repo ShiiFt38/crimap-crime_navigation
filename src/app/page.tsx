@@ -91,7 +91,7 @@ export default function Home() {
                     latitude: -30,
                     zoom: 5,
                 }}
-                style={{ width: "100vw", height: "95vh" }}
+                style={{ width: "100vw", height: "93vh" }}
                 mapStyle="https://demotiles.maplibre.org/style.json"
                 onLoad={() => {
                     const map = mapRef.current.getMap();

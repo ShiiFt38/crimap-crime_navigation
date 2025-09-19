@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useState } from "react";
 import slugify from "slugify";
 import RiskBadge from "./RiskBadge";
-import CrimeItem from "./CrimeItem"; // Assuming this is a separate component for crime items
+import CrimeItem from "./CrimeItem";
 
 interface AreaCardProps {
     area: string;
@@ -21,7 +21,7 @@ export default function AreaCard({ area, distance, crimeIndex }: AreaCardProps) 
     };
 
     return (
-        <div className="bg-white rounded-xl shadow-md overflow-hidden area-card transition-all duration-200 hover:shadow-lg">
+        <div className="bg-white rounded-xl shadow-md overflow-hidden snap-start transition-all duration-200 hover:shadow-lg">
             <div className="p-5">
                 <div className="flex justify-between items-start mb-3">
                     <div>
