@@ -2,17 +2,44 @@
 
 "use client";
 
-import { Map, AttributionControl } from "react-map-gl/maplibre";
+import { Map, AttributionControl, Popup, Source, Layer } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useRef, useState, useEffect } from "react";
 import maplibregl from "maplibre-gl";
 import { X, Search } from "lucide-react";
+import MapPopup from "./_components/map_popup";
 
 export default function Home() {
     const mapRef = useRef(null);
+    const [popupInfo, setPopupInfo ] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
     const [suggestions, setSuggestions] = useState([]);
     const [isFocused, setIsFocused] = useState(false);
+
+    const fillLayer = {
+        id: "district-fills",
+        type: "fill",
+        paint: {"fill-color": "#000000", "fill-opacity": 0},
+    };
+
+    const boundaryLayer = {
+        id: "district-boundaries",
+        type: "line",
+        paint: { "line-color": "#555555", "line-width": 1.5, "line-opacity": 0.7 },
+    };
+
+    const southAfricaBounds = [16.5, -35, 33, -22];
+
+    const handleClick = (e) => {
+        const features = e.features;
+        if (features?.length){
+            const feature = features[0];
+            setPopupInfo({
+                lngLat: e.lngLat,
+                districtName: feature.properties?.DISTRICT_N || "Unknown",
+            })
+        }
+    }
 
     // South Africa bounding box
     const bounds = [
@@ -86,111 +113,34 @@ export default function Home() {
         <main className="relative flex-grow bg-gray-100 h-100vh">
             <Map
                 ref={mapRef}
-                initialViewState={{
-                    longitude: 24,
-                    latitude: -30,
-                    zoom: 5,
-                }}
-                style={{ width: "100vw", height: "93vh" }}
+                initialViewState={{longitude: 24, latitude: -30, zoom: 5}}
+                style={{width: "100vw", height: "93vh"}}
                 mapStyle="https://demotiles.maplibre.org/style.json"
+                interactiveLayerIds={["district-fills"]}
+                onClick={handleClick}
                 onLoad={() => {
                     const map = mapRef.current.getMap();
-
-                    try {
-                        // Add GeoJSON source
-                        map.addSource("districts", {
-                            type: "geojson",
-                            data: "/data/MDB_District_Municipal_Boundary_2018.geojson",
-                            promoteId: "DISTRICT",
-                        });
-                        console.log("Source added successfully");
-
-                        // Add fill layer with zero opacity to maintain hover functionality
-                        map.addLayer({
-                            id: "district-fills",
-                            type: "fill",
-                            source: "districts",
-                            paint: {
-                                "fill-color": "#000000",
-                                "fill-opacity": 0, // Fully transparent
-                            },
-                        });
-
-                        // Boundary line layer with subdued styling
-                        map.addLayer({
-                            id: "district-boundaries",
-                            type: "line",
-                            source: "districts",
-                            paint: {
-                                "line-color": "#555555", // Dark gray for subtle boundaries
-                                "line-width": 1.5, // Thinner line for less visual dominance
-                                "line-opacity": 0.7, // Slightly transparent
-                            },
-                        });
-                        console.log("Boundary layer added");
-
-                        // Interaction state
-                        let hoveredId = null;
-
-                        // Hover effect
-                        map.on("mousemove", "district-fills", (e) => {
-                            console.log("Mouse move event:", e.features);
-                            if (e.features?.length) {
-                                const id = e.features[0].id;
-                                if (hoveredId !== null && hoveredId !== id) {
-                                    map.setFeatureState(
-                                        { source: "districts", id: hoveredId },
-                                        { hover: false }
-                                    );
-                                }
-                                if (id !== null) {
-                                    hoveredId = id;
-                                    map.setFeatureState(
-                                        { source: "districts", id },
-                                        { hover: true }
-                                    );
-                                }
-                            }
-                        });
-
-                        map.on("mouseleave", "district-fills", () => {
-                            if (hoveredId !== null) {
-                                map.setFeatureState(
-                                    { source: "districts", id: hoveredId },
-                                    { hover: false }
-                                );
-                            }
-                            hoveredId = null;
-                        });
-
-                        // Click popup
-                        map.on("click", "district-fills", (e) => {
-                            console.log("Click event:", e.features);
-                            if (!e.features?.length) return;
-                            const feature = e.features[0];
-                            new maplibregl.Popup()
-                                .setLngLat(e.lngLat)
-                                .setHTML(
-                                    `<strong>District:</strong> ${
-                                        feature.properties?.DISTRICT_N || "Unknown"
-                                    }`
-                                )
-                                .addTo(map);
-                        });
-
-                        // Fit map to South Africa
-                        map.fitBounds(bounds, { padding: 20 });
-                    } catch (error) {
-                        console.error("Error adding map elements:", error);
-                    }
-
-                    // General map error listener
-                    map.on("error", (e) => {
-                        console.error("Map error:", e);
-                    });
+                    map.fitBounds(southAfricaBounds, {padding: 20});
                 }}
             >
-                <AttributionControl customAttribution="Maptiler" />
+                <Source id="districts" type="geojson" data="/data/MDB_District_Municipal_Boundary_2018.geojson"
+                        promoteId="DISTRICT">
+                    <Layer {...fillLayer}/>
+                    <Layer {...boundaryLayer}/>
+                </Source>
+
+                {popupInfo && (
+                    <Popup
+                        longitude={popupInfo.lngLat.lng}
+                        latitude={popupInfo.lngLat.lat}
+                        anchor="top"
+                        onClose={() => setPopupInfo(null)}
+                        closeOnClick={false}
+                        className="max-w-xs"
+                    >
+                        <MapPopup district_name={popupInfo.districtName}/>
+                    </Popup>
+                )}
             </Map>
 
             <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10 max-w-md w-full px-4">

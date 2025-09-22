@@ -82,9 +82,8 @@ export default function DetailsEvidenceSection({ description, witnesses, policeC
                         <button
                             type="button"
                             name="image"
-                            className="bg-safety-blue bg-[#B05216] hover:bg-[#4F2915] border-b-2 border-[#4F2915]
-                             text-white px-6 py-2 rounded-lg
-                            text-sm transition-colors"
+                            className="bg-safety-blue bg-[#B05216] active:bg-[#4F2915] border-b-2 border-[#4F2915]
+                             text-white px-6 py-2 rounded-lg cursor-pointer text-sm transition-colors"
                         >Choose Files</button>
                         <p className="text-xs text-gray-400 mt-2">
                             Supported: JPG, PNG, MP4, MP3, WAV (Max 10MB each)

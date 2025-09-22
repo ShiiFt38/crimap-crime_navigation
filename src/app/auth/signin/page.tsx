@@ -1,6 +1,3 @@
-// TODO: Refactor the controlled component's state
-// TODO: Style the page according to the web UI
-
 "use client";
 
 import { useState } from "react";
@@ -10,10 +7,20 @@ import Link from "next/link";
 import {User} from "lucide-react";
 
 export default function SignIn() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [userData, setUserData] = useState({
+        email: "",
+        password: "",
+    });
     const [error, setError] = useState("");
     const router = useRouter();
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setUserData(prevUserData => ({
+            ...prevUserData,
+                [name]: value,
+        }))
+    }
 
     const errorMessages: {[key: string]: string} = {
         MISSING_CREDENTIALS: "please provide both email and password",
@@ -28,6 +35,7 @@ export default function SignIn() {
         setError("");
 
         try {
+            const { email, password } = userData;
             const res = await signIn("credentials", {
                 email,
                 password,
@@ -58,17 +66,19 @@ export default function SignIn() {
                 {error && <p className="text-red-500 mb-4 text-sm bg-red-50 p-3 rounded border border-red-200">{error}</p>}
                 <input
                     type="email"
+                    name="email"
                     placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={userData.email}
+                    onChange={handleChange}
                     className="w-full p-2 mb-4 border rounded"
                     required
                 />
                 <input
                     type="password"
+                    name="password"
                     placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    value={userData.password}
+                    onChange={handleChange}
                     className="w-full p-2 mb-4 border rounded"
                     required
                 />

@@ -31,7 +31,7 @@ export default function MyAreas() {
                 <div className="flex items-center justify-between mb-6">
                     <h1 className="text-2xl font-bold text-gray-900">My Areas</h1>
                     <button className="bg-[#B05216] active:bg-[#4F2915] text-white px-10 py-2 rounded-lg flex
-                        cursor-pointer border-b-2 border-[#4F2915] items-center shadow-md text-sm">
+                        cursor-pointer border-b-2 border-[#4F2915] items-center text-center shadow-md text-sm">
                         <Plus />
                         Add Area
                     </button>

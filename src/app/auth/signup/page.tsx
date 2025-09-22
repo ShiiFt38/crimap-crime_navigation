@@ -1,6 +1,3 @@
-// TODO: Refactor the controlled component's state
-// TODO: Style the page according to the web UI
-
 "use client";
 
 import { useState } from "react";
@@ -9,19 +6,32 @@ import Link from "next/link";
 import { User } from "lucide-react";
 
 export default function SignUp() {
-    const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [fullName, setFullName] = useState("");
-    const [phone, setPhone] = useState("");
+    const [ newUser, setNewUser ] = useState({
+        username: "",
+        email: "",
+        password: "",
+        fullName: "",
+        phone: "",
+    })
+
     const [error, setError] = useState("");
     const router = useRouter();
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+        setNewUser(prevUserData => ({
+            ...prevUserData,
+            [name]: value,
+        }))
+        console.log(newUser);
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
 
         try {
+            const { username, email, password, fullName, phone } = newUser;
             const res = await fetch("/api/signup", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -53,40 +63,45 @@ export default function SignUp() {
                 {error && <p className="text-red-500 mb-4">{error}</p>}
                 <input
                     type="text"
+                    name="username"
                     placeholder="Username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    value={newUser.username}
+                    onChange={handleChange}
                     className="w-full p-2 mb-4 border rounded"
                     required
                 />
                 <input
                     type="email"
+                    name="email"
                     placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={newUser.email}
+                    onChange={handleChange}
                     className="w-full p-2 mb-4 border rounded"
                     required
                 />
                 <input
                     type="password"
+                    name="password"
                     placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    value={newUser.password}
+                    onChange={handleChange}
                     className="w-full p-2 mb-4 border rounded"
                     required
                 />
                 <input
                     type="text"
+                    name="fullname"
                     placeholder="Full Name (optional)"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
+                    value={newUser.fullName}
+                    onChange={handleChange}
                     className="w-full p-2 mb-4 border rounded"
                 />
                 <input
                     type="tel"
+                    name="phone"
                     placeholder="Phone (optional)"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    value={newUser.phone}
+                    onChange={handleChange}
                     className="w-full p-2 mb-4 border rounded"
                 />
                 <button type="submit" className="bg-[#B05216] active:bg-[#4F2915] text-white px-10 py-2 rounded-lg
