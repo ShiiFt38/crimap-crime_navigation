@@ -1,12 +1,10 @@
-// TODO: Improve the district popup
-
 "use client";
 
-import { Map, AttributionControl, Popup, Source, Layer } from "react-map-gl/maplibre";
+import { Map, useControl, Popup, Source, Layer } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useRef, useState, useEffect } from "react";
 import maplibregl from "maplibre-gl";
-import { X, Search } from "lucide-react";
+import { X, Search, LoaderCircle } from "lucide-react";
 import MapPopup from "./_components/map_popup";
 
 export default function Home() {
@@ -15,6 +13,7 @@ export default function Home() {
     const [searchQuery, setSearchQuery] = useState("");
     const [suggestions, setSuggestions] = useState([]);
     const [isFocused, setIsFocused] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const fillLayer = {
         id: "district-fills",
@@ -27,8 +26,6 @@ export default function Home() {
         type: "line",
         paint: { "line-color": "#555555", "line-width": 1.5, "line-opacity": 0.7 },
     };
-
-    const southAfricaBounds = [16.5, -35, 33, -22];
 
     const handleClick = (e) => {
         const features = e.features;
@@ -55,11 +52,13 @@ export default function Home() {
         }
 
         const fetchSuggestions = async () => {
+            setLoading(true);
             try {
                 const response = await fetch(
                     `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(searchQuery)}&format=json&countrycodes=za&limit=5`
                 );
                 const data = await response.json();
+                setLoading(false);
                 setSuggestions(data);
                 console.log(suggestions)
             } catch (error) {
@@ -120,7 +119,7 @@ export default function Home() {
                 onClick={handleClick}
                 onLoad={() => {
                     const map = mapRef.current.getMap();
-                    map.fitBounds(southAfricaBounds, {padding: 20});
+                    map.fitBounds(bounds, {padding: 20});
                 }}
             >
                 <Source id="districts" type="geojson" data="/data/MDB_District_Municipal_Boundary_2018.geojson"
@@ -143,7 +142,7 @@ export default function Home() {
                 )}
             </Map>
 
-            <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10 max-w-md w-full px-4">
+            <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10 max-w-md w-full px-4 gap-y-2">
                 <form onSubmit={handleSearch} className="flex flex-row justify-center px-2">
                     <div className="flex flex-row space-x-2">
                         <input
@@ -170,6 +169,7 @@ export default function Home() {
                         </div>
                     </div>
                 </form>
+                {loading && <LoaderCircle className="mx-auto my-4 animate-spin"/>}
                 {suggestions.length > 0 && (
                     <ul className="mt-2 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto w-full">
                         {suggestions.map((suggestion) => (

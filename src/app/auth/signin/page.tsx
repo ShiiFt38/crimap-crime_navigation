@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
-import {User} from "lucide-react";
+import { User, CheckCheck, LoaderCircle } from "lucide-react";
 
 export default function SignIn() {
     const [userData, setUserData] = useState({
@@ -13,6 +13,8 @@ export default function SignIn() {
     });
     const [error, setError] = useState("");
     const router = useRouter();
+    const [valid, setValid] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -33,6 +35,7 @@ export default function SignIn() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
+        setLoading(true)
 
         try {
             const { email, password } = userData;
@@ -43,8 +46,12 @@ export default function SignIn() {
             });
 
             if (res?.error) {
+                setLoading(false)
+                setValid(false)
                 setError(errorMessages[res.error] || errorMessages.default);
             } else {
+                setLoading(false)
+                setValid(true)
                 router.push("/account");
             }
         } catch (error) {
@@ -60,7 +67,9 @@ export default function SignIn() {
                 <div className="flex justify-between items-center mb-6">
                     <h3 className="text-lg font-semibold text-gray-900">Sign In</h3>
                     <div className="py-[0.25rem] px-[0.75rem] bg-blue-100 rounded-lg flex items-center justify-center mr-4">
-                        <User size={16} className="text-blue-600" />
+                        {loading ? <LoaderCircle  size={16} className="animate-spin"/>
+                            : valid ? <CheckCheck size={16} className="text-green-600" />
+                                : <User size={16} className="text-blue-600" />}
                     </div>
                 </div>
                 {error && <p className="text-red-500 mb-4 text-sm bg-red-50 p-3 rounded border border-red-200">{error}</p>}

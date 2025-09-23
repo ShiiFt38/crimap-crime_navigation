@@ -1,8 +1,9 @@
 // app/my-areas/page.tsx
+// Handle error output in the frontend
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Plus } from "lucide-react";
+import { Plus, LoaderCircle } from "lucide-react";
 import AreaCard from "@/app/my-areas/components/AreaCard"
 
 export default function MyAreas() {
@@ -39,7 +40,7 @@ export default function MyAreas() {
 
                 {loading ? (
                     <div className="flex justify-center items-center h-64">
-                        <p className="text-lg text-gray-600">Loading...</p>
+                        <LoaderCircle className="animate-spin"/>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-14">

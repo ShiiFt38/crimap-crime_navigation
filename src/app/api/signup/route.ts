@@ -9,7 +9,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "MISSING_FIELDS" }, { status: 400 });
     }
 
-    const db = await openDb(); // Use the centralized DB connection
+    const db = await openDb();
 
     try {
         // Debug: Check if table exists

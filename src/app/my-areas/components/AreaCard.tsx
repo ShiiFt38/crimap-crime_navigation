@@ -3,6 +3,7 @@ import { useState } from "react";
 import slugify from "slugify";
 import RiskBadge from "./RiskBadge";
 import CrimeItem from "./CrimeItem";
+import { LoaderCircle } from "lucide-react";
 
 interface AreaCardProps {
     area: string;
@@ -50,7 +51,7 @@ export default function AreaCard({ area, distance, crimeIndex }: AreaCardProps) 
                             }`}
                             aria-disabled={isLoading}
                         >
-                            {isLoading ? "Loading..." : "View Area"}
+                            {isLoading ? <LoaderCircle size={16} className="m-auto animate-spin"/> : "View Area"}
                         </Link>
                         <button
                             className="flex-1 bg-gray-100 active:bg-[#4F2915] cursor-pointer border-b-2
