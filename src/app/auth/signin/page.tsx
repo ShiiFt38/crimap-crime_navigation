@@ -29,7 +29,7 @@ export default function SignIn() {
         INVALID_EMAIL: "No account found with this email",
         INCORRECT_PASSWORD: "Incorrect password. Please try again.",
         CredentialsSignin: "Invalid Credentials. Please check your email or password",
-        default: "An unexpexted error occured. Please try again later."
+        default: "An unexpected error occurred. Please try again later."
     }
 
     const handleSubmit = async (e: React.FormEvent) => {

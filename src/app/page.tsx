@@ -1,9 +1,8 @@
 "use client";
 
-import { Map, useControl, Popup, Source, Layer } from "react-map-gl/maplibre";
+import { Map, NavigationControl, Popup, Source, Layer } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useRef, useState, useEffect } from "react";
-import maplibregl from "maplibre-gl";
 import { X, Search, LoaderCircle } from "lucide-react";
 import MapPopup from "./_components/map_popup";
 
@@ -122,6 +121,7 @@ export default function Home() {
                     map.fitBounds(bounds, {padding: 20});
                 }}
             >
+                <NavigationControl/>
                 <Source id="districts" type="geojson" data="/data/MDB_District_Municipal_Boundary_2018.geojson"
                         promoteId="DISTRICT">
                     <Layer {...fillLayer}/>

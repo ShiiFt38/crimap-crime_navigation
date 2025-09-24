@@ -15,8 +15,8 @@ declare module "next-auth" {
     }
 }
 
-// Define the handler at the module level
-const handler = NextAuth({
+// Define the auth options
+const authOptions = {
     providers: [
         CredentialsProvider({
             name: "Credentials",
@@ -73,7 +73,6 @@ const handler = NextAuth({
         },
         async session({ session, token }) {
             if (session.user && token.sub) { // token.sub is the user ID
-                // Fetch additional user data from DB
                 const db = await openDb();
                 try {
                     const fullUser = await db.get(
@@ -98,7 +97,13 @@ const handler = NextAuth({
         },
     },
     debug: true, // Enable debug logging
-});
+};
 
-// Export the handler for all methods
+// Export the handler
+const handler = NextAuth(authOptions);
+
+// Export handlers for all methods
 export { handler as GET, handler as POST };
+
+// Export auth options for use in other routes
+export { authOptions };
