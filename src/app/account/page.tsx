@@ -11,7 +11,7 @@ import PasswordForm from "@/app/account/components/PasswordForm";
 import EmergencyContactsForm from "@/app/account/components/EmergencyContactsForm";
 import LocationForm from "@/app/account/components/LocationForm";
 import AlertsForm from "@/app/account/components/AlertsForm";
-import {TriangleAlert, Phone, Share2, LogOut} from "lucide-react"
+import {TriangleAlert, Phone, Share2, LogOut, LoaderCircle} from "lucide-react"
 
 export default function Settings() {
     const { data: session, status } = useSession();
@@ -29,7 +29,7 @@ export default function Settings() {
 
     if (status === "loading") {
         return <div className="flex justify-center items-center h-64">
-            <p className="text-lg text-gray-600">Loading...</p>
+            <LoaderCircle className="animate-spin"/>
         </div>;
     }
 

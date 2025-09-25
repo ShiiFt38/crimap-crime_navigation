@@ -66,7 +66,8 @@ export default function SignIn() {
             <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md w-full max-w-md mx-4 sm:mx-6">
                 <div className="flex justify-between items-center mb-6">
                     <h3 className="text-lg font-semibold text-gray-900">Sign In</h3>
-                    <div className="py-[0.25rem] px-[0.75rem] bg-blue-100 rounded-lg flex items-center justify-center mr-4">
+                    <div className={`py-[0.25rem] px-[0.75rem] ${valid ? "bg-green-100" : "bg-blue-100"} 
+                    rounded-lg flex items-center justify-center mr-4`}>
                         {loading ? <LoaderCircle  size={16} className="animate-spin"/>
                             : valid ? <CheckCheck size={16} className="text-green-600" />
                                 : <User size={16} className="text-blue-600" />}
