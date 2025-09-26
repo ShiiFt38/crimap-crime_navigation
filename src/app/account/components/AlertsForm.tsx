@@ -1,7 +1,7 @@
 'use client'
 
-import { Bell } from "lucide-react";
-import { useState } from "react";
+import { Bell, LoaderCircle } from "lucide-react";
+import { useState, useEffect } from "react";
 import SubmitBtn from "@/app/account/components/SubmitBtn";
 
 export default function AlertsForm() {
@@ -9,12 +9,45 @@ export default function AlertsForm() {
         smsAlerts: false,
         emailAlerts: false,
         pushNotifications: false,
-        alertRadius: "",
-    })
+    });
 
-    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
+
+    const errorMessages = {
+        INVALID_INPUT: "Invalid alert preferences provided.",
+        Unauthorized: "You must be logged in to update the preferences.",
+        default: "An unexpected error occurred. Please try again later",
+    }
+
+    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setError(null);
+        setSuccess(null);
+        setLoading(true);
         console.log(alertsData)
+
+        try {
+            const response = await fetch("/api/account/update-alerts", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({alertsData}),
+            });
+
+            const res = response.json();
+            if (!response.ok) {
+                setError(errorMessages[res.error] || errorMessages.default)
+                setLoading(false)
+                return;
+            }
+
+            setSuccess("Alert preferences updated successfully.");
+            setLoading(false);
+        } catch (error) {
+            setError(error.message || errorMessages.default);
+            setLoading(false);
+        }
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,11 +63,14 @@ export default function AlertsForm() {
             <div className="flex justify-between items-center mb-6">
                 <h3 className="text-lg font-semibold text-gray-900">Real-time Alerts</h3>
                 <div className="py-[0.25rem] px-[0.75rem] bg-yellow-200 rounded-lg flex items-center justify-center mr-4">
-                    <Bell size={16} className="yellow-600 text-xl" />
+                    {loading ? <LoaderCircle size={16}/>
+                        : <Bell size={16} className="yellow-600 text-xl" />}
                 </div>
             </div>
 
             <form onSubmit={onSubmit} className="flex flex-col space-y-6 md:px-16">
+                {error && <p className="text-red-500 mb-4 text-sm bg-red-50 p-3 rounded border border-red-200">{error}</p>}
+                {success && <p className="text-green-500 mb-4 text-sm bg-green-50 p-3 rounded border border-green-200">{success}</p>}
                 <div className="flex items-center justify-between">
                     <div>
                         <h4 className="font-medium text-gray-900">SMS Alerts</h4>
@@ -84,16 +120,6 @@ export default function AlertsForm() {
                             after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full
                             after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                     </label>
-                </div>
-
-                <div>
-                    <div className="flex justify-between text-xs text-gray-500 mt-1">
-                        <span>1 mile</span>
-                        <span>{alertsData.alertRadius || "1"} miles</span>
-                        <span>10 miles</span>
-                    </div>
-                    <input type="range" name="alertRadius" min="1" max="10" value={alertsData.alertRadius} onChange={handleChange}
-                           className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider"/>
                 </div>
 
                 <SubmitBtn name={"Save Alert Preferences"}/>
