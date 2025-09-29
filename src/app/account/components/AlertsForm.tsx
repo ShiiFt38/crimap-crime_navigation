@@ -3,8 +3,10 @@
 import { Bell, LoaderCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 import SubmitBtn from "@/app/account/components/SubmitBtn";
+import {useSession} from "next-auth/react";
 
 export default function AlertsForm() {
+    const { data: session, status } = useSession();
     const [ alertsData, setAlertsData ] = useState({
         smsAlerts: false,
         emailAlerts: false,
@@ -21,6 +23,37 @@ export default function AlertsForm() {
         default: "An unexpected error occurred. Please try again later",
     }
 
+    // Fetch alert preferences on mount
+    useEffect(() => {
+        if (status === "authenticated" && session?.user) {
+            const fetchAlerts = async () => {
+                try {
+                    const response = await fetch("/api/account/get-alerts", {
+                        method: "GET",
+                        headers: { "Content-Type": "application/json" },
+                    });
+
+                    if (!response.ok) {
+                        const res = await response.json();
+                        setError(res.error || errorMessages.default);
+                        return;
+                    }
+
+                    const data = await response.json();
+                    setAlertsData({
+                        smsAlerts: data.smsAlerts,
+                        emailAlerts: data.emailAlerts,
+                        pushNotifications: data.pushNotifications,
+                    });
+                } catch (error) {
+                    setError(error.message || errorMessages.default);
+                }
+            };
+
+            fetchAlerts();
+        }
+    }, [session, status]);
+
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError(null);
@@ -32,10 +65,10 @@ export default function AlertsForm() {
             const response = await fetch("/api/account/update-alerts", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({alertsData}),
+                body: JSON.stringify(alertsData),
             });
 
-            const res = response.json();
+            const res = await response.json();
             if (!response.ok) {
                 setError(errorMessages[res.error] || errorMessages.default)
                 setLoading(false)
@@ -51,10 +84,10 @@ export default function AlertsForm() {
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value, type, checked } = e.target;
+        const { name, type, checked } = e.target;
         setAlertsData((prevState) => ({
             ...prevState,
-            [name]: type === "checkbox" ? checked : value,
+            [name]: type === "checkbox" ? checked : false,
         }))
     }
 
@@ -63,8 +96,8 @@ export default function AlertsForm() {
             <div className="flex justify-between items-center mb-6">
                 <h3 className="text-lg font-semibold text-gray-900">Real-time Alerts</h3>
                 <div className="py-[0.25rem] px-[0.75rem] bg-yellow-200 rounded-lg flex items-center justify-center mr-4">
-                    {loading ? <LoaderCircle size={16}/>
-                        : <Bell size={16} className="yellow-600 text-xl" />}
+                    {loading ? <LoaderCircle className="animate-spin" size={16}/>
+                        : <Bell size={16} className="text-yellow-600 text-xl" />}
                 </div>
             </div>
 
