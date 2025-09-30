@@ -1,4 +1,5 @@
-import {Check, MapPin, Ban, Lock} from "lucide-react";
+import { MapPin } from "lucide-react";
+import LocationInput from "@/lib/modules/components/LocationInput";
 
 interface LocationTimeSectionProps {
     useCurrentLocation: boolean;
@@ -6,10 +7,12 @@ interface LocationTimeSectionProps {
     date: string;
     time: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    setLocation: (location: string) => void;
+    setUseCurrentLocation: (useCurrentLocation: boolean) => void;
 }
 
-export default function LocationTimeSection({ useCurrentLocation, location, date, time, onChange }: LocationTimeSectionProps){
-    return(
+export default function LocationTimeSection({ useCurrentLocation, location, date, time, onChange, setLocation, setUseCurrentLocation }: LocationTimeSectionProps) {
+    return (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-gray-900">Location & Time</h3>
@@ -19,43 +22,12 @@ export default function LocationTimeSection({ useCurrentLocation, location, date
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:px-20">
-                <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Location *</label>
-                    <div className="space-y-3">
-                        <label
-                            className={`w-full px-4 py-3 border border-gray-300 rounded-lg text-left
-                                        text-gray-700 flex items-center justify-between hover:cursor-pointer
-                                        ${useCurrentLocation && "bg-blue-50"} border-safety-blue`}
-                        >
-                            <div className="flex items-center">
-                                <MapPin size={16} className="mr-4" />
-                                <span className="font-medium text-safety-blue">Use current location</span>
-                            </div>
-
-                            {useCurrentLocation ? <Check size={16}/> : <Ban size={16}/>}
-
-                            {/* visually hidden checkbox drives the state */}
-                            <input
-                                type="checkbox"
-                                name="useCurrentLocation"
-                                checked={useCurrentLocation}
-                                onChange={onChange}
-                                className="hidden"
-                            />
-                        </label>
-
-                        <div className="text-center text-gray-500 text-sm">or</div>
-                        <input
-                            type="text"
-                            name="location"
-                            onChange={onChange}
-                            value={location}
-                            placeholder="Enter address, intersection, or landmark"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2
-                                    focus:ring-safety-blue focus:border-transparent"
-                        />
-                    </div>
-                </div>
+                <LocationInput
+                    location={location}
+                    useCurrentLocation={useCurrentLocation}
+                    setLocation={setLocation}
+                    setUseCurrentLocation={setUseCurrentLocation}
+                />
 
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Date *</label>
@@ -80,5 +52,5 @@ export default function LocationTimeSection({ useCurrentLocation, location, date
                 </div>
             </div>
         </div>
-    )
+    );
 }

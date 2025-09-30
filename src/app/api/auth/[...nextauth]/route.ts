@@ -76,7 +76,9 @@ const authOptions = {
                 const db = await openDb();
                 try {
                     const fullUser = await db.get(
-                        `SELECT username, full_name AS fullName, phone FROM user WHERE user_id = ?`,
+                        `SELECT username, full_name AS fullName, phone, default_address AS address, 
+                        default_longitude AS longitude, default_latitude AS latitude, 
+                        use_current_location as useCurrentLocation FROM user WHERE user_id = ?`,
                         [token.sub]
                     );
                     if (fullUser) {
@@ -87,6 +89,9 @@ const authOptions = {
                             email: session.user.email,
                             fullName: fullUser.fullName,
                             phone: fullUser.phone,
+                            address: fullUser.address,
+                            longitude: fullUser.longitude,
+                            latitude: fullUser.latitude,
                         };
                     }
                 } finally {
