@@ -1,30 +1,48 @@
-//TODO: Turn this component to a reusable module, props...
+import {Pencil, Trash} from "lucide-react";
 
-import {Trash} from "lucide-react";
+interface Contact {
+    contact_id: number;
+    contact_name: string;
+    phone_number: string;
+    relationship: string | null;
+};
 
-export default function EmergencyContact() {
+interface ContactProps {
+    contact: Contact;
+    handleEdit: (contact: Contact) => void;
+    handleDelete: (contact: number) => void;
+}
+
+export default function EmergencyContact({contact, handleEdit, handleDelete}: ContactProps) {
     return (
         <div
-            className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-gray-50 rounded-lg border">
-            <div className="flex-1 mb-3 sm:mb-0">
-                <div className="flex flex-col sm:flex-row sm:space-x-4">
-                    <input type="text" placeholder="Contact Name" defaultValue="Sarah Johnson"
-                           className="mb-2 sm:mb-0 px-3 py-2 border border-gray-300 rounded-md "/>
-                    <input type="tel" placeholder="Phone Number" defaultValue="+1 (555) 987-6543"
-                           className="mb-2 sm:mb-0 px-3 py-2 border border-gray-300 rounded-md "/>
-                    <select
-                        className="px-3 py-2 border border-gray-300 rounded-md">
-                        <option value="family">Family</option>
-                        <option value="friend">Friend</option>
-                        <option value="colleague">Colleague</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
+            key={contact.contact_id}
+            className="flex flex-row justify-between items-start md:items-center p-4
+                                    bg-gray-50 rounded-lg border border-gray-200"
+        >
+            <div className="w-full flex-row space-x-4 ">
+                <p className="block font-medium text-gray-900">{contact.contact_name}</p>
+                <p className="inline text-sm items text-gray-600">{contact.phone_number}</p>
+                <p className="inline text-sm text-gray-500 capitalize">{contact.relationship}</p>
             </div>
-            <button
-                className="text-red-600 hover:text-red-800 p-2 rounded-full hover:bg-red-200">
-                <Trash size={16} className="text-red" />
-            </button>
+            <div className="flex space-x-3 mt-3 md:mt-0">
+                <button
+                    onClick={() => handleEdit(contact)}
+                    className="text-blue-600 hover:text-blue-800 transition-colors
+                                            hover:bg-gray-100 rounded-full p-2 cursor-pointer"
+                    aria-label="Edit contact"
+                >
+                    <Pencil size={16} />
+                </button>
+                <button
+                    onClick={() => handleDelete(contact.contact_id)}
+                    className="text-red-600 hover:text-red-800 transition-colors
+                                            hover:bg-gray-100 rounded-full p-2 cursor-pointer"
+                    aria-label="Delete contact"
+                >
+                    <Trash size={16} />
+                </button>
+            </div>
         </div>
     )
 }

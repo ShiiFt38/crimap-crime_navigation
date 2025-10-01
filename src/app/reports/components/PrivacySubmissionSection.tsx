@@ -21,7 +21,7 @@ export default function PrivacySubmissionSection({ anonymous, termsConfirmation,
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 space-x-4 md:px-20">
+            <div className="grid grid-cols-1 md:grid-cols-2 space-x-4 space-y-8 md:px-20">
                 <div className="space-y-4">
                     <div
                         className="flex items-center justify-between p-4 bg-gray-100 rounded-lg">
@@ -35,8 +35,8 @@ export default function PrivacySubmissionSection({ anonymous, termsConfirmation,
                             <input type="checkbox" name="anonymous" checked={anonymous} className="sr-only peer"
                                    onChange={onChange}/>
                             <div
-                                className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4
-                            peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full
+                                className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer
+                                peer-checked:after:translate-x-full
                             peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px]
                             after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full
                             after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
@@ -68,8 +68,7 @@ export default function PrivacySubmissionSection({ anonymous, termsConfirmation,
                             onChange={onChange}
                             value={contactEmail}
                             placeholder="your.email@example.com"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2
-                            focus:ring-safety-blue focus:border-transparent"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg "
                         />
                         <p className="text-xs text-gray-500 mt-1">
                             Only used if authorities need to follow up
@@ -86,7 +85,7 @@ export default function PrivacySubmissionSection({ anonymous, termsConfirmation,
                             onChange={onChange}
                             value={contactPhone}
                             placeholder="(555) 123-4567"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-safety-blue focus:border-transparent"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg "
                         />
                     </div>
                 </div>

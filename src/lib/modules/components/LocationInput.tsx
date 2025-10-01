@@ -65,9 +65,9 @@ export default function LocationInput({ location, setCoords, useCurrentLocation,
             <label className="block text-sm font-medium text-gray-700 mb-2">Location *</label>
             <div className="space-y-3">
                 <label
-                    className={`w-full px-4 py-3 border border-gray-300 rounded-lg text-left
+                    className={`w-full px-4 py-3 border rounded-lg text-left
                       text-gray-700 flex items-center justify-between hover:cursor-pointer
-                      ${useCurrentLocation && 'border-[#8F9C68]'} `}
+                      ${useCurrentLocation ? 'border-[#8F9C68] bg-[#8F9C68]/30' : 'border-gray-300'} `}
                 >
                     <div className="flex items-center">
                         <MapPin size={16} className="mr-4" />

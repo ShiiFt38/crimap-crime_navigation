@@ -121,7 +121,7 @@ export default function Home() {
                     map.fitBounds(bounds, {padding: 20});
                 }}
             >
-                <NavigationControl/>
+                <NavigationControl position="bottom-left"/>
                 <Source id="districts" type="geojson" data="/data/MDB_District_Municipal_Boundary_2018.geojson"
                         promoteId="DISTRICT">
                     <Layer {...fillLayer}/>
@@ -142,7 +142,7 @@ export default function Home() {
                 )}
             </Map>
 
-            <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10 max-w-md w-full px-4 gap-y-2">
+            <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-9 max-w-md w-full px-4 gap-y-2">
                 <form onSubmit={handleSearch} className="flex flex-row justify-center px-2">
                     <div className="flex flex-row space-x-2">
                         <input
