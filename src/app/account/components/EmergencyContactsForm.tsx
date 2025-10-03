@@ -1,7 +1,8 @@
 'use client'
 
-import { Phone, Pencil, Trash, LoaderCircle } from "lucide-react"
+import { Phone, LoaderCircle } from "lucide-react"
 import { useEffect, useState } from "react";
+import Select from "react-select";
 import EmergencyContact from "./EmergencyContact";
 import SubmitBtn from "@/app/account/components/SubmitBtn";
 
@@ -147,6 +148,12 @@ export default function EmergencyContactsForm() {
         setSuccess(null);
     };
 
+    const relationshipOptions = [
+        {value: "Family", label: "Family" },
+        {value: "Friend", label: "Friend"},
+        {value: "Colleague", label: "Colleague"},
+    ]
+
     return (
         <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 lg:col-span-2">
             <div className="flex items-center justify-between mb-6">
@@ -166,7 +173,7 @@ export default function EmergencyContactsForm() {
                         name="contact_name"
                         onChange={handleChange}
                         value={formData.contact_name}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg transition-all"
                     />
                 </div>
                 <div>
@@ -176,22 +183,23 @@ export default function EmergencyContactsForm() {
                         name="phone_number"
                         onChange={handleChange}
                         value={formData.phone_number}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg transition-all"
                     />
                 </div>
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Relationship</label>
-                    <select
+                    <Select
                         name="relationship"
-                        onChange={handleChange}
-                        value={formData.relationship}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                    >
-                        <option value="Family">Family</option>
-                        <option value="Friend">Friend</option>
-                        <option value="Colleague">Colleague</option>
-                        <option value="Other">Other</option>
-                    </select>
+                        onChange={(selectedOption) => {
+                            handleChange({ target: {name: "relationship", value: selectedOption ? selectedOption.value : ''}});
+                        }}
+                        value={relationshipOptions.find((option) => option.value === formData.relationship) || null}
+                        className="w-full rounded-lg"
+                        options={relationshipOptions}
+                        classNamePrefix="select"
+                        placeholder="What is your relationship with the contact?"
+                        isClearable
+                    />
                 </div>
                 <div className="flex space-x-4">
                     <SubmitBtn name={formData.contact_id ? "Update Contact" : "Add Contact"} />
@@ -199,7 +207,8 @@ export default function EmergencyContactsForm() {
                         <button
                             type="button"
                             onClick={handleCancelEdit}
-                            className="bg-gray-100 active:bg-[#4F2915] cursor-pointer border-b-2 border-[#4F2915] active:text-white text-gray-700 py-2 px-3 rounded-lg text-sm font-medium"
+                            className="bg-gray-100 active:bg-[#4F2915] cursor-pointer border-b-2 border-[#4F2915]
+                            active:text-white text-gray-700 py-2 px-3 rounded-lg text-sm font-medium"
                         >
                             Cancel
                         </button>

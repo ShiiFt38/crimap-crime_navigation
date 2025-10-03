@@ -43,7 +43,7 @@ export default function CrimeReportCard({
 
             {/* Toggleable full details list */}
             {isDetailsOpen && (
-                <div className="bg-gray-50 rounded-lg p-3 mb-3 text-sm text-gray-700">
+                <div className="bg-gray-50 rounded-lg p-3 mb-3 text-sm text-gray-700 border border-gray-300">
                     <p><strong>Offence:</strong> {offence}</p>
                     <p><strong>Time:</strong> {time}</p>
                     <p><strong>Description:</strong> {description}</p>
@@ -56,17 +56,17 @@ export default function CrimeReportCard({
             <p className="text-gray-800 text-sm mb-3">{description}</p>
 
             {image && (
-                <div className="relative bg-gray-200 rounded-lg h-32 mb-3 overflow-hidden">
+                <div className="relative bg-gray-100 rounded-lg h-32 mb-3 overflow-hidden">
                     <img
                         src={image}
                         alt="Report image"
-                        className="object-cover"
+                        className="object-contain"
                         sizes="(max-width: 768px) 100vw, 50vw"
                     />
                 </div>
             )}
 
-            <div className="bg-gray-100 rounded-lg p-3 mb-3 w-full">
+            <div className="bg-gray-100 rounded-lg p-3 mb-3 w-fit border border-gray-300">
                 <div className="flex items-center text-gray-600 text-xs">
                     <MapPin size={14} className="mr-2" /> {location}
                 </div>
@@ -74,7 +74,7 @@ export default function CrimeReportCard({
 
             <div className="flex items-center justify-between">
                 <span className="text-gray-500 text-xs">by {author}</span>
-                <div className="flex items-center space-x-4 bg-[#B05216] rounded-full px-4 py-2">
+                <div className="flex items-center space-x-4 bg-[#B05216] rounded-full px-4 py-2 border-b-2 border-[#4F2915]">
                     <button className="cursor-pointer flex items-center space-x-1 text-white hover:text-safety-blue">
                         <ThumbsUp size={14} />
                         <span className="text-xs">{likes}</span>

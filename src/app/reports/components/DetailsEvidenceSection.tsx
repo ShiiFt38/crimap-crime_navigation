@@ -1,4 +1,6 @@
-import {BookText, ImageUp, Lock} from "lucide-react";
+import {BookText, ImageUp} from "lucide-react";
+import Select from 'react-select';
+import CreatableSelect from 'react-select/creatable';
 
 interface DetailsEvidenceProps {
     description: string;
@@ -8,6 +10,19 @@ interface DetailsEvidenceProps {
     onChange: (e: React.ChangeEvent<HTMLSelectElement | HTMLTextAreaElement>) => void;
 }
 
+const witnessOptions = [
+    {value: 'Multiple witnesses were present', label: 'Yes - Multiple witnesses'},
+    {value: 'One witness was present', label: 'One witness'},
+    {value: 'No witnesses were present', label: 'No witnesses'},
+    {value: 'Unknown', label: 'Unknown'},
+]
+
+const policeContactOptions = [
+    {value: 'Police were contacted and responded', label: 'Yes - Police responded'},
+    {value: 'Police were contacted and a report was filed', label: "Yes - Report filed"},
+    {value: 'Police were not contacted', label: 'No - Not contacted'},
+    {value: 'Planning to contact police soon', label: 'Planning to contact'},
+]
 export default function DetailsEvidenceSection({ description, witnesses, policeContacted, image, onChange }: DetailsEvidenceProps) {
     return (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 ">
@@ -35,35 +50,32 @@ export default function DetailsEvidenceSection({ description, witnesses, policeC
 
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Witnesses Present</label>
-                    <select
+                    <Select
                         name="witnesses"
-                        onChange={onChange}
-                        value={witnesses}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                    >
-                        <option>Select...</option>
-                        <option>Yes - Multiple witnesses</option>
-                        <option>Yes - One witness</option>
-                        <option>No witnesses</option>
-                        <option>Unknown</option>
-                    </select>
+                        value={witnessOptions.find(option => option.value === witnesses) || null}
+                        onChange={(selectedOption) =>
+                            onChange({ target: { name: 'witnesses', value: selectedOption ? selectedOption.value : '' } })}
+                        className="w-full rounded-lg"
+                        options={witnessOptions}
+                        classNamePrefix="select"
+                        placeholder="Were there any witnesses?"
+                        isClearable
+                    />
                 </div>
 
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Police Contacted</label>
-                    <select
+                    <Select
                         name="policeContacted"
-                        onChange={onChange}
-                        value={policeContacted}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg
-                        focus:ring-2 focus:ring-safety-blue focus:border-transparent"
-                    >
-                        <option>Select...</option>
-                        <option>Yes - Police responded</option>
-                        <option>Yes - Report filed</option>
-                        <option>No - Not contacted</option>
-                        <option>Planning to contact</option>
-                    </select>
+                        onChange={(selectedOption) =>
+                            onChange({target: {name: 'policeContacted', value: selectedOption ? selectedOption.value : ''}})}
+                        value={policeContactOptions.find((option) => option.value === policeContacted) || null}
+                        className="w-full rounded-lg"
+                        options={policeContactOptions}
+                        classNamePrefix="select"
+                        placeholder="Select witnesses present..."
+                        isClearable
+                    />
                 </div>
 
                 <div className="md:col-span-2">
