@@ -45,17 +45,17 @@ export default function AreaCard({ area, distance, crimeIndex }: AreaCardProps) 
                         <Link
                             href={`/my-areas/${slugify(area, { lower: true })}`}
                             onClick={handleViewAreaClick}
-                            className={`flex-1 bg-[#B05216] active:bg-[#4F2915] cursor-pointer border-b-2
-                        border-[#4F2915] text-white py-2 px-3 rounded-lg text-sm font-medium text-center ${
-                                isLoading ? "opacity-50 cursor-not-allowed" : "active:bg-[#4F2915]"
+                            className={`flex-1 bg-[var(--color-secondary)] active:bg-[var(--color-quarternary)] cursor-pointer border-b-2
+                        border-[var(--color-quarternary)] text-white py-2 px-3 rounded-lg text-sm font-medium text-center ${
+                                isLoading ? "opacity-50 cursor-not-allowed" : "active:bg-[var(--color-quarternary)]"
                             }`}
                             aria-disabled={isLoading}
                         >
                             {isLoading ? <LoaderCircle size={16} className="m-auto animate-spin"/> : "View Area"}
                         </Link>
                         <button
-                            className="flex-1 bg-gray-100 active:bg-[#4F2915] cursor-pointer border-b-2
-                        border-[#4F2915] active:text-white text-gray-700 py-2 px-3 rounded-lg text-sm font-medium"
+                            className="flex-1 bg-gray-100 active:bg-[var(--color-quarternary)] cursor-pointer border-b-2
+                        border-[var(--color-quarternary)] active:text-white text-gray-700 py-2 px-3 rounded-lg text-sm font-medium"
                             disabled={isLoading}
                         >
                             Remove

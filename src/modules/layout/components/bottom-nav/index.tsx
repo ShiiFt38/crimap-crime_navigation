@@ -9,7 +9,7 @@ export default function BottomNav(){
     const src = usePathname();
 
     return (
-        <nav className="md:hidden z-10 flex fixed bottom-0 left-0 right-0 h-16 bg-[#1E4B26] shadow-lg justify-around items-center">
+        <nav className="md:hidden z-10 flex fixed bottom-0 left-0 right-0 h-16 bg-[var(--color-primary)] shadow-lg justify-around items-center">
             {navLinks.map((e, idx) => (
                 <NavLink
                     key={idx}
@@ -18,8 +18,8 @@ export default function BottomNav(){
                     page={e.page}
                     isActive={src == `${e.page}`}
                     iconStyle={`w-4 h-4 flex-shrink-0 transform transition duration-500 ease-in-out
-                     group-active:text-[#8F9C68] ${src == e.page ? "text-[#8F9C68]" : "text-white"}`}/>
+                     group-active:text-[var(--color-tertiary)] ${src == e.page ? "text-[var(--color-tertiary)]" : "text-white"}`}/>
             ))}
-        <FilterButton style={"absolute justify-items-center bottom-25 right-5 p-2 bg-[#1E4B26] rounded-full "}/>
+        <FilterButton style={"absolute justify-items-center bottom-25 right-5 p-2 bg-[var(--color-primary)] rounded-full "}/>
         </nav>)
 }

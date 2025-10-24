@@ -1,8 +1,9 @@
 'use client'
 
-import { MapPin, EllipsisVertical, ThumbsUp, Pin } from "lucide-react";
+import { MapPin, EllipsisVertical, ThumbsUp, Pin, MessageCircleMore } from "lucide-react";
 import OffenceBadge from "@/app/reports/components/OffenceBadge";
 import { useState } from "react";
+import ChatRoom from "@/app/reports/components/ChatRoom";
 
 interface ReportCardProps {
     offence: string;
@@ -24,6 +25,7 @@ export default function CrimeReportCard({
                                             image,
                                         }: ReportCardProps) {
     const [isDetailsOpen, setIsDetailsOpen] = useState(false); // State for toggling details
+    const [chatRoom, setChatRoom] = useState(false);
 
     return (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 md:px-20 w-full">
@@ -37,7 +39,7 @@ export default function CrimeReportCard({
                     className="group p-2 cursor-pointer hover:bg-gray-100 rounded-full w-1/4 max-w-fit justify-self-end"
                     onClick={() => setIsDetailsOpen(!isDetailsOpen)}
                 >
-                    <EllipsisVertical size={18} className="justify-self-end group-active:text-[#4F2915]" />
+                    <EllipsisVertical size={18} className="justify-self-end group-active:text-[var(--color-quarternary)]" />
                 </button>
             </div>
 
@@ -74,16 +76,20 @@ export default function CrimeReportCard({
 
             <div className="flex items-center justify-between">
                 <span className="text-gray-500 text-xs">by {author}</span>
-                <div className="flex items-center space-x-4 bg-[#B05216] rounded-full px-4 py-2 border-b-2 border-[#4F2915]">
-                    <button className="cursor-pointer flex items-center space-x-1 text-white hover:text-safety-blue">
+                <div className="flex items-center space-x-4 bg-[var(--color-secondary)] rounded-full px-4 py-2 border-b-2 border-[var(--color-quarternary)]">
+                    <button className="cursor-pointer flex items-center space-x-1 text-white">
                         <ThumbsUp size={14} />
                         <span className="text-xs">{likes}</span>
                     </button>
-                    <button className="cursor-pointer text-white hover:text-safety-blue">
+                    <button className="cursor-pointer text-white">
                         <Pin size={14} />
+                    </button>
+                    <button className="cursor-pointer text-white" onClick={() => setChatRoom(!chatRoom)}>
+                        <MessageCircleMore size={14} />
                     </button>
                 </div>
             </div>
+            <ChatRoom show={chatRoom} />
         </div>
     );
 }

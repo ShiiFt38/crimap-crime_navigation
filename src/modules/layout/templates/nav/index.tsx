@@ -13,7 +13,7 @@ export default function Nav() {
 
     return (
         <div className="sticky top-0 z-20">
-            <header className="relative h-16 mx-auto duration-200 bg-[#1E4B26] shadow-md">
+            <header className="relative h-16 mx-auto duration-200 bg-[var(--color-primary)] shadow-md">
                 <nav className="content-container flex items-center justify-between w-full h-full text-small-regular px-4">
                     <FilterButton style="hidden md:flex"/>
 
@@ -25,13 +25,13 @@ export default function Nav() {
                             }</h1>
                             <h1 id="brand-name" className="hidden md:flex text-2xl font-bold text-gray-100">CRIMAP</h1>
                         </div>
-                        <Fingerprint id="brand-logo" className="flex ml-4 my-auto text-[#B05216]"/>
+                        <Fingerprint id="brand-logo" className="flex ml-4 my-auto text-[var(--color-secondary)]"/>
                     </Link>
 
                     <button className={`flex items-center justify-self-end gap-x-6 h-full hidden md:flex`} onClick={toggleDrawer}>
-                        <div id="menuBtn" className="focus:outline-none group p-2 rounded-full active:bg-[#8F9C68]
-                            hover:bg-[#8F9C68] cursor-pointer duration-300">
-                            <Menu className=" text-white group-active:text-[#1E4B26]"/>
+                        <div id="menuBtn" className="focus:outline-none group p-2 rounded-full active:bg-[var(--color-tertiary)]
+                            hover:bg-[var(--color-tertiary)] cursor-pointer duration-300">
+                            <Menu className=" text-white group-active:text-[var(--color-primary)]"/>
                         </div>
                     </button>
                 </nav>

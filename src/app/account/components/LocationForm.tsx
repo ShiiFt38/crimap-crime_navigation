@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import LocationInput from "@/lib/modules/components/LocationInput";
 import SubmitBtn from "@/app/account/components/SubmitBtn";
+import FormError from "@/lib/modules/components/FormError";
 
 export default function LocationForm(){
     const { data: session, status} = useSession()
@@ -89,11 +90,7 @@ export default function LocationForm(){
             </div>
 
             <form onSubmit={onSubmit} className="flex flex-col space-y-4 md:px-16">
-                {error && (
-                    <p className="text-red-500 mb-4 text-sm bg-red-50 p-3 rounded border border-red-200">
-                        {error}
-                    </p>
-                )}
+                {error && <FormError text={error}/>}
                 {success && (
                     <p className="text-green-500 mb-4 text-sm bg-green-50 p-3 rounded border border-green-200">
                         {success}

@@ -36,8 +36,8 @@ export default function Settings() {
     if (!session) {
         return (
             <div className="flex min-h-screen items-center justify-center">
-                <button onClick={() => signIn()} className="bg-[#B05216] active:bg-[#4F2915]
-                text-white px-10 py-2 rounded-lg flex cursor-pointer border-b-2 border-[#4F2915] items-center
+                <button onClick={() => signIn()} className="bg-[var(--color-secondary)] active:bg-[var(--color-quarternary)]
+                text-white px-10 py-2 rounded-lg flex cursor-pointer border-b-2 border-[var(--color-quarternary)] items-center
                 shadow-md text-sm">
                     Sign In to Access Settings
                 </button>
@@ -72,8 +72,8 @@ export default function Settings() {
                 <div className="lg:col-span-2 mt-4 flex justify-center">
                     <button
                         onClick={handleLogout}
-                        className="bg-[#B05216] active:bg-[#4F2915] text-white px-10 py-2 rounded-lg flex
-                            cursor-pointer border-b-2 border-[#4F2915] items-center shadow-md text-sm"
+                        className="bg-[var(--color-secondary)] active:bg-[var(--color-quarternary)] text-white px-10 py-2 rounded-lg flex
+                            cursor-pointer border-b-2 border-[var(--color-quarternary)] items-center shadow-md text-sm"
                     >
                         <LogOut className="mr-2" />
                         Log Out

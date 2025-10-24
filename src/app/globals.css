@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+@theme {
+    --color-primary: #1E4B26;
+    --color-secondary: #B05216;
+    --color-tertiary: #8F9C68;
+    --color-quarternary: #4F2915;
+}
+
 @font-face {
   font-family: 'Rubik Dirt';
   src: url('/fonts/Rubik_Dirt/RubikDirt-Regular.ttf');
@@ -14,7 +21,6 @@
 }
 
 :root {
-  --color-primary: #8F9C68;
   --background: #ffffff;
 }
 

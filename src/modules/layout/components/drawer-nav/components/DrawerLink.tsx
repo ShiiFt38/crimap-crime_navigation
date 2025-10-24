@@ -13,7 +13,7 @@ export default function DrawerLink({ page,icon: Icon, iconName, isActive, iconSt
 
     return (
         <Link href={page} className={`hidden md:flex group text-sm p-3 rounded-lg duration-500 
-        hover:bg-[#8F9C68] ${isActive && "bg-[#8F9C68]"}`}>
+        hover:bg-[var(--color-tertiary)] ${isActive && "bg-[var(--color-tertiary)]"}`}>
             <Icon className={iconStyle}/>{iconName}
         </Link>
     )

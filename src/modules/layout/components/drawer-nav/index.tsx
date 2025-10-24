@@ -14,11 +14,11 @@ export default function DrawerNav(){
     return (
         <>
             <div className={`${!isDrawerOpen && "translate-x-full"} duration-300 transition ease-in-out fixed top-0 right-0 h-full w-3/4 max-w-xs 
-            bg-[#1E4B26] text-white shadow-lg z-30 p-6`}>
+            bg-[var(--color-primary)] text-white shadow-lg z-30 p-6`}>
                 <button className="flex group items-center justify-self-end" onClick={toggleDrawer}>
-                    <div className="focus:outline-none p-2 rounded-full active:bg-[#8F9C68]
-                        hover:bg-[#8F9C68] cursor-pointer duration-300">
-                        <X className="cursor-pointer group-active:text-[#1E4B26]"/>
+                    <div className="focus:outline-none p-2 rounded-full active:bg-[var(--color-tertiary)]
+                        hover:bg-[var(--color-tertiary)] cursor-pointer duration-300">
+                        <X className="cursor-pointer group-active:text-[var(--color-primary)]"/>
                     </div>
                 </button>
 
@@ -31,8 +31,8 @@ export default function DrawerNav(){
                             iconName={e.name}
                             page={e.page}
                             isActive={src == e.page}
-                            iconStyle={`mr-2 w-4 h-4 flex-shrink-0 group-active:text-[#1E4B26] duration-300 
-                                ${src == e.page ? "text-[#1E4B26]" : "text-white"}`}/>
+                            iconStyle={`mr-2 w-4 h-4 flex-shrink-0 group-active:text-[var(--color-primary)] duration-300 
+                                ${src == e.page ? "text-[var(--color-primary)]" : "text-white"}`}/>
                     ))}
                 </div>
             </div>

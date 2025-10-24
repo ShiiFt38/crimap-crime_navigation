@@ -80,7 +80,8 @@ export default function ReportForm() {
                     <input
                         type="submit"
                         value="Submit Crime Report"
-                        className="px-10 mx-auto bg-[#B05216] active:bg-[#4F2915] border-b-2 border-[#4F2915]
+                        className="px-10 mx-auto bg-[var(--color-secondary)] active:bg-[var(--color-quarternary)]
+                        border-b-2 border-[var(--color-quarternary)]
                       text-white text-sm py-2 rounded-lg cursor-pointer transition-colors"
                     />
                 </div>

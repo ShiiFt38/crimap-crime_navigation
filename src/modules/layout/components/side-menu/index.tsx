@@ -25,7 +25,8 @@ export default function SideMenu() {
                         <select
                             name="crime-type"
                             id="crime-type"
-                            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-[#1E4B26] focus:border-[#1E4B26] sm:text-sm rounded-md border"
+                            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none
+                            focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] sm:text-sm rounded-md border"
                         >
                             <option value="all">All Types</option>
                             <option value="theft">Theft</option>
@@ -42,7 +43,8 @@ export default function SideMenu() {
                         <select
                             name="time-range"
                             id="time-range"
-                            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-[#1E4B26] focus:border-[#1E4B26] sm:text-sm rounded-md border"
+                            className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none
+                            focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] sm:text-sm rounded-md border"
                         >
                             <option value="24h">Last 24 Hours</option>
                             <option value="7d">Last 7 Days</option>
@@ -83,7 +85,7 @@ export default function SideMenu() {
                 <div className="mb-6">
                     <div className="flex justify-between items-center mb-3">
                         <h2 className="text-lg font-semibold">Latest Reports</h2>
-                        <Link href="/reports" className="text-sm text-[#B05216] hover:text-[#4F2915] cursor-pointer">
+                        <Link href="/reports" className="text-sm text-[var(--color-secondary)] hover:text-[var(--color-quarternary)] cursor-pointer">
                             View All
                         </Link>
                     </div>
@@ -120,7 +122,9 @@ export default function SideMenu() {
                 {/* Report Button */}
                 <Link
                     href="/reports/report-form"
-                    className="px-10 mx-auto bg-[#B05216] active:bg-[#4F2915] border-b-2 border-[#4F2915] text-white font-medium py-2 rounded-lg flex items-center mb-24 justify-center text-sm cursor-pointer"
+                    className="px-10 mx-auto bg-[var(--color-secondary)] active:bg-[var(--color-quarternary)] border-b-2
+                    border-[var(--color-quarternary)] text-white font-medium py-2 rounded-lg flex items-center mb-24
+                    justify-center text-sm cursor-pointer"
                 >
                     Report Incident
                 </Link>

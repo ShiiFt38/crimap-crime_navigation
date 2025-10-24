@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import Select from "react-select";
 import EmergencyContact from "./EmergencyContact";
 import SubmitBtn from "@/app/account/components/SubmitBtn";
+import FormError from "@/lib/modules/components/FormError";
 
 type Contact = {
     contact_id: number;
@@ -164,7 +165,7 @@ export default function EmergencyContactsForm() {
                 </div>
             </div>
             <form className="flex flex-col space-y-4 md:px-16" onSubmit={handleSubmit}>
-                {error && <p className="text-red-500 mb-4 text-sm bg-red-50 p-3 rounded border border-red-200">{error}</p>}
+                {error && <FormError text={error}/>}
                 {success && <p className="text-green-500 mb-4 text-sm bg-green-50 p-3 rounded border border-green-200">{success}</p>}
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Contact Name</label>

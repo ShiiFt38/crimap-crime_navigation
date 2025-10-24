@@ -156,13 +156,13 @@ export default function Home() {
                             placeholder="Search locations in South Africa..."
                         />
                         <div className="flex justify-items-center w-fit h-fit text-white rounded-full cursor-pointer
-                        bg-[#1E4B26]">
+                        bg-[var(--color-primary)]">
                             <button className="cursor-pointer p-2" onClick={() => {setSearchQuery("")}}>
                                 <X size={20} />
                             </button>
                         </div>
                         <div className="flex justify-items-center w-fit h-fit text-white rounded-full cursor-pointer
-                        bg-[#1E4B26]">
+                        bg-[var(--color-primary)]">
                             <button className="cursor-pointer p-2" type="submit">
                                 <Search size={20} />
                             </button>
