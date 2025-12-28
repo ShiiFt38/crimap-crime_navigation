@@ -1,4 +1,4 @@
-//TODO: implement the update button functionality
+//TODO: validate phone number input suing za format only
 
 'use client'
 
@@ -84,13 +84,14 @@ export default function UserSettingsForm() {
                 </div>
             </div>
 
-            <form className="flex flex-col space-y-4 md:px-16" onSubmit={onSubmit}>
+            <form className="group flex flex-col space-y-4 md:px-16" onSubmit={onSubmit}>
                 {error && <FormError text={error}/>}
                 {success && <p className="text-green-500 mb-4 text-sm bg-green-50 p-3 rounded border border-green-200">{success}</p>}
                 <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">Username</label>
                     <input id="username" type="text" name="username" placeholder="username"
                            autoComplete="off" onChange={handleChange} value={userData.username}
+                           required
                            className="w-full px-4 py-3 border border-gray-300 rounded-lg"/>
                 </div>
                 <div>
@@ -102,7 +103,7 @@ export default function UserSettingsForm() {
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
                     <input type="tel" name="phoneNumber" placeholder="Phone Number" autoComplete="off"
-                           onChange={handleChange} value={userData.phoneNumber}
+                           onChange={handleChange} value={userData.phoneNumber} required
                            className="w-full px-4 py-3 border border-gray-300 rounded-lg"/>
                 </div>
                 <SubmitBtn name={"Update Profile"}/>

@@ -83,23 +83,26 @@ export default function PasswordForm() {
                 </div>
             </div>
 
-            <form className="flex flex-col space-y-4 md:px-16" onSubmit={onSubmit}>
+            <form className="group flex flex-col space-y-4 md:px-16" onSubmit={onSubmit}>
                 {error && <FormError text={error} />}
                 {success && <p className="text-green-500 mb-4 text-sm bg-green-50 p-3 rounded border border-green-200">{success}</p>}
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Current Password *</label>
                     <input type="password" name="currentPassword" onChange={handleChange} value={passwordData.currentPassword}
-                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"/>
+                           required
+                           className="w-full px-4 py-3 border border-gray-300 rounded-lg transition-all"/>
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">New Password</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">New Password *</label>
                     <input type="password" name="newPassword" onChange={handleChange} value={passwordData.newPassword}
-                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"/>
+                           required
+                           className="w-full px-4 py-3 border border-gray-300 rounded-lg transition-all"/>
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Confirm New Password *</label>
                     <input type="password" name="confirmPassword" onChange={handleChange} value={passwordData.confirmPassword}
-                           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"/>
+                           required
+                           className="w-full px-4 py-3 border border-gray-300 rounded-lg transition-all"/>
                 </div>
                 <SubmitBtn name={"Update Password"}/>
             </form>

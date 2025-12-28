@@ -4,8 +4,8 @@ import {time} from "motion";
 import {error} from "next/dist/build/output/log";
 
 export async function POST(request: Request) {
+    const db = await openDb();
     try {
-        const db = await openDb();
         const formData = await request.json();
 
         const {
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
         await db.run("BEGIN TRANSACTION");
 
         const reportQuery = `
-            INSERT INTO real_time_report (user_id, offence_id, station_id, description, loaction_address, latitude,
+            INSERT INTO real_time_report (user_id, offence_id, station_id, description, location_address, latitude,
                                           longitude,
                                           timestamp, verification_status, upvotes, severity_level, witnesses_present,
                                           police_contacted)

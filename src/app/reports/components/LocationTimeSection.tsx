@@ -37,6 +37,7 @@ export default function LocationTimeSection({ useCurrentLocation, location, date
                         onChange={onChange}
                         value={date}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                        required
                     />
                 </div>
 
@@ -48,6 +49,7 @@ export default function LocationTimeSection({ useCurrentLocation, location, date
                         onChange={onChange}
                         value={time}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                        required
                     />
                 </div>
             </div>

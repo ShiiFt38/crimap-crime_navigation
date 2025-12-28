@@ -4,7 +4,8 @@ export default function SubmitBtn({ name }: { name: string }){
             type="submit"
             value={name}
             className="bg-[var(--color-secondary)] active:bg-[var(--color-quarternary)] text-white px-10 py-2 rounded-lg
-                    flex cursor-pointer border-b-2 border-[var(--color-quarternary)] items-center shadow-md text-sm"
+                    flex cursor-pointer border-b-2 border-[var(--color-quarternary)] items-center shadow-md text-sm
+                    group-invalid:bg-[var(--color-tertiary)] group-invalid:border-b-[var(--color-primary)]"
         />
     )
 }

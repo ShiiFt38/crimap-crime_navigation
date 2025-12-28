@@ -36,20 +36,21 @@ export default function DetailsEvidenceSection({ description, witnesses, policeC
             <div className="grid grid-cols-1 md:grid-cols-2 space-y-6 gap-x-6 md:px-20">
                 <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-2"
-                    >Description</label
+                    >Description *</label
                     >
                     <textarea
                         rows={4}
                         name="description"
                         onChange={onChange}
                         value={description}
+                        required
                         placeholder="Describe what happened in detail. Include any relevant information about suspects, vehicles, or other important details..."
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg"
                     ></textarea>
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Witnesses Present</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Witnesses Present *</label>
                     <Select
                         name="witnesses"
                         value={witnessOptions.find(option => option.value === witnesses) || null}
@@ -60,11 +61,12 @@ export default function DetailsEvidenceSection({ description, witnesses, policeC
                         classNamePrefix="select"
                         placeholder="Were there any witnesses?"
                         isClearable
+                        required
                     />
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Police Contacted</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Police Contacted *</label>
                     <Select
                         name="policeContacted"
                         onChange={(selectedOption) =>
@@ -75,6 +77,7 @@ export default function DetailsEvidenceSection({ description, witnesses, policeC
                         classNamePrefix="select"
                         placeholder="Select witnesses present..."
                         isClearable
+                        required
                     />
                 </div>
 
@@ -82,7 +85,7 @@ export default function DetailsEvidenceSection({ description, witnesses, policeC
                     <label className="block text-sm font-medium text-gray-700 mb-2">Media Evidence (Optional)</label>
                     <div
                         className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center
-        hover:border-gray-400 transition-colors"
+                        hover:border-gray-400 transition-colors"
                     >
                         {!image ? <div className="space-y-2">
                                 <ImageUp size={24} className="mx-auto mb-4 text-gray-400"/>

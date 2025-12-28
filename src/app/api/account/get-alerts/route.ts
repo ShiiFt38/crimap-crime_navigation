@@ -30,7 +30,7 @@ export async function GET(req: Request) {
             });
         }
 
-        console.log("Alert preferences fetched successfully:", preferences);
+        // console.log("Alert preferences fetched successfully:", preferences);
 
         return NextResponse.json({
             smsAlerts: !!preferences.sms_alerts, // Convert 0/1 to boolean

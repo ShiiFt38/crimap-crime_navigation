@@ -87,6 +87,7 @@ export default function CrimeInformationSection({offence, severity, onChange,}: 
                         classNamePrefix="select"
                         placeholder="Select crime type..."
                         isClearable
+                        required
                     />
                 </div>
 

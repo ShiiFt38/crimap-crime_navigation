@@ -39,7 +39,7 @@ export default function ReportForm() {
 
     return (
         <div id="submitContent" className="max-w-7xl mx-auto py-10">
-            <form className="space-y-8" onSubmit={onSubmit}>
+            <form className="group space-y-8" onSubmit={onSubmit}>
                 {/* Crime Information Section */}
                 <CrimeInformationSection
                     offence={formData.offence}
@@ -82,7 +82,8 @@ export default function ReportForm() {
                         value="Submit Crime Report"
                         className="px-10 mx-auto bg-[var(--color-secondary)] active:bg-[var(--color-quarternary)]
                         border-b-2 border-[var(--color-quarternary)]
-                      text-white text-sm py-2 rounded-lg cursor-pointer transition-colors"
+                      text-white text-sm py-2 rounded-lg cursor-pointer transition-colors
+                      group-invalid:bg-[var(--color-tertiary)] group-invalid:border-b-[var(--color-primary)]"
                     />
                 </div>
             </form>

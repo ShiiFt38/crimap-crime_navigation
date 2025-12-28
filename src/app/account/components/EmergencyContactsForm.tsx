@@ -164,27 +164,29 @@ export default function EmergencyContactsForm() {
                         <Phone size={16} className="text-green-600" />}
                 </div>
             </div>
-            <form className="flex flex-col space-y-4 md:px-16" onSubmit={handleSubmit}>
+            <form className="group flex flex-col space-y-4 md:px-16" onSubmit={handleSubmit}>
                 {error && <FormError text={error}/>}
                 {success && <p className="text-green-500 mb-4 text-sm bg-green-50 p-3 rounded border border-green-200">{success}</p>}
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Contact Name</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Contact Name *</label>
                     <input
                         type="text"
                         name="contact_name"
                         onChange={handleChange}
                         value={formData.contact_name}
+                        required
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg transition-all"
                     />
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
                     <input
                         type="tel"
                         name="phone_number"
                         onChange={handleChange}
                         value={formData.phone_number}
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg transition-all"
+                        required
                     />
                 </div>
                 <div>
@@ -200,6 +202,7 @@ export default function EmergencyContactsForm() {
                         classNamePrefix="select"
                         placeholder="What is your relationship with the contact?"
                         isClearable
+
                     />
                 </div>
                 <div className="flex space-x-4">

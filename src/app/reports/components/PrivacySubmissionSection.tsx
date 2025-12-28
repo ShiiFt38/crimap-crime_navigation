@@ -49,11 +49,12 @@ export default function PrivacySubmissionSection({ anonymous, termsConfirmation,
                             name="termsConfirmation"
                             onChange={onChange}
                             checked={termsConfirmation}
+                            required
                             className="mt-1 h-4 w-4 text-safety-blue focus:ring-safety-blue border-gray-300 rounded"
                         />
                         <label className="text-sm text-gray-700">
                             I understand this report may be shared with local authorities
-                            and community safety organizations
+                            and community safety organizations *
                         </label>
                     </div>
                 </div>
