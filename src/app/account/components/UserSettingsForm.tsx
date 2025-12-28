@@ -61,7 +61,7 @@ export default function UserSettingsForm() {
             setSuccess("Profile updated successfully.")
             setLoading(false)
         } catch (error) {
-            setError(error.message || "An error while updating the profile.")
+            setError(error.message || "An error occurred while updating the profile.")
             setLoading(false)
         }
     }
@@ -86,7 +86,10 @@ export default function UserSettingsForm() {
 
             <form className="group flex flex-col space-y-4 md:px-16" onSubmit={onSubmit}>
                 {error && <FormError text={error}/>}
-                {success && <p className="text-green-500 mb-4 text-sm bg-green-50 p-3 rounded border border-green-200">{success}</p>}
+                {success &&
+                    <p className="text-green-500 mb-4 text-sm bg-green-50 p-3 rounded border border-green-200"
+                        >{success}</p>}
+
                 <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">Username</label>
                     <input id="username" type="text" name="username" placeholder="username"
