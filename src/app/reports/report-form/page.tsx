@@ -1,5 +1,5 @@
-//TODO: Add focus rings on form inputs for real time form verification
-
+//TODO: The add more button does not append newly uploaded files
+// app/reports/report-form/page.tsx
 'use client'
 
 import { useState } from 'react';
@@ -8,12 +8,16 @@ import LocationTimeSection from "@/app/reports/components/LocationTimeSection";
 import DetailsEvidenceSection from "@/app/reports/components/DetailsEvidenceSection";
 import PrivacySubmissionSection from "@/app/reports/components/PrivacySubmissionSection";
 import FormError from "@/lib/modules/components/FormError";
-import {LoaderCircle} from "lucide-react";
+import FormSuccess from "@/lib/modules/components/FormSuccess";
+import { LoaderCircle } from "lucide-react";
+import {useSession} from "next-auth/react";
 
 export default function ReportForm() {
-    const [error, setError] = useState<string | null>(null)
-    const [success, setSuccess] = useState<string | null>(null)
-    const [loading, setLoading] = useState<boolean>(false)
+    const { data: session } = useSession();
+
+    const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
 
     const [formData, setFormData] = useState({
         offence: "",
@@ -25,83 +29,99 @@ export default function ReportForm() {
         description: "",
         witnesses: "",
         policeContacted: "",
-        image: "",
+        image: [] as File[],
         anonymous: false,
         termsConfirmation: false,
         contactEmail: "",
         contactPhone: "",
     });
 
+
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(formData);
         setError(null);
         setSuccess(null);
         setLoading(true);
 
+        const data = new FormData();
+        data.append("offence", formData.offence);
+        data.append("severity", formData.severity);
+        data.append("location", formData.location);
+        data.append("date", formData.date);
+        data.append("time", formData.time);
+        data.append("description", formData.description);
+        data.append("witnesses", formData.witnesses);
+        data.append("policeContacted", formData.policeContacted);
+        data.append("anonymous", formData.anonymous.toString());
+        data.append("termsConfirmation", formData.termsConfirmation.toString());
+        data.append("contactEmail", formData.contactEmail);
+        data.append("contactPhone", formData.contactPhone);
+
+        // Append multiple files
+        if (formData.image && formData.image.length > 0) {
+            formData.image.forEach((file) => {
+                data.append("media", file); // Use "media" name for multiple files
+            });
+        }
+
         try {
             const response = await fetch("/api/reports/report", {
                 method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify(formData),
-            })
+                body: data, // Send FormData, not JSON
+            });
 
-            const result = await response.json()
+            const result = await response.json();
 
-            if (!response.ok){
-                setError(result.error || "Failed to submit report")
-                setLoading(false)
-                return
+            if (!response.ok) {
+                setError(result.error || "Failed to submit report");
+            } else {
+                setSuccess("Report submitted successfully!");
+                // Reset form
+                setFormData({
+                    offence: "",
+                    severity: "",
+                    useCurrentLocation: false,
+                    location: "",
+                    date: "",
+                    time: "",
+                    description: "",
+                    witnesses: "",
+                    policeContacted: "",
+                    image: [],
+                    anonymous: false,
+                    termsConfirmation: false,
+                    contactEmail: "",
+                    contactPhone: "",
+                });
             }
-
-            setSuccess("Report submitted successfully.")
-            setFormData({
-                offence: "",
-                severity: "",
-                useCurrentLocation: false,
-                location: "",
-                date: "",
-                time: "",
-                description: "",
-                witnesses: "",
-                policeContacted: "",
-                image: "",
-                anonymous: false,
-                termsConfirmation: false,
-                contactEmail: "",
-                contactPhone: "",
-            })
-        } catch (error) {
-            setError("Network error. Please try again. ")
+        } catch (err) {
+            setError("Network error. Please try again.");
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-        const { name, value, type, checked } = e.target;
-        setFormData((prevFormData) => ({
-            ...prevFormData,
-            [name]: type === "checkbox" ? checked : value,
+    const handleChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+    ) => {
+        const { name, value, type, checked, files } = e.target as HTMLInputElement;
+        setFormData((prev) => ({
+            ...prev,
+            [name]: type === "checkbox" ? checked : type === "file" ? files?.[0] || null : value,
         }));
     };
 
+    if (!session) {
+        return <div className="text-center py-10">Please log in to submit a report.</div>
+    }
+
     return (
-        <div id="submitContent" className="max-w-7xl mx-auto py-10">
+        <div className="max-w-7xl mx-auto py-10">
             {error && <FormError text={error} />}
-            {success &&
-                <p className="text-green-500 mb-4 text-sm bg-green-50 p-3 rounded border border-green-200"
-                    >{success}</p>}
+            {success && <FormSuccess text={success} />}
 
             <form className="group space-y-8" onSubmit={onSubmit}>
-                {/* Crime Information Section */}
-                <CrimeInformationSection
-                    offence={formData.offence}
-                    severity={formData.severity}
-                    onChange={handleChange}
-                />
-
-                {/* Location & Time Section */}
+                <CrimeInformationSection offence={formData.offence} severity={formData.severity} onChange={handleChange} />
                 <LocationTimeSection
                     useCurrentLocation={formData.useCurrentLocation}
                     location={formData.location}
@@ -111,8 +131,6 @@ export default function ReportForm() {
                     setLocation={(value) => setFormData((prev) => ({ ...prev, location: value }))}
                     setUseCurrentLocation={(value) => setFormData((prev) => ({ ...prev, useCurrentLocation: value }))}
                 />
-
-                {/* Details & Evidence Section */}
                 <DetailsEvidenceSection
                     description={formData.description}
                     witnesses={formData.witnesses}
@@ -120,8 +138,6 @@ export default function ReportForm() {
                     image={formData.image}
                     onChange={handleChange}
                 />
-
-                {/* Privacy & Submission Section */}
                 <PrivacySubmissionSection
                     anonymous={formData.anonymous}
                     termsConfirmation={formData.termsConfirmation}
@@ -130,16 +146,13 @@ export default function ReportForm() {
                     onChange={handleChange}
                 />
 
-                <div className="mt-8 pb-12 flex flex-col sm:flex-row gap-4">
+                <div className="mt-8 pb-12 text-center">
                     <button
                         type="submit"
                         disabled={loading}
-                        className="px-10 mx-auto bg-[var(--color-secondary)] active:bg-[var(--color-quarternary)]
-                        border-b-2 border-[var(--color-quarternary)]
-                      text-white text-sm py-2 rounded-lg cursor-pointer transition-colors
-                      group-invalid:bg-[var(--color-tertiary)] group-invalid:border-b-[var(--color-primary)]"
+                        className="px-10 bg-[#B05216] hover:bg-[#4F2915] border-b-2 border-[#4F2915] text-white text-sm py-2 rounded-lg cursor-pointer transition-colors disabled:opacity-50"
                     >
-                        {loading ? <LoaderCircle size={16} className="m-auto animate-spin"/> : "Submit Crime Report"}
+                        {loading ? <LoaderCircle className="animate-spin mx-auto" size={20} /> : "Submit Crime Report"}
                     </button>
                 </div>
             </form>

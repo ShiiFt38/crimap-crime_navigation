@@ -1,5 +1,5 @@
 //TODO: Implement comments table and query against it
-//TODO: Upgrade image upload feature
+//TODO: Only logged in users should be able to upload reports
 //TODO: Implement upvotes feature
 //TODO: Implement card pin feature
 
@@ -33,13 +33,14 @@ export default async function Reports(){
             {reports.map((report: any) => (
                 <CrimeReportCard
                     key={report.report_id}
-                    offence={report.offence || "Unkown offence"}
+                    offence={report.offence || "Unknown offence"}
                     time={report.time}
                     description={report.description}
                     location={report.location}
                     author={report.anonymous ? "Anonymous" : "User"}
                     likes={report.upvotes}
-                    image={report.image || undefined}
+                    reportId={report.report_id}
+                    media={report.media}
                 />
             ))}
         </div>

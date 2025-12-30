@@ -7,6 +7,7 @@ import { useState, useEffect } from "react"
 import SubmitBtn from "@/app/account/components/SubmitBtn";
 import {useSession} from "next-auth/react";
 import FormError from "@/lib/modules/components/FormError";
+import FormSuccess from "@/lib/modules/components/FormSuccess";
 
 export default function UserSettingsForm() {
     const { data: session, status} = useSession()
@@ -85,10 +86,8 @@ export default function UserSettingsForm() {
             </div>
 
             <form className="group flex flex-col space-y-4 md:px-16" onSubmit={onSubmit}>
-                {error && <FormError text={error}/>}
-                {success &&
-                    <p className="text-green-500 mb-4 text-sm bg-green-50 p-3 rounded border border-green-200"
-                        >{success}</p>}
+                {error && <FormError text={error} />}
+                {success && <FormSuccess text={success} />}
 
                 <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">Username</label>

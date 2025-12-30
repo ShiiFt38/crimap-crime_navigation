@@ -6,8 +6,8 @@ interface DetailsEvidenceProps {
     description: string;
     witnesses: string;
     policeContacted: string;
-    image: string;
-    onChange: (e: React.ChangeEvent<HTMLSelectElement | HTMLTextAreaElement>) => void;
+    image: File[]; // Array of files
+    onChange: (e: any) => void; // Allow custom events
 }
 
 const witnessOptions = [
@@ -23,9 +23,28 @@ const policeContactOptions = [
     {value: 'Police were not contacted', label: 'No - Not contacted'},
     {value: 'Planning to contact police soon', label: 'Planning to contact'},
 ]
-export default function DetailsEvidenceSection({ description, witnesses, policeContacted, image, onChange }: DetailsEvidenceProps) {
+export default function DetailsEvidenceSection({
+                                                   description,
+                                                   witnesses,
+                                                   policeContacted,
+                                                   image,
+                                                   onChange,
+                                               }: DetailsEvidenceProps) {
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const files = Array.from(e.target.files);
+            onChange({
+                target: {
+                    name: "image",
+                    value: files,
+                },
+            });
+        }
+    };
+
     return (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 ">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
             <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-gray-900">Details & Evidence</h3>
                 <div className="py-[0.25rem] px-[0.75rem] bg-emerald-100 rounded-lg flex items-center justify-center mr-4">
@@ -35,18 +54,16 @@ export default function DetailsEvidenceSection({ description, witnesses, policeC
 
             <div className="grid grid-cols-1 md:grid-cols-2 space-y-6 gap-x-6 md:px-20">
                 <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2"
-                    >Description *</label
-                    >
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Description *</label>
                     <textarea
                         rows={4}
                         name="description"
                         onChange={onChange}
                         value={description}
                         required
-                        placeholder="Describe what happened in detail. Include any relevant information about suspects, vehicles, or other important details..."
+                        placeholder="Describe what happened in detail..."
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg"
-                    ></textarea>
+                    />
                 </div>
 
                 <div>
@@ -82,88 +99,56 @@ export default function DetailsEvidenceSection({ description, witnesses, policeC
                 </div>
 
                 <div className="md:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Media Evidence (Optional)</label>
-                    <div
-                        className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center
-                        hover:border-gray-400 transition-colors"
-                    >
-                        {!image ? <div className="space-y-2">
-                                <ImageUp size={24} className="mx-auto mb-4 text-gray-400"/>
-                                <h3 className="text-lg font-medium text-gray-700 mb-2">
-                                    Upload Evidence
-                                </h3>
-                                <p className="text-sm text-gray-500 mb-4">
-                                    Photos, videos, or audio related to the incident
-                                </p>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Media Evidence (Optional)
+                    </label>
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400 transition-colors">
+                        {image.length === 0 ? (
+                            <div className="space-y-2">
+                                <ImageUp size={48} className="mx-auto text-gray-400" />
+                                <h3 className="text-lg font-medium text-gray-700">Upload Evidence</h3>
+                                <p className="text-sm text-gray-500">Photos, videos, or audio</p>
                             </div>
-                            : image.length > 0 && (
-                            <div className="flex flex-row gap-2 overflow-x-scroll scrollbar-hide">
+                        ) : (
+                            <div className="grid grid-cols-3 gap-4 overflow-y-auto max-h-96">
                                 {image.map((file, index) => {
                                     const url = URL.createObjectURL(file);
-                                    if (file.type.startsWith('image/')) {
-                                        return (
-                                            <img
-                                                key={index}
-                                                src={url}
-                                                alt={`Preview ${index + 1}`}
-                                                className="max-h-24 max-w-full rounded-lg object-cover"
-                                            />
-                                        );
-                                    } else if (file.type.startsWith('video/')) {
-                                        return (
-                                            <video
-                                                key={index}
-                                                src={url}
-                                                alt={`Preview ${index + 1}`}
-                                                className="max-h-24 max-w-full rounded-lg object-cover"
-                                                controls
-                                            />
-                                        );
-                                    } else if (file.type.startsWith('audio/')) {
-                                        return (
-                                            <audio
-                                                key={index}
-                                                src={url}
-                                                alt={`Preview ${index + 1}`}
-                                                className="max-w-full"
-                                                controls
-                                            />
-                                        );
-                                    }
-                                    return null;
+                                    return file.type.startsWith("image/") ? (
+                                        <img key={index} src={url} alt={`Preview ${index}`} className="w-full h-32 object-cover rounded" />
+                                    ) : file.type.startsWith("video/") ? (
+                                        <video key={index} controls className="w-full h-32 rounded">
+                                            <source src={url} />
+                                        </video>
+                                    ) : (
+                                        <audio key={index} controls className="w-full">
+                                            <source src={url} />
+                                        </audio>
+                                    );
                                 })}
                             </div>
                         )}
 
                         <input
                             type="file"
-                            className="hidden"
-                            accept="image/*,audio/*,video/*"
-                            multiple
                             id="media-upload"
-                            onChange={(e) => {
-                                const files = Array.from(e.target.files).filter(file => file.size <= 10 * 1024 * 1024);
-                                if (files.length > 0) {
-                                    onChange({ target: { name: 'image', value: files }});
-                                }
-                                e.target.value = null;
-                            }}
+                            name="image"
+                            accept="image/*,video/*,audio/*"
+                            multiple
+                            onChange={handleFileChange}
+                            className="hidden"
                         />
                         <button
                             type="button"
-                            className="block mx-auto bg-[#B05216] active:bg-[#4F2915] border-b-2 border-[#4F2915]
-                            text-white px-6 py-2 rounded-lg cursor-pointer text-sm mt-4"
-                            onClick={(e) => {
-                                e.preventDefault();
-                                document.getElementById('media-upload')?.click();
-                            }}>Select Files
+                            onClick={() => document.getElementById("media-upload")?.click()}
+                            className="mt-4 bg-[var(--color-secondary)] active:bg-[var(--color-quarternary)]
+                            cursor-pointer border-b-2 border-[var(--color-quarternary)] text-white px-10 py-2
+                            shadow-md text-sm rounded-lg"
+                        >
+                            {image.length > 0 ? "Add More" : "Select Files"}
                         </button>
-                        <small className="text-xs text-gray-400 mt-2">
-                            Supported: JPG, PNG, MP4, MP3, WAV (Max 10MB each)
-                        </small>
                     </div>
                 </div>
             </div>
         </div>
-    )
+    );
 }

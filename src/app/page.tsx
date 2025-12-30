@@ -1,9 +1,11 @@
+// Add proper error handling for failed map renders
+
 "use client";
 
 import { Map, NavigationControl, Popup, Source, Layer } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useRef, useState, useEffect } from "react";
-import { X, Search, LoaderCircle } from "lucide-react";
+import { TriangleAlert, X, Search, LoaderCircle } from "lucide-react";
 import MapPopup from "./_components/map_popup";
 
 export default function Home() {
@@ -13,6 +15,7 @@ export default function Home() {
     const [suggestions, setSuggestions] = useState([]);
     const [isFocused, setIsFocused] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [ error, setError ] = useState<string | null>(null);
 
     const fillLayer = {
         id: "district-fills",
@@ -109,7 +112,7 @@ export default function Home() {
 
     return (
         <main className="relative flex-grow bg-gray-100 h-100vh">
-            <Map
+            {!error ? <Map
                 ref={mapRef}
                 initialViewState={{longitude: 24, latitude: -30, zoom: 5}}
                 style={{width: "100vw", height: "93vh"}}
@@ -119,6 +122,10 @@ export default function Home() {
                 onLoad={() => {
                     const map = mapRef.current.getMap();
                     map.fitBounds(bounds, {padding: 20});
+                }}
+                onError = {(error) => {
+                    setError("Failed to load map. Please check your internet connection");
+                    console.log(error);
                 }}
             >
                 <NavigationControl position="bottom-left"/>
@@ -141,6 +148,12 @@ export default function Home() {
                     </Popup>
                 )}
             </Map>
+                :
+                <div className="flex flex-col items-center justify-center h-screen bg-gray-100 text-gray-800">
+                    <TriangleAlert className="mb-4 text-red-500" />
+                    <p className="text-lg font-semibold mb-2">{error}</p>
+                    <p className="text-sm text-gray-600">The app requires an internet connection to load map styles. Try refreshing or checking your network.</p>
+                </div>}
 
             <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-9 max-w-md w-full px-4 gap-y-2">
                 <form onSubmit={handleSearch} className="flex flex-row justify-center px-2">

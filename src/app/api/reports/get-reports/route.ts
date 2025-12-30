@@ -2,52 +2,61 @@
 import { NextResponse } from "next/server";
 import { openDb } from "@/lib/db";
 
+function formatRelativeTime(timestamp: string) {
+    const now = new Date();
+    const reportTime = new Date(timestamp);
+    const diff = Math.floor((now.getTime() - reportTime.getTime()) / 1000);
+
+    if (diff < 60) return "just now";
+    if (diff < 3600) return `${Math.floor(diff / 60)} minutes ago`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)} hours ago`;
+    if (diff < 604800) return `${Math.floor(diff / 86400)} days ago`;
+    return reportTime.toLocaleDateString();
+}
+
 export async function GET() {
     try {
         const db = await openDb();
 
         const reports = await db.all(`
-      SELECT 
-        r.report_id,
-        r.offence_id AS offence,
-        r.severity_level AS severity,
-        r.location_address AS location,
-        r.timestamp,
-        r.description,
-        r.witnesses_present AS witnesses,
-        r.police_contacted AS policeContacted,
-        r.upvotes,
-        rm.file_path AS image
-      FROM real_time_report r
-      LEFT JOIN report_media rm ON r.report_id = rm.report_id
-      ORDER BY r.timestamp DESC
-    `);
+            SELECT r.report_id,
+                   r.offence_id                AS offence,
+                   r.location_address          AS location,
+                   r.timestamp,
+                   r.description,
+                   r.upvotes,
+                   GROUP_CONCAT(rm.file_path)  AS media_paths,
+                   GROUP_CONCAT(rm.media_type) AS media_types
+            FROM real_time_report r
+                     LEFT JOIN report_media rm ON r.report_id = rm.report_id
+            GROUP BY r.report_id
+            ORDER BY r.timestamp DESC
+        `);
 
-        // Format timestamp to relative time
-        const formattedReports = reports.map(report => ({
-            ...report,
-            time: formatRelativeTime(report.timestamp),
-        }));
+        const formatted = reports.map((r) => {
+            const paths = r.media_paths ? r.media_paths.split(",") : [];
+            const types = r.media_types ? r.media_types.split(",") : [];
+            const media = paths.map((path: string, i: number) => ({
+                path,
+                type: types[i] || "image",
+            }));
 
-        return NextResponse.json(formattedReports);
+            return {
+                report_id: r.report_id,
+                offence: r.offence,
+                location: r.location,
+                description: r.description,
+                upvotes: r.upvotes,
+                time: formatRelativeTime(r.timestamp),
+                media: r.media_paths ? r.media_paths.split(",").map((path: string, i: number) => ({
+                    path,
+                    type: r.media_types.split(",")[i] || "image",
+                })) : [],
+            };
+        });
+
+        return NextResponse.json(formatted);
     } catch (error) {
-        console.error("Error fetching reports:", error);
-        return NextResponse.json(
-            { error: "Failed to fetch reports" },
-            { status: 500 }
-        );
+        return NextResponse.json({error: "Failed to fetch reports"}, {status: 500});
     }
-}
-
-// Helper function for relative time
-function formatRelativeTime(timestamp: string) {
-    const now = new Date();
-    const reportTime = new Date(timestamp);
-    const diffInSeconds = Math.floor((now.getTime() - reportTime.getTime()) / 1000);
-
-    if (diffInSeconds < 60) return "just now";
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
-    if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)} days ago`;
-    return reportTime.toLocaleDateString();
 }

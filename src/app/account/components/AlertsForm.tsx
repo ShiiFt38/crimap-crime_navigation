@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 import SubmitBtn from "@/app/account/components/SubmitBtn";
 import {useSession} from "next-auth/react";
 import FormError from "@/lib/modules/components/FormError";
+import FormSuccess from "@/lib/modules/components/FormSuccess";
+
 
 export default function AlertsForm() {
     const { data: session, status } = useSession();
@@ -103,8 +105,8 @@ export default function AlertsForm() {
             </div>
 
             <form onSubmit={onSubmit} className="flex flex-col space-y-6 md:px-16">
-                {error && <FormError text={error}/>}
-                {success && <p className="text-green-500 mb-4 text-sm bg-green-50 p-3 rounded border border-green-200">{success}</p>}
+                {error && <FormError text={error} />}
+                {success && <FormSuccess text={success} />}
                 <div className="flex items-center justify-between">
                     <div>
                         <h4 className="font-medium text-gray-900">SMS Alerts</h4>
