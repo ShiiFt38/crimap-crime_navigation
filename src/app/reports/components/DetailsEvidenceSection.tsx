@@ -33,13 +33,20 @@ export default function DetailsEvidenceSection({
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
-            const files = Array.from(e.target.files);
+            let files = []
+            if (image.length > 0){
+                files = image.concat(Array.from(e.target.files));
+            }
+            else {
+                files = Array.from(e.target.files);
+            }
             onChange({
                 target: {
                     name: "image",
                     value: files,
                 },
             });
+        console.log(`Var image: ${image} \n Var files: ${files}`)
         }
     };
 

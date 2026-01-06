@@ -1,5 +1,4 @@
 //TODO: Implement comments table and query against it
-//TODO: Only logged in users should be able to upload reports
 //TODO: Implement upvotes feature
 //TODO: Implement card pin feature
 

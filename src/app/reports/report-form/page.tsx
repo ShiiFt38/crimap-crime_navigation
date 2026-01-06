@@ -1,4 +1,3 @@
-//TODO: The add more button does not append newly uploaded files
 // app/reports/report-form/page.tsx
 'use client'
 
@@ -10,7 +9,7 @@ import PrivacySubmissionSection from "@/app/reports/components/PrivacySubmission
 import FormError from "@/lib/modules/components/FormError";
 import FormSuccess from "@/lib/modules/components/FormSuccess";
 import { LoaderCircle } from "lucide-react";
-import {useSession} from "next-auth/react";
+import {signIn, useSession} from "next-auth/react";
 
 export default function ReportForm() {
     const { data: session } = useSession();
@@ -112,7 +111,14 @@ export default function ReportForm() {
     };
 
     if (!session) {
-        return <div className="text-center py-10">Please log in to submit a report.</div>
+        return (
+            <div className="flex min-h-screen items-center justify-center">
+                <button onClick={() => signIn()} className="bg-[var(--color-secondary)] active:bg-[var(--color-quarternary)]
+                    text-white px-10 py-2 rounded-lg flex cursor-pointer border-b-2 border-[var(--color-quarternary)] items-center
+                    shadow-md text-sm">
+                    Log In to Submit Reports
+                </button>
+            </div>)
     }
 
     return (
@@ -150,7 +156,9 @@ export default function ReportForm() {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="px-10 bg-[#B05216] hover:bg-[#4F2915] border-b-2 border-[#4F2915] text-white text-sm py-2 rounded-lg cursor-pointer transition-colors disabled:opacity-50"
+                        className="px-10 bg-[#B05216] hover:bg-[#4F2915] border-b-2 border-[#4F2915]
+                        text-white text-sm py-2 rounded-lg cursor-pointer transition-colors disabled:opacity-50
+                        group-invalid:bg-[var(--color-tertiary)] group-invalid:border-b-[var(--color-primary)]"
                     >
                         {loading ? <LoaderCircle className="animate-spin mx-auto" size={20} /> : "Submit Crime Report"}
                     </button>

@@ -1,6 +1,5 @@
 //TODO: Add focus rings on form inputs for real time form verification
 //TODO: Add a confirmation popup for form submissions
-//TODO: Add success notification popup
 
 "use client"
 
