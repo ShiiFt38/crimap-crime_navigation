@@ -3,9 +3,16 @@
 
 import { MapPin, EllipsisVertical, ThumbsUp, Pin, MessageCircleMore } from "lucide-react";
 import OffenceBadge from "@/app/reports/components/OffenceBadge";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ChatRoom from "@/app/reports/components/ChatRoom";
 import {useSession} from "next-auth/react";
+
+interface Comment {
+    comment_id: number;
+    comment_text: string;
+    timestamp: string;
+    author: string;
+}
 
 interface MediaItem {
     path: string;
@@ -33,12 +40,50 @@ export default function CrimeReportCard({
                                             reportId,
                                             media = [],
                                         }: ReportCardProps) {
-    const { data: session, status } = useSession();
+    const { data: session } = useSession();
     const [ currentLikes, setCurrentLikes ] = useState(likes);
     const [isDetailsOpen, setIsDetailsOpen] = useState(false);
     const [chatRoom, setChatRoom] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
     const [currentMedia, setCurrentMedia] = useState<MediaItem | null>(null);
+    const [comments, setComments] = useState<Comment[]>([]);
+    const [newComment, setNewComment] = useState("");
+    const [loadingComments, setLoadingComments] = useState<boolean>(false);
+
+    const fetchComments = async () => {
+        setLoadingComments(true);
+        const res = await fetch(`/api/reports/comments?reportId=${reportId}`);
+        if (res.ok) {
+            const data = await res.json();
+            setComments(data);
+        }
+        setLoadingComments(false);
+    }
+
+    useEffect(() => {
+        fetchComments();
+    }, [reportId]);
+
+    const submitComment = async () => {
+        if (!newComment.trim()) return;
+        if (!session) {
+            alert("Please log in to comment");
+            return;
+        }
+
+        console.log("Attempting to submit comment (CrimeReportCard.jsx -> submitComment)")
+
+        const res = await fetch("/api/reports/comments", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({ reportId, comment: newComment }),
+        });
+
+        if (res.ok) {
+            setNewComment("");
+            fetchComments();
+        }
+    }
 
     const handleUpvote = async () => {
         if (!session) {
@@ -174,13 +219,22 @@ export default function CrimeReportCard({
                     <button className="cursor-pointer text-white">
                         <Pin size={14} />
                     </button>
-                    <button className="cursor-pointer text-white" onClick={() => setChatRoom(!chatRoom)}>
+                    <button className="flex space-x-1 cursor-pointer text-white" onClick={() => setChatRoom(!chatRoom)}>
                         <MessageCircleMore size={14} />
+                        <span className="text-xs">{comments.length}</span>
                     </button>
                 </div>
             </div>
 
-            <ChatRoom show={chatRoom} />
+            <ChatRoom
+                show={chatRoom}
+                comments={comments}
+                loadingComments={loadingComments}
+                session={session}
+                newComment={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                submitComment={submitComment}
+                />
 
             {/* Full-Screen Modal */}
             {modalOpen && currentMedia && (
