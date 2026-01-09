@@ -36,33 +36,66 @@ export default function CrimeReportCard({
                                             description,
                                             location,
                                             author,
-                                            likes,
+                                            likes: initialLikes,
                                             reportId,
                                             media = [],
                                         }: ReportCardProps) {
     const { data: session } = useSession();
-    const [ currentLikes, setCurrentLikes ] = useState(likes);
     const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-    const [chatRoom, setChatRoom] = useState(false);
+    const [chatRoomOpen, setChatRoomOpen] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
     const [currentMedia, setCurrentMedia] = useState<MediaItem | null>(null);
+
+    //Upvote state
+    const [likes, setLikes] = useState(initialLikes);
+    const [hasUpvoted, setHasUpvoted] = useState(false);
+    const [upvoteLoading, setUpvoteLoading] = useState(false);
+
+    // Comment state
     const [comments, setComments] = useState<Comment[]>([]);
     const [newComment, setNewComment] = useState("");
     const [loadingComments, setLoadingComments] = useState<boolean>(false);
 
-    const fetchComments = async () => {
-        setLoadingComments(true);
-        const res = await fetch(`/api/reports/comments?reportId=${reportId}`);
-        if (res.ok) {
-            const data = await res.json();
-            setComments(data);
-        }
-        setLoadingComments(false);
-    }
-
     useEffect(() => {
-        fetchComments();
-    }, [reportId]);
+        if (chatRoomOpen) {
+            const fetchComments = async () => {
+                setLoadingComments(true);
+                try {
+                    const res = await fetch(`/api/reports/comments?reportId=${reportId}`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        setComments(data);
+                    }
+                } catch (err) {
+                    console.error("Failed to load comments");
+                } finally {
+                    setLoadingComments(false);
+                }
+            };
+            fetchComments();
+        }
+    }, [chatRoomOpen, reportId]);
+
+    // Check if current user has upvoted on mount
+    useEffect(() => {
+        if (!session?.user?.id) return;
+
+        const checkUpvoteStatus = async () => {
+            try {
+                const res = await fetch(`/api/reports/upvote-status?reportId=${reportId}`, {
+                    headers: { "Content-Type": "application/json" },
+                });
+                if (res.ok) {
+                    const { hasUpvoted } = await res.json();
+                    setHasUpvoted(hasUpvoted);
+                }
+            } catch (err) {
+                console.error("Failed to check upvote status");
+            }
+        };
+
+        checkUpvoteStatus();
+    }, [session, reportId]);
 
     const submitComment = async () => {
         if (!newComment.trim()) return;
@@ -71,26 +104,36 @@ export default function CrimeReportCard({
             return;
         }
 
-        console.log("Attempting to submit comment (CrimeReportCard.jsx -> submitComment)")
+        try {
+            const res = await fetch("/api/reports/comments", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ reportId, comment: newComment }),
+            });
 
-        const res = await fetch("/api/reports/comments", {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({ reportId, comment: newComment }),
-        });
-
-        if (res.ok) {
-            setNewComment("");
-            fetchComments();
+            if (res.ok) {
+                setNewComment("");
+                // Refresh comments
+                const refreshed = await fetch(`/api/reports/comments?reportId=${reportId}`);
+                if (refreshed.ok) {
+                    setComments(await refreshed.json());
+                }
+            } else {
+                alert("Failed to post comment");
+            }
+        } catch (err) {
+            alert("Network error");
         }
-    }
+    };
 
-    const handleUpvote = async () => {
+    const toggleUpvote = async () => {
         if (!session) {
             alert("Please log in to upvote");
             return;
         }
+        if (upvoteLoading) return;
 
+        setUpvoteLoading(true);
         try {
             const response = await fetch("/api/reports/upvote", {
                 method: "POST",
@@ -98,13 +141,18 @@ export default function CrimeReportCard({
                 body: JSON.stringify({ reportId }),
             });
 
+            const result = await response.json();
+
             if (response.ok) {
-                setCurrentLikes(currentLikes + 1);
+                setLikes(result.upvotes);
+                setHasUpvoted(result.hasUpvoted);
             } else {
-                alert("Failed to upvote");
+                alert(result.error || "Failed to toggle upvote");
             }
         } catch (error) {
             alert("Network error");
+        } finally {
+            setUpvoteLoading(false);
         }
     };
 
@@ -211,15 +259,15 @@ export default function CrimeReportCard({
             {/* Footer */}
             <div className="flex items-center justify-between">
                 <span className="text-gray-500 text-xs">by {author}</span>
-                <div className="flex items-center space-x-4 bg-[var(--color-secondary)] rounded-full px-4 py-2 border-b-2 border-[var(--color-quarternary)]">
-                    <button onClick={handleUpvote} className="cursor-pointer flex items-center space-x-1 text-white">
-                        <ThumbsUp size={14} />
+                <div className="flex items-center space-x-4 bg-[var(--color-secondary)] rounded-full px-4 py-2
+                border-b-2 border-[var(--color-quarternary)] align-middle">
+                    <button onClick={toggleUpvote}
+                            disabled={upvoteLoading}
+                            className="cursor-pointer flex items-center space-x-1 text-white">
+                        <ThumbsUp size={14} fill={hasUpvoted ? "white" : "none"} stroke={hasUpvoted ? "white" : "currentColor"} />
                         <span className="text-xs">{likes}</span>
                     </button>
-                    <button className="cursor-pointer text-white">
-                        <Pin size={14} />
-                    </button>
-                    <button className="flex space-x-1 cursor-pointer text-white" onClick={() => setChatRoom(!chatRoom)}>
+                    <button className="flex space-x-1 cursor-pointer text-white" onClick={() => setChatRoomOpen(!chatRoomOpen)}>
                         <MessageCircleMore size={14} />
                         <span className="text-xs">{comments.length}</span>
                     </button>
@@ -227,7 +275,7 @@ export default function CrimeReportCard({
             </div>
 
             <ChatRoom
-                show={chatRoom}
+                show={chatRoomOpen}
                 comments={comments}
                 loadingComments={loadingComments}
                 session={session}

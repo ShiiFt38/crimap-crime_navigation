@@ -22,7 +22,8 @@ export default function ChatRoom({show, comments, loadingComments, session, newC
             <div className="bg-gray-50 rounded-lg p-3 mb-3 max-h-48 overflow-y-auto space-y-2">
                 {loadingComments ? <p>Loading...</p> : comments.map(c => (
                     <div key={c.comment_id} className="flex items-start space-x-2">
-                        <div className="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center text-white text-xs font-bold">M</div>
+                        <div className="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center text-white
+                        text-xs font-bold">{c.author[0].toUpperCase()}</div>
                         <div className="flex-1">
                             <div className="bg-white rounded-lg p-2 shadow-sm">
                                 <div className="flex items-center justify-between mb-1">
