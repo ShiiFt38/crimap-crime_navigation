@@ -1,53 +1,34 @@
+// src/app/api/account/update-alerts/route.ts
 import { NextResponse } from "next/server";
-import { openDb } from "@/lib/db";
-import { getServerSession } from "next-auth";
+import { db } from "@/lib/drizzle";
+import { user } from "@/lib/schema";
+import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { eq } from "drizzle-orm";
 
-export async function POST(req: Request) {
+export async function POST(request: Request) {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
-        console.log("No authenticated session found");
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { smsAlerts, emailAlerts, pushNotifications } = await req.json();
-
-    // Validate input
-    if (typeof smsAlerts !== "boolean" || typeof emailAlerts !== "boolean" || typeof pushNotifications !== "boolean") {
-        return NextResponse.json({ error: "INVALID_INPUT" }, { status: 400 });
-    }
-
-    const db = await openDb();
     try {
-        // Check if a row exists for the user
-        const existing = await db.get(
-            `SELECT user_id FROM user_preference WHERE user_id = ?`,
-            [session.user.id]
-        );
+        const body = await request.json();
+        const { useCurrentLocation, defaultLatitude, defaultLongitude, defaultAddress } = body;
 
-        console.log("Existing preferences check:", existing); // Debug
+        await db
+            .update(user)
+            .set({
+                useCurrentLocation: useCurrentLocation ?? false,
+                defaultLatitude: defaultLatitude || null,
+                defaultLongitude: defaultLongitude || null,
+                defaultAddress: defaultAddress || null,
+            })
+            .where(eq(user.userId, parseInt(session.user.id)));
 
-        if (!existing) {
-            // Insert a new row if none exists
-            console.log("Inserting new preferences for user_id:", session.user.id);
-            await db.run(
-                `INSERT INTO user_preference (user_id, sms_alerts, email_alerts, push_notifications) VALUES (?, ?, ?, ?)`,
-                [session.user.id, smsAlerts ? 1 : 0, emailAlerts ? 1 : 0, pushNotifications ? 1 : 0]
-            );
-        } else {
-            // Update existing row
-            console.log("Updating preferences for user_id:", session.user.id);
-            await db.run(
-                `UPDATE user_preference SET sms_alerts = ?, email_alerts = ?, push_notifications = ? WHERE user_id = ?`,
-                [smsAlerts ? 1 : 0, emailAlerts ? 1 : 0, pushNotifications ? 1 : 0, session.user.id]
-            );
-        }
-
-        return NextResponse.json({ success: true, message: "Alert preferences updated successfully" });
+        return NextResponse.json({ message: "Alerts updated" });
     } catch (error) {
-        console.error("Alert preferences update error:", error);
-        return NextResponse.json({ error: "Server error" }, { status: 500 });
-    } finally {
-        await db.close();
+        console.error("Error updating alerts:", error);
+        return NextResponse.json({ error: "Failed to update alerts" }, { status: 500 });
     }
 }

@@ -1,62 +1,58 @@
-// src/app/api/reports/get-reports/route.ts
 import { NextResponse } from "next/server";
-import { openDb } from "@/lib/db";
+import { db } from "@/lib/drizzle";
+import { realTimeReport, reportMedia, user } from "@/lib/schema";
+import { sql, eq } from "drizzle-orm";
 
-function formatRelativeTime(timestamp: string) {
+function formatRelativeTime(timestamp: Date) {
     const now = new Date();
-    const reportTime = new Date(timestamp);
-    const diff = Math.floor((now.getTime() - reportTime.getTime()) / 1000);
-
+    const diff = Math.floor((now.getTime() - timestamp.getTime()) / 1000);
     if (diff < 60) return "just now";
     if (diff < 3600) return `${Math.floor(diff / 60)} minutes ago`;
     if (diff < 86400) return `${Math.floor(diff / 3600)} hours ago`;
     if (diff < 604800) return `${Math.floor(diff / 86400)} days ago`;
-    return reportTime.toLocaleDateString();
+    return timestamp.toLocaleDateString();
 }
 
 export async function GET() {
     try {
-        const db = await openDb();
-
-        const reports = await db.all(`
-            SELECT r.report_id,
-                   r.offence_id                AS offence,
-                   r.location_address          AS location,
-                   r.timestamp,
-                   r.description,
-                   r.upvotes,
-                   GROUP_CONCAT(rm.file_path)  AS media_paths,
-                   GROUP_CONCAT(rm.media_type) AS media_types
-            FROM real_time_report r
-                     LEFT JOIN report_media rm ON r.report_id = rm.report_id
-            GROUP BY r.report_id
-            ORDER BY r.timestamp DESC
-        `);
+        const reports = await db
+            .select({
+                reportId: realTimeReport.reportId,
+                offence: realTimeReport.offenceId,
+                location: realTimeReport.locationAddress,
+                timestamp: realTimeReport.timestamp,
+                description: realTimeReport.description,
+                upvotes: realTimeReport.upvotes,
+                mediaPaths: sql<string>`COALESCE(GROUP_CONCAT(${reportMedia.filePath}), '')`,
+                mediaTypes: sql<string>`COALESCE(GROUP_CONCAT(${reportMedia.mediaType}), '')`,
+            })
+            .from(realTimeReport)
+            .leftJoin(reportMedia, eq(realTimeReport.reportId, reportMedia.reportId))
+            .groupBy(realTimeReport.reportId)
+            .orderBy(sql`${realTimeReport.timestamp} DESC`);
 
         const formatted = reports.map((r) => {
-            const paths = r.media_paths ? r.media_paths.split(",") : [];
-            const types = r.media_types ? r.media_types.split(",") : [];
-            const media = paths.map((path: string, i: number) => ({
+            const paths = r.mediaPaths ? r.mediaPaths.split(",").filter(Boolean) : [];
+            const types = r.mediaTypes ? r.mediaTypes.split(",").filter(Boolean) : [];
+            const media = paths.map((path, i) => ({
                 path,
-                type: types[i] || "image",
+                type: (types[i] || "image") as "image" | "video" | "audio",
             }));
 
             return {
-                report_id: r.report_id,
+                report_id: r.reportId,
                 offence: r.offence,
                 location: r.location,
                 description: r.description,
                 upvotes: r.upvotes,
                 time: formatRelativeTime(r.timestamp),
-                media: r.media_paths ? r.media_paths.split(",").map((path: string, i: number) => ({
-                    path,
-                    type: r.media_types.split(",")[i] || "image",
-                })) : [],
+                media,
             };
         });
 
         return NextResponse.json(formatted);
     } catch (error) {
-        return NextResponse.json({error: "Failed to fetch reports"}, {status: 500});
+        console.error("Error:", error);
+        return NextResponse.json({ error: "Failed to fetch reports" }, { status: 500 });
     }
 }

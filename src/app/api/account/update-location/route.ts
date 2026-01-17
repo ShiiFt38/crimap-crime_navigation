@@ -1,45 +1,33 @@
+// src/app/api/account/update-location/route.ts
 import { NextResponse } from "next/server";
-import { openDb } from "@/lib/db";
-import { getServerSession } from "next-auth";
+import { db } from "@/lib/drizzle";
+import { user } from "@/lib/schema";
+import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { eq } from "drizzle-orm";
 
-export async function POST(req: Request) {
+export async function POST(request: Request) {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
-        return NextResponse.json({ error: "UNAUTHORIZED" }, { status: 401 });
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { address, useCurrentLocation, latitude, longitude } = await req.json();
-
-    if (!useCurrentLocation && !address) {
-        return NextResponse.json(
-            { error: "MISSING_LOCATION" },
-            { status: 400 }
-        );
-    }
-
-    const db = await openDb();
     try {
-        await db.run(
-            `UPDATE user SET default_address = ?, default_latitude = ?, default_longitude = ?, use_current_location = ?
-       WHERE user_id = ?`,
-            [
-                address || null,
-                useCurrentLocation ? latitude : null,
-                useCurrentLocation ? longitude : null,
-                useCurrentLocation,
-                session.user.id,
-            ]
-        );
+        const { latitude, longitude, address, useCurrentLocation } = await request.json();
 
-        return NextResponse.json({
-            success: true,
-            message: "Location updated successfully",
-        });
+        await db
+            .update(user)
+            .set({
+                defaultLatitude: latitude || null,
+                defaultLongitude: longitude || null,
+                defaultAddress: address || null,
+                useCurrentLocation: useCurrentLocation ?? false,
+            })
+            .where(eq(user.userId, parseInt(session.user.id)));
+
+        return NextResponse.json({ message: "Location updated" });
     } catch (error) {
-        console.error("Location update error: ", error);
-        return NextResponse.json({ error: "SERVER_ERROR" }, { status: 500 });
-    } finally {
-        await db.close();
+        console.error("Error updating location:", error);
+        return NextResponse.json({ error: "Failed to update location" }, { status: 500 });
     }
 }

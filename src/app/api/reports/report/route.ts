@@ -1,26 +1,20 @@
 // src/app/api/reports/report/route.ts
 import { NextResponse } from "next/server";
-import { openDb } from "@/lib/db";
+import { db } from "@/lib/drizzle";
+import { realTimeReport, reportMedia } from "@/lib/schema";
+import { sql } from "drizzle-orm";
 import { writeFile } from "fs/promises";
 import { join } from "path";
 import { randomUUID } from "crypto";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export const config = {
     api: {
-        bodyParser: false, // Required for FormData
+        bodyParser: false,
     },
 };
 
 export async function POST(request: Request) {
-    const session = await getServerSession(authOptions);
-    if (!session) {
-        return NextResponse.json({ error: "Unauthorized"}, { status: 401 })
-    }
-
     try {
-        const db = await openDb();
         const formData = await request.formData();
 
         const offence = formData.get("offence") as string;
@@ -37,28 +31,22 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
         }
 
-        const timestamp = `${date} ${time}:00`;
+        const timestamp = new Date(`${date}T${time}:00`);
 
-        const result = await db.run(
-            `INSERT INTO real_time_report (
-                user_id, offence_id, station_id, description, location_address,
-                latitude, longitude, timestamp, verification_status, upvotes,
-                severity_level, witnesses_present, police_contacted
-            ) VALUES (NULL, ?, NULL, ?, ?, NULL, NULL, ?, 'pending', 0, ?, ?, ?)`,
-            [
-                offence,
-                description,
-                location,
-                timestamp,
-                severity,
-                witnesses ? 1 : 0,
-                policeContacted ? 1 : 0,
-            ]
-        );
+        const [newReport] = await db.insert(realTimeReport).values({
+            offenceId: offence, // Adjust if offenceId is integer
+            description,
+            locationAddress: location,
+            timestamp,
+            severityLevel: severity || null,
+            witnessesPresent: witnesses ? true : false,
+            policeContacted: policeContacted ? true : false,
+            verificationStatus: 'pending',
+            upvotes: 0,
+        }).returning({ reportId: realTimeReport.reportId });
 
-        const reportId = result.lastID!;
+        const reportId = newReport.reportId;
 
-        // Handle multiple media files
         for (const file of mediaFiles) {
             if (file.size === 0) continue;
 
@@ -69,19 +57,18 @@ export async function POST(request: Request) {
 
             await writeFile(join(process.cwd(), "public", "uploads", filename), buffer);
 
-            const mediaType = file.type.startsWith("video/") ? "video"
-                : file.type.startsWith("audio/") ? "audio" : "image";
+            const mediaType = file.type.startsWith('video/') ? 'video' : file.type.startsWith('audio/') ? 'audio' : 'image';
 
-            await db.run(
-                `INSERT INTO report_media (report_id, file_path, media_type)
-         VALUES (?, ?, ?)`,
-                [reportId, filePath, mediaType]
-            );
+            await db.insert(reportMedia).values({
+                reportId,
+                filePath,
+                mediaType,
+            });
         }
 
-        return NextResponse.json({ message: "Report submitted successfully" }, { status: 201 });
+        return NextResponse.json({ message: "Report submitted successfully", reportId }, { status: 201 });
     } catch (error) {
-        console.error("Submission error:", error);
-        return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+        console.error("Error submitting report:", error);
+        return NextResponse.json({ error: "Failed to submit report" }, { status: 500 });
     }
 }

@@ -1,8 +1,10 @@
 // src/app/api/reports/comments/route.ts
 import { NextResponse } from "next/server";
-import { openDb } from "@/lib/db";
+import { db } from "@/lib/drizzle";
+import { reportComment } from "@/lib/schema";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { eq } from "drizzle-orm";
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
@@ -13,18 +15,16 @@ export async function GET(request: Request) {
     }
 
     try {
-        const db = await openDb();
-        const comments = await db.all(`
-      SELECT 
-        c.comment_id,
-        c.comment_text,
-        c.timestamp,
-        u.username AS author
-      FROM report_comment c
-      JOIN user u ON c.user_id = u.user_id
-      WHERE c.report_id = ?
-      ORDER BY c.timestamp ASC
-    `, [reportId]);
+        const comments = await db.select({
+            commentId: reportComment.commentId,
+            commentText: reportComment.commentText,
+            timestamp: reportComment.timestamp,
+            author: sql<string>`u.username`,
+        })
+            .from(reportComment)
+            .leftJoin(user, eq(reportComment.userId, user.userId))
+            .where(eq(reportComment.reportId, parseInt(reportId)))
+            .orderBy(reportComment.timestamp);
 
         return NextResponse.json(comments);
     } catch (error) {
@@ -34,22 +34,22 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
     const session = await getServerSession(authOptions);
-    if (!session?.user) {
+    if (!session?.user?.id) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    try {
-        const { reportId, comment } = await request.json();
-        if (!reportId || !comment?.trim()) {
-            return NextResponse.json({ error: "Missing data" }, { status: 400 });
-        }
+    const { reportId, comment } = await request.json();
 
-        const db = await openDb();
-        await db.run(
-            `INSERT INTO report_comment (report_id, user_id, comment_text)
-       VALUES (?, ?, ?)`,
-            [reportId, session.user.id, comment.trim()]
-        );
+    if (!reportId || !comment?.trim()) {
+        return NextResponse.json({ error: "Missing data" }, { status: 400 });
+    }
+
+    try {
+        await db.insert(reportComment).values({
+            reportId: parseInt(reportId),
+            userId: parseInt(session.user.id),
+            commentText: comment.trim(),
+        });
 
         return NextResponse.json({ message: "Comment added" });
     } catch (error) {

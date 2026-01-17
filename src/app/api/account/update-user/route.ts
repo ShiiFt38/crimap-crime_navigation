@@ -1,48 +1,44 @@
+// src/app/api/account/update-user/route.ts
 import { NextResponse } from "next/server";
-import { openDb } from "@/lib/db";
-import { getServerSession } from "next-auth";
+import { db } from "@/lib/drizzle";
+import { user } from "@/lib/schema";
+import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { eq } from "drizzle-orm";
 
-export async function POST(req: Request) {
+export async function POST(request: Request) {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { username, fullName, phoneNumber } = await req.json();
+    const userId = parseInt(session.user.id);
+    const body = await request.json();
 
-    if (!username || !fullName || !phoneNumber) {
-        return NextResponse.json({ error: "All fields are required" }, { status: 400 });
-    }
-
-    // Check if username already exists for another user
-    if (username !== session.user.name) {
-        const db = await openDb();
-        try {
-            const existingUser = await db.get(
-                "SELECT user_id FROM user WHERE username = ? AND user_id != ?",
-                [username, session.user.id]
-            );
-            if (existingUser) {
-                return NextResponse.json({ error: "Username already taken" }, { status: 400 });
-            }
-        } finally {
-            await db.close();
-        }
-    }
-
-    const db = await openDb();
     try {
-        await db.run(
-            "UPDATE user SET username = ?, full_name = ?, phone = ? WHERE user_id = ?",
-            [username, fullName, phoneNumber, session.user.id]
-        );
+        const updated = await db
+            .update(user)
+            .set({
+                fullName: body.fullName || null,
+                phone: body.phone || null,
+                defaultAddress: body.address || null,
+                defaultLatitude: body.latitude || null,
+                defaultLongitude: body.longitude || null,
+                useCurrentLocation: body.useCurrentLocation ?? false,
+            })
+            .where(eq(user.userId, userId))
+            .returning({
+                fullName: user.fullName,
+                phone: user.phone,
+                defaultAddress: user.defaultAddress,
+                defaultLatitude: user.defaultLatitude,
+                defaultLongitude: user.defaultLongitude,
+                useCurrentLocation: user.useCurrentLocation,
+            });
 
-        return NextResponse.json({ success: true, message: "Profile updated successfully" });
+        return NextResponse.json({ message: "User updated", user: updated[0] });
     } catch (error) {
-        console.error("Profile update error: ", error);
-        return NextResponse.json({ error: "Server error" }, { status: 500 });
-    } finally {
-        await db.close();
+        console.error("Error updating user:", error);
+        return NextResponse.json({ error: "Failed to update user" }, { status: 500 });
     }
 }

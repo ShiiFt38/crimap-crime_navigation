@@ -1,8 +1,10 @@
 // src/app/api/reports/upvote/route.ts
 import { NextResponse } from "next/server";
-import { openDb } from "@/lib/db";
+import { db } from "@/lib/drizzle";
+import { reportUpvote, realTimeReport } from "@/lib/schema";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { eq } from "drizzle-orm";
 
 export async function POST(request: Request) {
     const session = await getServerSession(authOptions);
@@ -12,61 +14,57 @@ export async function POST(request: Request) {
     }
 
     const userId = parseInt(session.user.id);
+    const { reportId } = await request.json();
+
+    if (!reportId || isNaN(reportId)) {
+        return NextResponse.json({ error: "Invalid report ID" }, { status: 400 });
+    }
 
     try {
-        const { reportId } = await request.json();
+        const existing = await db.select({ upvoteId: reportUpvote.upvoteId })
+            .from(reportUpvote)
+            .where(
+                eq(reportUpvote.reportId, reportId) && eq(reportUpvote.userId, userId)
+            )
+            .limit(1);
 
-        if (!reportId || isNaN(reportId)) {
-            return NextResponse.json({ error: "Invalid report ID" }, { status: 400 });
-        }
-
-        const db = await openDb();
-
-        // Check if user already upvoted
-        const existing = await db.get(
-            `SELECT upvote_id FROM report_upvote WHERE report_id = ? AND user_id = ?`,
-            [reportId, userId]
-        );
-
-        if (existing) {
+        if (existing.length > 0) {
             // Remove upvote
-            await db.run(
-                `DELETE FROM report_upvote WHERE upvote_id = ?`,
-                [existing.upvote_id]
-            );
-            await db.run(
-                `UPDATE real_time_report SET upvotes = upvotes - 1 WHERE report_id = ?`,
-                [reportId]
-            );
+            await db.delete(reportUpvote).where(eq(reportUpvote.upvoteId, existing[0].upvoteId));
+            await db.update(realTimeReport)
+                .set({ upvotes: sql`${realTimeReport.upvotes} - 1` })
+                .where(eq(realTimeReport.reportId, reportId));
 
-            const updated = await db.get(`SELECT upvotes FROM real_time_report WHERE report_id = ?`, [reportId]);
+            const updated = await db.select({ upvotes: realTimeReport.upvotes })
+                .from(realTimeReport)
+                .where(eq(realTimeReport.reportId, reportId))
+                .limit(1);
 
             return NextResponse.json({
                 message: "Upvote removed",
-                upvotes: updated?.upvotes || 0,
+                upvotes: updated[0]?.upvotes || 0,
                 hasUpvoted: false,
             });
         } else {
             // Add upvote
-            await db.run(
-                `INSERT INTO report_upvote (report_id, user_id) VALUES (?, ?)`,
-                [reportId, userId]
-            );
-            await db.run(
-                `UPDATE real_time_report SET upvotes = upvotes + 1 WHERE report_id = ?`,
-                [reportId]
-            );
+            await db.insert(reportUpvote).values({ reportId, userId: userId });
+            await db.update(realTimeReport)
+                .set({ upvotes: sql`${realTimeReport.upvotes} + 1` })
+                .where(eq(realTimeReport.reportId, reportId));
 
-            const updated = await db.get(`SELECT upvotes FROM real_time_report WHERE report_id = ?`, [reportId]);
+            const updated = await db.select({ upvotes: realTimeReport.upvotes })
+                .from(realTimeReport)
+                .where(eq(realTimeReport.reportId, reportId))
+                .limit(1);
 
             return NextResponse.json({
-                message: "Upvoted",
-                upvotes: updated?.upvotes || 0,
+                message: "Upvoted successfully",
+                upvotes: updated[0]?.upvotes || 0,
                 hasUpvoted: true,
             });
         }
     } catch (error) {
-        console.error("Error toggling upvote:", error);
+        console.error("Error:", error);
         return NextResponse.json({ error: "Failed to toggle upvote" }, { status: 500 });
     }
 }

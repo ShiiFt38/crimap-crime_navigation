@@ -1,21 +1,11 @@
+// src/app/api/auth/[...nextauth]/route.ts
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { openDb } from "@/lib/db";
+import { db } from "@/lib/drizzle";
+import { user } from "@/lib/schema";
 import bcrypt from "bcryptjs";
+import { eq } from "drizzle-orm";
 
-declare module "next-auth" {
-    interface Session {
-        user: {
-            id: string;
-            name: string; // username
-            email: string;
-            fullName: string | null;
-            phone: string | null;
-        };
-    }
-}
-
-// Define the auth options
 const authOptions = {
     providers: [
         CredentialsProvider({
@@ -29,36 +19,42 @@ const authOptions = {
                     throw new Error("MISSING_CREDENTIALS");
                 }
 
-                let db;
                 try {
-                    db = await openDb();
-                    const user = await db.get(
-                        "SELECT user_id AS id, username AS name, email, password_hash FROM user WHERE email = ?",
-                        [credentials.email]
-                    );
+                    const [foundUser] = await db
+                        .select({
+                            userId: user.userId,
+                            username: user.username,
+                            email: user.email,
+                            passwordHash: user.passwordHash,
+                        })
+                        .from(user)
+                        .where(eq(user.email, credentials.email))
+                        .limit(1);
 
-                    if (!user || !user.password_hash) {
+                    if (!foundUser || !foundUser.passwordHash) {
                         throw new Error("INVALID_EMAIL");
                     }
 
-                    const isValid = await bcrypt.compare(credentials.password, user.password_hash);
+                    const isValid = await bcrypt.compare(credentials.password, foundUser.passwordHash);
                     if (!isValid) {
                         throw new Error("INCORRECT_PASSWORD");
                     }
 
-                    return { id: user.id, name: user.name, email: user.email };
+                    return {
+                        id: foundUser.userId.toString(),
+                        name: foundUser.username,
+                        email: foundUser.email,
+                    };
                 } catch (error) {
                     console.error("Authorization error:", error);
                     throw error;
-                } finally {
-                    if (db) await db.close();
                 }
             },
         }),
     ],
     pages: {
         signIn: "/auth/signin",
-        error: "/auth/signin", // Handle errors on sign-in page
+        error: "/auth/signin",
     },
     session: {
         strategy: "jwt",
@@ -72,43 +68,43 @@ const authOptions = {
             return token;
         },
         async session({ session, token }) {
-            if (session.user && token.sub) { // token.sub is the user ID
-                const db = await openDb();
-                try {
-                    const fullUser = await db.get(
-                        `SELECT username, full_name AS fullName, phone, default_address AS address, 
-                        default_longitude AS longitude, default_latitude AS latitude, 
-                        use_current_location as useCurrentLocation FROM user WHERE user_id = ?`,
-                        [token.sub]
-                    );
-                    if (fullUser) {
-                        session.user = {
-                            ...session.user,
-                            id: token.sub,
-                            name: fullUser.username || session.user.name, // Ensure name is username
-                            email: session.user.email,
-                            fullName: fullUser.fullName,
-                            phone: fullUser.phone,
-                            address: fullUser.address,
-                            longitude: fullUser.longitude,
-                            latitude: fullUser.latitude,
-                        };
-                    }
-                } finally {
-                    await db.close();
+            if (session.user && token.sub) {
+                const [fullUser] = await db
+                    .select({
+                        username: user.username,
+                        fullName: user.fullName,
+                        phone: user.phone,
+                        defaultAddress: user.defaultAddress,
+                        defaultLongitude: user.defaultLongitude,
+                        defaultLatitude: user.defaultLatitude,
+                        useCurrentLocation: user.useCurrentLocation,
+                    })
+                    .from(user)
+                    .where(eq(user.userId, parseInt(token.sub)))
+                    .limit(1);
+
+                if (fullUser) {
+                    session.user = {
+                        ...session.user,
+                        id: token.sub,
+                        name: fullUser.username || session.user.name,
+                        email: session.user.email,
+                        fullName: fullUser.fullName,
+                        phone: fullUser.phone,
+                        address: fullUser.defaultAddress,
+                        longitude: fullUser.defaultLongitude,
+                        latitude: fullUser.defaultLatitude,
+                        useCurrentLocation: fullUser.useCurrentLocation,
+                    };
                 }
             }
             return session;
         },
     },
-    debug: true, // Enable debug logging
+    debug: true,
 };
 
-// Export the handler
 const handler = NextAuth(authOptions);
 
-// Export handlers for all methods
 export { handler as GET, handler as POST };
-
-// Export auth options for use in other routes
 export { authOptions };
