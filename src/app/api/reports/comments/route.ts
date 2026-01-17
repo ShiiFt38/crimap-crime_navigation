@@ -1,10 +1,13 @@
 // src/app/api/reports/comments/route.ts
+
+//TODO: [SqliteError: no such function: now] { code: 'SQLITE_ERROR' }
+
 import { NextResponse } from "next/server";
 import { db } from "@/lib/drizzle";
-import { reportComment } from "@/lib/schema";
+import { reportComment, user } from "@/lib/schema";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
@@ -19,15 +22,18 @@ export async function GET(request: Request) {
             commentId: reportComment.commentId,
             commentText: reportComment.commentText,
             timestamp: reportComment.timestamp,
-            author: sql<string>`u.username`,
+            author: sql<string>`user.username`,
         })
             .from(reportComment)
             .leftJoin(user, eq(reportComment.userId, user.userId))
             .where(eq(reportComment.reportId, parseInt(reportId)))
             .orderBy(reportComment.timestamp);
 
+        console.log("Comments: ", NextResponse.json(comments));
+
         return NextResponse.json(comments);
     } catch (error) {
+        console.log(error);
         return NextResponse.json({ error: "Failed to fetch comments" }, { status: 500 });
     }
 }
@@ -53,6 +59,7 @@ export async function POST(request: Request) {
 
         return NextResponse.json({ message: "Comment added" });
     } catch (error) {
+        console.log("Error: ", error);
         return NextResponse.json({ error: "Failed to add comment" }, { status: 500 });
     }
 }

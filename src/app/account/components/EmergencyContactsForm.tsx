@@ -98,6 +98,7 @@ export default function EmergencyContactsForm() {
             setFormData({ contact_id: null, contact_name: "", phone_number: "", relationship: "Family" });
             await fetchContacts();
         } catch (err) {
+            console.log("Emergency Contact error: ", err);
             setError((err as Error).message || errorMessages.default);
         } finally {
             setLoading(false);

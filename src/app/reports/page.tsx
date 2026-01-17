@@ -1,7 +1,3 @@
-//TODO: Implement comments table and query against it
-//TODO: Implement upvotes feature
-//TODO: Implement card pin feature
-
 import CrimeReportCard from "@/app/reports/components/CrimeReportCard";
 
 
@@ -10,7 +6,9 @@ async function getReports(){
         cache: "no-store"
     });
     if (!res.ok) throw new Error("Failed to fetch reports");
-    return res.json();
+    const Response = res.json();
+
+    return Response;
 }
 
 export default async function Reports(){

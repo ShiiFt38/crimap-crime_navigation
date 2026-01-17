@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/drizzle";
-import { realTimeReport, reportMedia, user } from "@/lib/schema";
+import { realTimeReport, reportMedia, user, offence } from "@/lib/schema";
 import { sql, eq } from "drizzle-orm";
 
 function formatRelativeTime(timestamp: Date) {
@@ -18,7 +18,7 @@ export async function GET() {
         const reports = await db
             .select({
                 reportId: realTimeReport.reportId,
-                offence: realTimeReport.offenceId,
+                offenceName: offence.offenceName,
                 location: realTimeReport.locationAddress,
                 timestamp: realTimeReport.timestamp,
                 description: realTimeReport.description,
@@ -28,6 +28,7 @@ export async function GET() {
             })
             .from(realTimeReport)
             .leftJoin(reportMedia, eq(realTimeReport.reportId, reportMedia.reportId))
+            .leftJoin(offence, eq(realTimeReport.offenceId, offence.offenceId))
             .groupBy(realTimeReport.reportId)
             .orderBy(sql`${realTimeReport.timestamp} DESC`);
 
@@ -41,7 +42,7 @@ export async function GET() {
 
             return {
                 report_id: r.reportId,
-                offence: r.offence,
+                offence: r.offenceName,
                 location: r.location,
                 description: r.description,
                 upvotes: r.upvotes,

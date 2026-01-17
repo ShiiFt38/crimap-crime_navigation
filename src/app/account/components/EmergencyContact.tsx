@@ -16,13 +16,13 @@ interface ContactProps {
 export default function EmergencyContact({contact, handleEdit, handleDelete}: ContactProps) {
     return (
         <div
-            key={contact.contact_id}
+            key={contact.contactId}
             className="flex flex-row justify-between items-start md:items-center p-4
                                     bg-gray-50 rounded-lg border border-gray-200"
         >
             <div className="w-full flex-row space-x-4 ">
-                <p className="block font-medium text-gray-900">{contact.contact_name}</p>
-                <p className="inline text-sm items text-gray-600">{contact.phone_number}</p>
+                <p className="block font-medium text-gray-900">{contact.name}</p>
+                <p className="inline text-sm items text-gray-600">{contact.phone}</p>
                 <p className="inline text-sm text-gray-500 capitalize">{contact.relationship}</p>
             </div>
             <div className="flex space-x-3 mt-3 md:mt-0">

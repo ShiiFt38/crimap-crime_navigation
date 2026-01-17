@@ -1,4 +1,6 @@
 // app/reports/report-form/page.tsx
+//TODO: Update real_time_report table and store offence_id in appropriate column with necessary data type
+
 'use client'
 
 import { useState } from 'react';
@@ -43,7 +45,7 @@ export default function ReportForm() {
         setLoading(true);
 
         const data = new FormData();
-        data.append("offence", formData.offence);
+        data.append("offence", formData.offence.toString());
         data.append("severity", formData.severity);
         data.append("location", formData.location);
         data.append("date", formData.date);

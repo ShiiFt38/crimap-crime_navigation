@@ -56,24 +56,28 @@ export default function CrimeReportCard({
     const [newComment, setNewComment] = useState("");
     const [loadingComments, setLoadingComments] = useState<boolean>(false);
 
+    const fetchComments = async () => {
+        setLoadingComments(true);
+        try {
+            const res = await fetch(`/api/reports/comments?reportId=${reportId}`);
+            if (res.ok) {
+                const data = await res.json();
+                setComments(data);
+                console.log("Comments length: ", comments.length);
+            }
+        } catch (err) {
+            console.error("Failed to load comments");
+        } finally {
+            setLoadingComments(false);
+        }
+    };
+
     useEffect(() => {
         if (chatRoomOpen) {
-            const fetchComments = async () => {
-                setLoadingComments(true);
-                try {
-                    const res = await fetch(`/api/reports/comments?reportId=${reportId}`);
-                    if (res.ok) {
-                        const data = await res.json();
-                        setComments(data);
-                    }
-                } catch (err) {
-                    console.error("Failed to load comments");
-                } finally {
-                    setLoadingComments(false);
-                }
-            };
             fetchComments();
         }
+
+        fetchComments();
     }, [chatRoomOpen, reportId]);
 
     // Check if current user has upvoted on mount
@@ -275,6 +279,7 @@ export default function CrimeReportCard({
             </div>
 
             <ChatRoom
+                key={reportId}
                 show={chatRoomOpen}
                 comments={comments}
                 loadingComments={loadingComments}

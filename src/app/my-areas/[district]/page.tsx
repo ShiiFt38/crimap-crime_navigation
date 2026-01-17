@@ -21,7 +21,9 @@ Here's how it works:
 This page runs on the server, so it prepares everything (including the typed data) before sending it to the browser.
 */}
 
-import { openDb } from "@/lib/db";
+import { db } from "@/lib/drizzle";
+import { district, station, crimeRecord } from "@/lib/schema";
+import { eq, sql } from "drizzle-orm";
 import Map from "./components/Map";
 import StatsSummary from "./components/StatsSummary";
 import TrendsChart from "./components/TrendsChart";
@@ -37,24 +39,38 @@ type DistrictPageProps = {
 
 export default async function DistrictPage({ params }: DistrictPageProps) {
     const resolvedParams = await params;
-    const db = await openDb();
-    const { district } = resolvedParams;
+    const districtSlug = resolvedParams.district;
 
-    const rows = await db.all(
-        `SELECT
-             d.district_name,
-             d.population,
-             s.station_name,
-             o.offence_name,
-             cr.date,
-             cr.count
-         FROM crime_record cr
-                  JOIN station s ON cr.station_id = s.station_id
-                  JOIN district d ON s.district_id = d.district_id
-                  JOIN offence o ON cr.offence_id = o.offence_id
-         WHERE lower(replace(d.district_name, ' ', '-')) = ?`,
-        [district]
-    );
+    // Find district by slug (assuming you store slug or normalize name)
+    // If you use ID instead, change to parseInt(districtSlug)
+    const [dist] = await db
+        .select({
+            districtId: district.districtId,
+            districtName: district.districtName,
+            population: district.population,
+        })
+        .from(district)
+        .where(eq(district.districtName, districtSlug.replace(/-/g, " "))) // example normalization
+        .limit(1);
+
+    if (!dist) {
+        return <div>District not found</div>;
+    }
+
+    // Fetch crime records / stats for this district
+    const rows = await db
+        .select({
+            count: crimeRecord.count,
+            date: crimeRecord.date,
+            stationName: station.stationName,
+            population: district.population,
+            districtName: district.districtName,
+        })
+        .from(crimeRecord)
+        .leftJoin(station, eq(crimeRecord.stationId, station.stationId))
+        .leftJoin(district, eq(station.districtId, district.districtId))
+        .where(eq(district.districtId, dist.districtId))
+        .orderBy(sql`${crimeRecord.date} DESC`);
 
     // Log the fetched data to the server console for debugging
     // console.log("Fetched rows for district", district, ":", rows);

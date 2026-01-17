@@ -30,7 +30,7 @@ export default function ChatRoom({show, comments, loadingComments, session, newC
                                     <span className="text-xs font-medium text-gray-700">{c.author}</span>
                                     <span className="text-xs text-gray-500">{new Date(c.timestamp).toLocaleString()}</span>
                                 </div>
-                                <p className="text-sm text-gray-800">{c.comment_text}</p>
+                                <p className="text-sm text-gray-800">{c.commentText}</p>
                             </div>
                         </div>
                     </div>
@@ -54,7 +54,24 @@ export default function ChatRoom({show, comments, loadingComments, session, newC
                         Send
                     </button>
                 </div>
-            ) : (<p className="text-sm text-gray-600">Log in to comment</p>
+            ) : (
+                <div className="flex space-x-2">
+                    <input
+                        type="text"
+                        value={newComment}
+                        placeholder="Log in to comment"
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                        disabled
+                        onChange={onChange}/>
+                    <button
+                        type="submit"
+                        onClick={submitComment}
+                        className="cursor-pointer border-b-2 bg-[var(--color-tertiary)]
+                        border-b-[var(--color-primary)] text-white px-4 py-2 rounded-lg
+                    text-sm font-medium transition-colors">
+                        Send
+                    </button>
+                </div>
             )}
         </div>
     )

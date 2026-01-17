@@ -96,10 +96,9 @@ export const reportComment = pgTable("report_comment", {
 export const emergencyContact = pgTable("emergency_contact", {
   contactId: serial("contact_id").primaryKey(),
   userId: integer("user_id").references(() => user.userId, { onDelete: "cascade" }),
-  name: text("name").notNull(),
-  phone: text("phone").notNull(),
+  name: text("contact_name").notNull(),
+  phone: text("phone_number").notNull(),
   relationship: text("relationship"),
-  createdAt: timestamp("created_at").defaultNow(),
 });
 
 // Relations (optional for now, but useful for joins)

@@ -4,7 +4,7 @@ import { db } from "@/lib/drizzle";
 import { reportUpvote, realTimeReport } from "@/lib/schema";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 export async function POST(request: Request) {
     const session = await getServerSession(authOptions);
