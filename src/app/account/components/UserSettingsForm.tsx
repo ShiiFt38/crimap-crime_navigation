@@ -27,7 +27,7 @@ export default function UserSettingsForm() {
                 ...prevUserData,
                 username: session.user.name || "",
                 fullName: session.user.fullName || "",
-                phoneNumber: session.user.phone,
+                phoneNumber: session.user.phone || "",
             }))
         }
     }, [session, status]);
@@ -62,7 +62,7 @@ export default function UserSettingsForm() {
             setSuccess("Profile updated successfully.")
             setLoading(false)
         } catch (error) {
-            setError(error.message || "An error occurred while updating the profile.")
+            setError(error instanceof Error ? error.message : "An error occurred while updating the profile.")
             setLoading(false)
         }
     }

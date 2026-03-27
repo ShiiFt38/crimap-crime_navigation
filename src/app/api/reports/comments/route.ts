@@ -1,13 +1,9 @@
-// src/app/api/reports/comments/route.ts
-
-//TODO: [SqliteError: no such function: now] { code: 'SQLITE_ERROR' }
-
 import { NextResponse } from "next/server";
 import { db } from "@/lib/drizzle";
 import { reportComment, user } from "@/lib/schema";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { eq, sql } from "drizzle-orm";
+import { asc, eq } from "drizzle-orm";
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
@@ -22,14 +18,12 @@ export async function GET(request: Request) {
             commentId: reportComment.commentId,
             commentText: reportComment.commentText,
             timestamp: reportComment.timestamp,
-            author: sql<string>`user.username`,
+            author: user.username,
         })
             .from(reportComment)
             .leftJoin(user, eq(reportComment.userId, user.userId))
             .where(eq(reportComment.reportId, parseInt(reportId)))
-            .orderBy(reportComment.timestamp);
-
-        console.log("Comments: ", NextResponse.json(comments));
+            .orderBy(asc(reportComment.timestamp));
 
         return NextResponse.json(comments);
     } catch (error) {

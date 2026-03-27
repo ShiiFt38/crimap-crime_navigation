@@ -2,7 +2,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/drizzle";
 import { crimeRecord, station, district } from "@/lib/schema";
-import { sql } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 export async function GET(request: Request) {
     try {
@@ -10,7 +10,7 @@ export async function GET(request: Request) {
         const districtId = searchParams.get("districtId");
         const limit = parseInt(searchParams.get("limit") || "20");
 
-        let query = db
+        const baseQuery = db
             .select({
                 recordId: crimeRecord.recordId,
                 stationName: station.stationName,
@@ -25,11 +25,9 @@ export async function GET(request: Request) {
             .orderBy(sql`${crimeRecord.date} DESC`)
             .limit(limit);
 
-        if (districtId && !isNaN(parseInt(districtId))) {
-            query = query.where(eq(district.districtId, parseInt(districtId)));
-        }
-
-        const records = await query;
+        const records = districtId && !isNaN(parseInt(districtId))
+            ? await baseQuery.where(eq(district.districtId, parseInt(districtId)))
+            : await baseQuery;
 
         return NextResponse.json(records);
     } catch (error) {

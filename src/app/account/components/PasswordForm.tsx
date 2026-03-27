@@ -62,7 +62,7 @@ export default function PasswordForm() {
             setPasswordData({ currentPassword: "", newPassword: "", confirmPassword: "" });
             setLoading(false)
         } catch (err) {
-            setError(err.message || "An error occurred while updating the password.");
+            setError(err instanceof Error ? err.message : "An error occurred while updating the password.");
             setLoading(false)
         }
     }

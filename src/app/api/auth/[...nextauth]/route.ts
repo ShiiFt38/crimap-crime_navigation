@@ -1,12 +1,12 @@
 // src/app/api/auth/[...nextauth]/route.ts
-import NextAuth from "next-auth";
+import NextAuth, { type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { db } from "@/lib/drizzle";
 import { user } from "@/lib/schema";
 import bcrypt from "bcryptjs";
 import { eq } from "drizzle-orm";
 
-const authOptions = {
+const authOptions: NextAuthOptions = {
     providers: [
         CredentialsProvider({
             name: "Credentials",
@@ -64,11 +64,14 @@ const authOptions = {
         async jwt({ token, user }) {
             if (user) {
                 token.id = user.id;
+                token.sub = user.id;
             }
             return token;
         },
         async session({ session, token }) {
-            if (session.user && token.sub) {
+            const sessionUserId = token.id || token.sub;
+
+            if (session.user && sessionUserId) {
                 const [fullUser] = await db
                     .select({
                         username: user.username,
@@ -80,13 +83,13 @@ const authOptions = {
                         useCurrentLocation: user.useCurrentLocation,
                     })
                     .from(user)
-                    .where(eq(user.userId, parseInt(token.sub)))
+                    .where(eq(user.userId, parseInt(sessionUserId)))
                     .limit(1);
 
                 if (fullUser) {
                     session.user = {
                         ...session.user,
-                        id: token.sub,
+                        id: sessionUserId,
                         name: fullUser.username || session.user.name,
                         email: session.user.email,
                         fullName: fullUser.fullName,

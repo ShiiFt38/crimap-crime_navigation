@@ -108,7 +108,7 @@ export default function ReportForm() {
         const { name, value, type, checked, files } = e.target as HTMLInputElement;
         setFormData((prev) => ({
             ...prev,
-            [name]: type === "checkbox" ? checked : type === "file" ? files?.[0] || null : value,
+            [name]: type === "checkbox" ? checked : type === "file" ? Array.from(files || []) : value,
         }));
     };
 

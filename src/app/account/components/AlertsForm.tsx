@@ -49,7 +49,7 @@ export default function AlertsForm() {
                         pushNotifications: data.pushNotifications,
                     });
                 } catch (error) {
-                    setError(error.message || errorMessages.default);
+                    setError(error instanceof Error ? error.message : errorMessages.default);
                 }
             };
 
@@ -81,7 +81,7 @@ export default function AlertsForm() {
             setSuccess("Alert preferences updated successfully.");
             setLoading(false);
         } catch (error) {
-            setError(error.message || errorMessages.default);
+            setError(error instanceof Error ? error.message : errorMessages.default);
             setLoading(false);
         }
     }
@@ -117,10 +117,10 @@ export default function AlertsForm() {
                             checked={alertsData.smsAlerts}/>
                         <div
                             className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4
-                            peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full
+                            peer-focus:ring-[var(--color-tertiary)] rounded-full peer peer-checked:after:translate-x-full
                             peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px]
                             after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full
-                            after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                            after:h-5 after:w-5 after:transition-all peer-checked:bg-[var(--color-primary)]"></div>
                     </label>
                 </div>
 
@@ -134,10 +134,10 @@ export default function AlertsForm() {
                             onChange={handleChange}/>
                         <div
                             className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4
-                            peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full
+                            peer-focus:ring-[var(--color-tertiary)] rounded-full peer peer-checked:after:translate-x-full
                             peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px]
                             after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full
-                            after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                            after:h-5 after:w-5 after:transition-all peer-checked:bg-[var(--color-primary)]"></div>
                     </label>
                 </div>
 
@@ -151,10 +151,10 @@ export default function AlertsForm() {
                         checked={alertsData.pushNotifications}/>
                         <div
                             className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4
-                            peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full
+                            peer-focus:ring-[var(--color-tertiary)] rounded-full peer peer-checked:after:translate-x-full
                             peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px]
                             after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full
-                            after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                            after:h-5 after:w-5 after:transition-all peer-checked:bg-[var(--color-primary)]"></div>
                     </label>
                 </div>
 

@@ -6,6 +6,8 @@ import {
     boolean,
     timestamp,
     pgTable,
+    uniqueIndex,
+    index,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
@@ -21,6 +23,21 @@ export const user = pgTable("user", {
     defaultLongitude: real("default_longitude"),
     useCurrentLocation: boolean("use_current_location").default(false),
 });
+
+export const userPreferences = pgTable(
+    "user_preference",
+    {
+        preferenceId: serial("preference_id").primaryKey(),
+        userId: integer("user_id").references(() => user.userId, { onDelete: "cascade" }).notNull(),
+        smsAlerts: boolean("sms_alerts").default(false),
+        emailAlerts: boolean("email_alerts").default(false),
+        pushNotifications: boolean("push_notifications").default(false),
+        alertRadius: integer("alert_radius").default(5),
+    },
+    (table) => ({
+        userIdUnique: uniqueIndex("user_preference_user_id_unique").on(table.userId),
+    })
+);
 
 export const offence = pgTable("offence", {
     offenceId: serial("offence_id").primaryKey(),
@@ -50,52 +67,67 @@ export const crimeRecord = pgTable("crime_record", {
     stationId: integer("station_id").references(() => station.stationId),
     offenceId: integer("offence_id").references(() => offence.offenceId),
     count: integer("count").notNull(),
-    date: timestamp("date").notNull(),
+    date: timestamp("date", { withTimezone: true }).notNull(),
 });
 
-export const realTimeReport = pgTable("real_time_report", {
-    reportId: serial("report_id").primaryKey(),
-    userId: integer("user_id").references(() => user.userId),
-    offenceId: integer("offence_id").notNull().references(() => offence.offenceId),
-    stationId: integer("station_id").references(() => station.stationId),
-    description: text("description"),
-    locationAddress: text("location_address"),
-    latitude: real("latitude"),
-    longitude: real("longitude"),
-    timestamp: timestamp("timestamp").defaultNow(),
-    verificationStatus: text("verification_status").default("pending"),
-    upvotes: integer("upvotes").default(0),
-    severityLevel: text("severity_level"),
-    witnessesPresent: boolean("witnesses_present"),
-    policeContacted: boolean("police_contacted"),
-});
+export const realTimeReport = pgTable(
+    "real_time_report",
+    {
+        reportId: serial("report_id").primaryKey(),
+        userId: integer("user_id").references(() => user.userId, { onDelete: "set null" }),
+        offenceId: integer("offence_id").notNull().references(() => offence.offenceId),
+        stationId: integer("station_id").references(() => station.stationId),
+        description: text("description"),
+        locationAddress: text("location_address"),
+        latitude: real("latitude"),
+        longitude: real("longitude"),
+        timestamp: timestamp("timestamp", { withTimezone: true }).notNull(),
+        verificationStatus: text("verification_status").default("pending"),
+        upvotes: integer("upvotes").default(0),
+        severityLevel: text("severity_level"),
+        witnessesPresent: boolean("witnesses_present").default(false),
+        policeContacted: boolean("police_contacted").default(false),
+        anonymous: boolean("anonymous").default(false),
+        contactEmail: text("contact_email"),
+        contactPhone: text("contact_phone"),
+    },
+    (table) => ({
+        timestampIdx: index("real_time_report_timestamp_idx").on(table.timestamp),
+    })
+);
 
 export const reportMedia = pgTable("report_media", {
     mediaId: serial("media_id").primaryKey(),
     reportId: integer("report_id").notNull().references(() => realTimeReport.reportId),
     filePath: text("file_path").notNull(),
     mediaType: text("media_type"),
-    uploadedAt: timestamp("uploaded_at").defaultNow(),
+    uploadedAt: timestamp("uploaded_at", { withTimezone: true }).defaultNow(),
 });
 
-export const reportUpvote = pgTable("report_upvote", {
-    upvoteId: serial("upvote_id").primaryKey(),
-    reportId: integer("report_id").notNull().references(() => realTimeReport.reportId),
-    userId: integer("user_id").notNull().references(() => user.userId),
-    timestamp: timestamp("timestamp").defaultNow(),
-});
+export const reportUpvote = pgTable(
+    "report_upvote",
+    {
+        upvoteId: serial("upvote_id").primaryKey(),
+        reportId: integer("report_id").notNull().references(() => realTimeReport.reportId, { onDelete: "cascade" }),
+        userId: integer("user_id").notNull().references(() => user.userId, { onDelete: "cascade" }),
+        timestamp: timestamp("timestamp", { withTimezone: true }).defaultNow(),
+    },
+    (table) => ({
+        uniqueReportUser: uniqueIndex("report_upvote_report_user_unique").on(table.reportId, table.userId),
+    })
+);
 
 export const reportComment = pgTable("report_comment", {
     commentId: serial("comment_id").primaryKey(),
-    reportId: integer("report_id").notNull().references(() => realTimeReport.reportId),
-    userId: integer("user_id").notNull().references(() => user.userId),
+    reportId: integer("report_id").notNull().references(() => realTimeReport.reportId, { onDelete: "cascade" }),
+    userId: integer("user_id").notNull().references(() => user.userId, { onDelete: "cascade" }),
     commentText: text("comment_text").notNull(),
-    timestamp: timestamp("timestamp").defaultNow(),
+    timestamp: timestamp("timestamp", { withTimezone: true }).defaultNow(),
 });
 
 export const emergencyContact = pgTable("emergency_contact", {
   contactId: serial("contact_id").primaryKey(),
-  userId: integer("user_id").references(() => user.userId, { onDelete: "cascade" }),
+  userId: integer("user_id").references(() => user.userId, { onDelete: "cascade" }).notNull(),
   name: text("contact_name").notNull(),
   phone: text("phone_number").notNull(),
   relationship: text("relationship"),

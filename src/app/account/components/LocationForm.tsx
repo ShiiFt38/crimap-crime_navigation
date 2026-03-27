@@ -60,8 +60,8 @@ export default function LocationForm(){
                 body: JSON.stringify({
                     address: locationData.address,
                     useCurrentLocation: locationData.currentLocation,
-                    latitude: locationData.currentLocation ? locationData.latitude : null,
-                    longitude: locationData.currentLocation ? locationData.longitude : null,
+                    latitude: locationData.currentLocation ? locationData.latitude : 0,
+                    longitude: locationData.currentLocation ? locationData.longitude : 0,
                 }),
             });
 
@@ -75,7 +75,7 @@ export default function LocationForm(){
             setSuccess("Location updated successfully!");
             setLoading(false);
         } catch (err) {
-            setError(err.message || errorMessages.SERVER_ERROR);
+            setError(err instanceof Error ? err.message : errorMessages.SERVER_ERROR);
             setLoading(false);
         }
     };

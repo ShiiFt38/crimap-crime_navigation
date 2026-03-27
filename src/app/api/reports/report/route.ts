@@ -1,10 +1,9 @@
-// src/app/api/reports/report/route.ts
 import { NextResponse } from "next/server";
 import { db } from "@/lib/drizzle";
 import { realTimeReport, reportMedia } from "@/lib/schema";
-import { writeFile } from "fs/promises";
-import { join } from "path";
-import { randomUUID } from "crypto";
+import { uploadReportMedia } from "@/lib/supabase";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export const config = {
     api: {
@@ -14,22 +13,24 @@ export const config = {
 
 export async function POST(request: Request) {
     try {
+        const session = await getServerSession(authOptions);
         const formData = await request.formData();
 
         const offenceValue = formData.get("offence");
         const offenceId = offenceValue ? Number(offenceValue) : NaN;
-
         const severity = formData.get("severity") as string | null;
-        const location = formData.get("location") as string;
-        const date = formData.get("date") as string;
-        const time = formData.get("time") as string;
-        const description = formData.get("description") as string;
+        const location = (formData.get("location") as string | null)?.trim() || "";
+        const date = formData.get("date") as string | null;
+        const time = formData.get("time") as string | null;
+        const description = (formData.get("description") as string | null)?.trim() || "";
         const witnesses = formData.get("witnesses") as string | null;
         const policeContacted = formData.get("policeContacted") as string | null;
+        const anonymous = formData.get("anonymous") === "true";
+        const contactEmail = (formData.get("contactEmail") as string | null)?.trim() || null;
+        const contactPhone = (formData.get("contactPhone") as string | null)?.trim() || null;
         const mediaFiles = formData.getAll("media") as File[];
 
-        // Validation
-        if (isNaN(offenceId) || offenceId < 1 || offenceId > 44) {
+        if (isNaN(offenceId) || offenceId < 1) {
             return NextResponse.json({ error: "Invalid or missing offence selected" }, { status: 400 });
         }
 
@@ -38,54 +39,41 @@ export async function POST(request: Request) {
         }
 
         const timestamp = new Date(`${date}T${time}:00`);
-        console.log("Insert values:", {
-            offenceId: typeof offenceId,
-            description: typeof description,
-            location: typeof location,
-            timestamp: typeof timestamp,
-            severity: severity ?? "null",
-            witnesses: witnesses,
-            policeContacted: policeContacted,
-        });
+        if (Number.isNaN(timestamp.getTime())) {
+            return NextResponse.json({ error: "Invalid date or time supplied" }, { status: 400 });
+        }
+
+        const userId = !anonymous && session?.user?.id ? Number(session.user.id) : null;
 
         const [newReport] = await db
             .insert(realTimeReport)
             .values({
-                offenceId: offenceId,           // now correctly an integer
+                userId,
+                offenceId,
                 description,
                 locationAddress: location,
                 timestamp,
                 severityLevel: severity || null,
-                witnessesPresent: witnesses ? true : false,
-                policeContacted: policeContacted ? true : false,
+                witnessesPresent: Boolean(witnesses?.trim()),
+                policeContacted: Boolean(policeContacted?.trim()),
                 verificationStatus: "pending",
                 upvotes: 0,
+                anonymous,
+                contactEmail,
+                contactPhone,
             })
             .returning({ reportId: realTimeReport.reportId });
 
         const reportId = newReport.reportId;
 
-        // Handle multiple media files
         for (const file of mediaFiles) {
             if (file.size === 0) continue;
 
-            const buffer = Buffer.from(await file.arrayBuffer());
-            const ext = file.name.split(".").pop() || "bin";
-            const filename = `${randomUUID()}.${ext}`;
-            const filePath = `/uploads/${filename}`;
-
-            await writeFile(join(process.cwd(), "public", "uploads", filename), buffer);
-
-            const mediaType = file.type.startsWith("video/")
-                ? "video"
-                : file.type.startsWith("audio/")
-                    ? "audio"
-                    : "image";
-
+            const uploaded = await uploadReportMedia(file);
             await db.insert(reportMedia).values({
                 reportId,
-                filePath,
-                mediaType,
+                filePath: uploaded.filePath,
+                mediaType: uploaded.mediaType,
             });
         }
 

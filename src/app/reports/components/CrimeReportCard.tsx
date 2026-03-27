@@ -1,17 +1,16 @@
-// app/reports/components/CrimeReportCard.tsx
 'use client'
 
-import { MapPin, EllipsisVertical, ThumbsUp, Pin, MessageCircleMore } from "lucide-react";
+import { MapPin, EllipsisVertical, ThumbsUp, MessageCircleMore } from "lucide-react";
 import OffenceBadge from "@/app/reports/components/OffenceBadge";
 import { useState, useEffect } from "react";
 import ChatRoom from "@/app/reports/components/ChatRoom";
-import {useSession} from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 interface Comment {
-    comment_id: number;
-    comment_text: string;
+    commentId: number;
+    commentText: string;
     timestamp: string;
-    author: string;
+    author: string | null;
 }
 
 interface MediaItem {
@@ -27,31 +26,27 @@ interface ReportCardProps {
     author: string;
     likes: number;
     reportId: number;
-    media?: MediaItem[]; // Now receives array from API
+    media?: MediaItem[];
 }
 
 export default function CrimeReportCard({
-                                            offence,
-                                            time,
-                                            description,
-                                            location,
-                                            author,
-                                            likes: initialLikes,
-                                            reportId,
-                                            media = [],
-                                        }: ReportCardProps) {
+    offence,
+    time,
+    description,
+    location,
+    author,
+    likes: initialLikes,
+    reportId,
+    media = [],
+}: ReportCardProps) {
     const { data: session } = useSession();
     const [isDetailsOpen, setIsDetailsOpen] = useState(false);
     const [chatRoomOpen, setChatRoomOpen] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
     const [currentMedia, setCurrentMedia] = useState<MediaItem | null>(null);
-
-    //Upvote state
     const [likes, setLikes] = useState(initialLikes);
     const [hasUpvoted, setHasUpvoted] = useState(false);
     const [upvoteLoading, setUpvoteLoading] = useState(false);
-
-    // Comment state
     const [comments, setComments] = useState<Comment[]>([]);
     const [newComment, setNewComment] = useState("");
     const [loadingComments, setLoadingComments] = useState<boolean>(false);
@@ -63,9 +58,8 @@ export default function CrimeReportCard({
             if (res.ok) {
                 const data = await res.json();
                 setComments(data);
-                console.log("Comments length: ", comments.length);
             }
-        } catch (err) {
+        } catch {
             console.error("Failed to load comments");
         } finally {
             setLoadingComments(false);
@@ -73,14 +67,9 @@ export default function CrimeReportCard({
     };
 
     useEffect(() => {
-        if (chatRoomOpen) {
-            fetchComments();
-        }
-
-        fetchComments();
+        void fetchComments();
     }, [chatRoomOpen, reportId]);
 
-    // Check if current user has upvoted on mount
     useEffect(() => {
         if (!session?.user?.id) return;
 
@@ -94,11 +83,11 @@ export default function CrimeReportCard({
                     setHasUpvoted(hasUpvoted);
                 }
             } catch (err) {
-                console.error("Failed to check upvote status");
+                console.error("Failed to check upvote status", err);
             }
         };
 
-        checkUpvoteStatus();
+        void checkUpvoteStatus();
     }, [session, reportId]);
 
     const submitComment = async () => {
@@ -117,15 +106,11 @@ export default function CrimeReportCard({
 
             if (res.ok) {
                 setNewComment("");
-                // Refresh comments
-                const refreshed = await fetch(`/api/reports/comments?reportId=${reportId}`);
-                if (refreshed.ok) {
-                    setComments(await refreshed.json());
-                }
+                await fetchComments();
             } else {
                 alert("Failed to post comment");
             }
-        } catch (err) {
+        } catch {
             alert("Network error");
         }
     };
@@ -153,30 +138,15 @@ export default function CrimeReportCard({
             } else {
                 alert(result.error || "Failed to toggle upvote");
             }
-        } catch (error) {
+        } catch {
             alert("Network error");
         } finally {
             setUpvoteLoading(false);
         }
     };
 
-    const openModal = (item: MediaItem) => {
-        setCurrentMedia(item);
-        setModalOpen(true);
-    };
-
-    const closeModal = () => {
-        setModalOpen(false);
-        setCurrentMedia(null);
-    };
-
-    if (!session) {
-        const handleUpvote = () => alert("Please log in to upvote")
-    }
-
     return (
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 md:px-20 w-full">
-            {/* Post details and menu button */}
             <div className="flex flex-row items-start justify-between mb-3">
                 <div className="flex flex-row items-center space-x-2 w-3/4">
                     <OffenceBadge offence={offence} />
@@ -190,7 +160,6 @@ export default function CrimeReportCard({
                 </button>
             </div>
 
-            {/* Toggleable full details list */}
             {isDetailsOpen && (
                 <div className="bg-gray-50 rounded-lg p-3 mb-3 text-sm text-gray-700 border border-gray-300">
                     <p><strong>Offence:</strong> {offence}</p>
@@ -204,15 +173,16 @@ export default function CrimeReportCard({
 
             <p className="text-gray-800 text-sm mb-3">{description}</p>
 
-            {/* Media Grid - Now handles multiple files */}
             {media.length > 0 && (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-5">
                     {media.map((item, index) => (
                         <div
                             key={index}
-                            className="relative aspect-square rounded-lg overflow-hidden bg-gray-100 cursor-pointer
-                            hover:opacity-90 transition-opacity"
-                            onClick={() => openModal(item)}
+                            className="relative aspect-square rounded-lg overflow-hidden bg-gray-100 cursor-pointer hover:opacity-90 transition-opacity"
+                            onClick={() => {
+                                setCurrentMedia(item);
+                                setModalOpen(true);
+                            }}
                         >
                             {item.type === "image" && (
                                 <img
@@ -229,21 +199,10 @@ export default function CrimeReportCard({
                                     <video className="w-full h-full object-cover">
                                         <source src={item.path} />
                                     </video>
-                                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                        <div className="bg-white bg-opacity-80 rounded-full p-3">
-                                            <svg width="32" height="32" viewBox="0 0 24 24" fill="#B05216">
-                                                <path d="M8 5v14l11-7z" />
-                                            </svg>
-                                        </div>
-                                    </div>
                                 </div>
                             )}
                             {item.type === "audio" && (
                                 <div className="w-full h-full flex flex-col items-center justify-center bg-gray-200">
-                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" className="text-gray-600 mb-2">
-                                        <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" />
-                                        <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" />
-                                    </svg>
                                     <span className="text-xs text-gray-600">Audio File</span>
                                 </div>
                             )}
@@ -252,7 +211,6 @@ export default function CrimeReportCard({
                 </div>
             )}
 
-            {/* Location */}
             <div className="bg-gray-100 rounded-lg p-3 mb-3 w-fit border border-gray-300">
                 <div className="flex items-center text-gray-600 text-xs">
                     <MapPin size={14} className="mr-2" />
@@ -260,15 +218,11 @@ export default function CrimeReportCard({
                 </div>
             </div>
 
-            {/* Footer */}
             <div className="flex items-center justify-between">
                 <span className="text-gray-500 text-xs">by {author}</span>
-                <div className="flex items-center space-x-4 bg-[var(--color-secondary)] rounded-full px-4 py-2
-                border-b-2 border-[var(--color-quarternary)] align-middle">
-                    <button onClick={toggleUpvote}
-                            disabled={upvoteLoading}
-                            className="cursor-pointer flex items-center space-x-1 text-white">
-                        <ThumbsUp size={14} fill={hasUpvoted ? "white" : "none"} stroke={hasUpvoted ? "white" : "currentColor"} />
+                <div className="flex items-center space-x-4 bg-[var(--color-secondary)] rounded-full px-4 py-2 border-b-2 border-[var(--color-quarternary)] align-middle">
+                    <button onClick={toggleUpvote} disabled={upvoteLoading} className="cursor-pointer flex items-center space-x-1 text-white">
+                        <ThumbsUp size={14} fill={hasUpvoted ? "white" : "none"} />
                         <span className="text-xs">{likes}</span>
                     </button>
                     <button className="flex space-x-1 cursor-pointer text-white" onClick={() => setChatRoomOpen(!chatRoomOpen)}>
@@ -279,7 +233,6 @@ export default function CrimeReportCard({
             </div>
 
             <ChatRoom
-                key={reportId}
                 show={chatRoomOpen}
                 comments={comments}
                 loadingComments={loadingComments}
@@ -287,13 +240,15 @@ export default function CrimeReportCard({
                 newComment={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
                 submitComment={submitComment}
-                />
+            />
 
-            {/* Full-Screen Modal */}
             {modalOpen && currentMedia && (
                 <div
                     className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
-                    onClick={closeModal}
+                    onClick={() => {
+                        setModalOpen(false);
+                        setCurrentMedia(null);
+                    }}
                 >
                     <div className="relative max-w-4xl max-h-full">
                         {currentMedia.type === "image" && (
@@ -321,11 +276,13 @@ export default function CrimeReportCard({
                             </div>
                         )}
                         <button
-                            className="absolute top-4 right-4 text-white bg-black bg-opacity-50 rounded-full
-                            cursor-pointer p-2"
-                            onClick={closeModal}
+                            className="absolute top-4 right-4 text-white bg-black bg-opacity-50 rounded-full cursor-pointer p-2"
+                            onClick={() => {
+                                setModalOpen(false);
+                                setCurrentMedia(null);
+                            }}
                         >
-                            ✕
+                            X
                         </button>
                     </div>
                 </div>

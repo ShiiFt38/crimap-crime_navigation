@@ -19,21 +19,15 @@ export async function POST(request: Request) {
         const updated = await db
             .update(user)
             .set({
+                username: body.username || null,
                 fullName: body.fullName || null,
-                phone: body.phone || null,
-                defaultAddress: body.address || null,
-                defaultLatitude: body.latitude || null,
-                defaultLongitude: body.longitude || null,
-                useCurrentLocation: body.useCurrentLocation ?? false,
+                phone: body.phoneNumber || null,
             })
             .where(eq(user.userId, userId))
             .returning({
+                username: user.username,
                 fullName: user.fullName,
                 phone: user.phone,
-                defaultAddress: user.defaultAddress,
-                defaultLatitude: user.defaultLatitude,
-                defaultLongitude: user.defaultLongitude,
-                useCurrentLocation: user.useCurrentLocation,
             });
 
         return NextResponse.json({ message: "User updated", user: updated[0] });

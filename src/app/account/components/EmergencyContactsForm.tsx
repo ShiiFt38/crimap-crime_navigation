@@ -99,7 +99,7 @@ export default function EmergencyContactsForm() {
             await fetchContacts();
         } catch (err) {
             console.log("Emergency Contact error: ", err);
-            setError((err as Error).message || errorMessages.default);
+            setError(err instanceof Error ? err.message : errorMessages.default);
         } finally {
             setLoading(false);
         }
@@ -139,7 +139,7 @@ export default function EmergencyContactsForm() {
             setSuccess("Contact deleted successfully!");
             await fetchContacts();
         } catch (err) {
-            setError((err as Error).message || errorMessages.default);
+            setError(err instanceof Error ? err.message : errorMessages.default);
         } finally {
             setLoading(false);
         }
@@ -196,7 +196,10 @@ export default function EmergencyContactsForm() {
                     <Select
                         name="relationship"
                         onChange={(selectedOption) => {
-                            handleChange({ target: {name: "relationship", value: selectedOption ? selectedOption.value : ''}});
+                            setFormData((prev) => ({
+                                ...prev,
+                                relationship: selectedOption ? selectedOption.value : "",
+                            }));
                         }}
                         value={relationshipOptions.find((option) => option.value === formData.relationship) || null}
                         className="w-full rounded-lg"

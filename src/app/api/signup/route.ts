@@ -1,7 +1,7 @@
 // src/app/api/signup/route.ts
 import { NextResponse } from "next/server";
 import { db } from "@/lib/drizzle";
-import { user } from "@/lib/schema";
+import { user, userPreferences } from "@/lib/schema";
 import bcrypt from "bcryptjs";
 import { eq } from "drizzle-orm";
 
@@ -26,16 +26,28 @@ export async function POST(request: Request) {
 
         const passwordHash = await bcrypt.hash(password, 10);
 
-        const [newUser] = await db
-            .insert(user)
-            .values({
-                username,
-                email,
-                passwordHash,
-                fullName: fullName || null,
-                phone: phone || null,
-            })
-            .returning({ userId: user.userId, username: user.username, email: user.email });
+        const newUser = await db.transaction(async (tx) => {
+            const [createdUser] = await tx
+                .insert(user)
+                .values({
+                    username,
+                    email,
+                    passwordHash,
+                    fullName: fullName || null,
+                    phone: phone || null,
+                })
+                .returning({ userId: user.userId, username: user.username, email: user.email });
+
+            await tx.insert(userPreferences).values({
+                userId: createdUser.userId,
+                smsAlerts: false,
+                emailAlerts: false,
+                    pushNotifications: false,
+                    alertRadius: 5,
+                });
+
+            return createdUser;
+        });
 
         return NextResponse.json({
             message: "User created successfully",

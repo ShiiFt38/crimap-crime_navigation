@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { db } from "@/lib/drizzle";
-import { user } from "@/lib/schema";
+import { userPreferences } from "@/lib/schema";
 import { eq } from "drizzle-orm";
 
 export async function GET() {
@@ -15,13 +15,13 @@ export async function GET() {
     try {
         const [userData] = await db
             .select({
-                useCurrentLocation: user.useCurrentLocation,
-                defaultLatitude: user.defaultLatitude,
-                defaultLongitude: user.defaultLongitude,
-                defaultAddress: user.defaultAddress,
+                smsAlerts: userPreferences.smsAlerts,
+                emailAlerts: userPreferences.emailAlerts,
+                pushNotifications: userPreferences.pushNotifications,
+                alertRadius: userPreferences.alertRadius,
             })
-            .from(user)
-            .where(eq(user.userId, parseInt(session.user.id)))
+            .from(userPreferences)
+            .where(eq(userPreferences.userId, parseInt(session.user.id)))
             .limit(1);
 
         return NextResponse.json(userData || {});

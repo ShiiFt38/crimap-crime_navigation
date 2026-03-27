@@ -102,11 +102,12 @@ export default function MyAreas() {
                                         fetchDistricts(nextPage);
                                     }}
                                     disabled={loading}
-                                    className="bg-[var(--color-secondary)] active:bg-[var(--color-quarternary)] text-white px-10 py-2 rounded-lg
-                    flex cursor-pointer border-b-2 border-[var(--color-quarternary)] items-center shadow-md text-sm
-                    group-invalid:bg-[var(--color-tertiary)] group-invalid:border-b-[var(--color-primary)]"
+                                    className={`bg-[var(--color-secondary)] active:bg-[var(--color-quarternary)] text-white px-10 py-2 rounded-lg
+                                    ${loading ? "opacity-50 cursor-not-allowed" : "active:bg-[var(--color-quarternary)]"}
+                                        flex cursor-pointer border-b-2 border-[var(--color-quarternary)] items-center shadow-md text-sm
+                                        group-invalid:bg-[var(--color-tertiary)] group-invalid:border-b-[var(--color-primary)]`}
                                 >
-                                    {loading ? 'Loading…' : 'Load more'}
+                                    {loading ? <LoaderCircle size={16} className="m-auto animate-spin"/> : 'Load More'}
                                 </button>
                             </div>
                         )}

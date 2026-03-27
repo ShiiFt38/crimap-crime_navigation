@@ -2,7 +2,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/drizzle";
 import { district, station, crimeRecord } from "@/lib/schema";
-import { sql } from "drizzle-orm";
+import { sql, eq } from "drizzle-orm";
 
 export async function GET() {
     try {

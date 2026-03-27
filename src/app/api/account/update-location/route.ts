@@ -15,13 +15,15 @@ export async function POST(request: Request) {
     try {
         const { latitude, longitude, address, useCurrentLocation } = await request.json();
 
+        console.log("Data types: \n", "latitude: ", latitude, typeof latitude, "\n longitude", longitude, typeof longitude,
+            "\naddress: ", typeof address, "useCurrentLocation: ", useCurrentLocation, typeof useCurrentLocation);
         await db
             .update(user)
             .set({
-                defaultLatitude: latitude || null,
-                defaultLongitude: longitude || null,
+                defaultLatitude: latitude || 0,
+                defaultLongitude: longitude || 0,
                 defaultAddress: address || null,
-                useCurrentLocation: useCurrentLocation ?? false,
+                useCurrentLocation: Boolean(useCurrentLocation),
             })
             .where(eq(user.userId, parseInt(session.user.id)));
 

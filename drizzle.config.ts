@@ -2,9 +2,9 @@
 import type { Config } from "drizzle-kit";
 
 export default {
-    schema: "./lib/schema.ts",
+    schema: "./src/lib/schema.ts",
     out: "./drizzle/migrations",
-    driver: "pg",           // change to "better-sqlite" when testing SQLite
+    dialect: "postgresql",
     dbCredentials: {
         connectionString: process.env.DATABASE_URL!,
     },
